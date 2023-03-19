@@ -133,6 +133,6 @@ STATIC_ROOT = local_settings.static_root
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = local_settings.allowed_hosts
+"""ALLOWED_HOSTS = local_settings.allowed_hosts
 
-CSRF_TRUSTED_ORIGINS = local_settings.csrf_trusted_origins
+CSRF_TRUSTED_ORIGINS = local_settings.csrf_trusted_origins"""

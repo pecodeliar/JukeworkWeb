@@ -7,6 +7,9 @@ from django import forms
 from .models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.http import JsonResponse
+
+
 
 
 # https://ordinarycoders.com/blog/article/django-user-register-login-logout
@@ -89,3 +92,14 @@ def register(request):
         return render(request, "users/register.html", {
             "form_fields": list(NewUserForm())
         })
+
+
+# API route
+def user(request, id):
+    user = User.objects.get(pk=id)
+    if request.method == "GET":
+        return JsonResponse(user.serialize(), safe=False)
+    else:
+        return JsonResponse({
+            "error": "GET required."
+        }, status=400)

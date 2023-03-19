@@ -35,6 +35,9 @@ class User(AbstractUser):
     def serialize(self):
         return {
             "id": self.id,
+            "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "pfp_url":  self.profile_picture,
             "following": [user.id for user in self.following.all()],
             "followers": [user.id for user in self.followers.all()],
