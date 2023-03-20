@@ -1,9 +1,15 @@
+let loggedInUser = null
+
 document.addEventListener('DOMContentLoaded', function() {
 
-    if (document.querySelector('#post-form') !== null) {
+    const postForm = document.querySelector('#post-form')
+    if (postForm !== null) {
+        loggedInUser = parseInt(postForm.dataset.user)
         const form = composePost();
         document.querySelector('#post-form').append(form);
     };
+
+    const article = document.querySelector("#electric-cars");
 
     loadPosts();
 
@@ -27,7 +33,6 @@ function getCookie(name) {
 
 function composePost() {
 
-
     // Make div
     const formDiv = document.createElement("div");
     formDiv.setAttribute("class", "form-div");
@@ -36,13 +41,42 @@ function composePost() {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
 
+    var formRow = document.createElement("div");
+    formRow.setAttribute("class", "post-form-row")
+
+    // Profile Picture
+    const pfpDiv = document.createElement("div");
+    pfpDiv.setAttribute("class", "create-post-pfp");
+    const pfp = document.createElement("img");
+    pfpDiv.append(pfp)
+    formRow.append(pfpDiv)
+
+    // Get user information for PFP
+    fetch(`/users/${loggedInUser}`)
+    .then(response => response.json() )
+    .then(user => {
+
+        pfp.alt = user.username;
+        pfp.src = user.pfp_url;
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+    const formTextDiv = document.createElement("div");
+    formTextDiv.setAttribute("class", "form-text-div");
     const formText = document.createElement("textarea");
     formText.setAttribute("class", "form-text");
+    formText.placeholder = "Enter post content..."
+    formTextDiv.append(formText)
+    formRow.append(formTextDiv)
 
     const csrftoken = getCookie('csrftoken');
 
     const postButton = document.createElement("input");
     postButton.setAttribute("type", "submit");
+    postButton.setAttribute("class", "float-right round-btn post-crt-btn");
     postButton.setAttribute("value", "Create Post");
     postButton.addEventListener("click", () => {
 
@@ -65,7 +99,7 @@ function composePost() {
 
     });
 
-    form.append(formText, postButton)
+    form.append(formRow, postButton)
     formDiv.append(form);
     return formDiv;
 
@@ -87,8 +121,10 @@ function loadPosts() {
             .then(response => response.json() )
             .then(user => {
 
+
+
                 const postCard = postElement(post.fields, post.pk, user)
-                const help = likePostButton(post.fields, post.pk, user)
+                const help = likePostButton(post.fields, post.pk, loggedInUser)
 
                 parent.append(postCard, help);
                 help.addEventListener("click", () => like(help))
@@ -166,14 +202,15 @@ function likePostButton(post, id, creator) {
     likeIcon.setAttribute("data-type", "post");
     const likeCount = document.createElement("p");
     likeCount.setAttribute("class", "like-cnt");
-    likeCount.innerText = ""
+    likeCount.innerText = post.likers["length"]
+    console.log(post.likers["length"])
     likeCount.setAttribute("data-id", id);
     likeCount.setAttribute("data-type", "post");
     const likeBtn = document.createElement("input");
     likeBtn.setAttribute("type", "button");
     likeBtn.setAttribute("data-id", id);
     likeBtn.setAttribute("data-type", "post");
-    const liked = post.likers.includes(creator.id);
+    const liked = post.likers.includes(loggedInUser);
     if (liked == false) {
         likeBtn.value = `Like Post`
         likeIcon.style.color = "grey"
@@ -206,6 +243,7 @@ function like(span) {
 
             const elements = document.querySelectorAll(`[data-type='${id}'], [data-type='${type}']`)
             console.log(elements)
+            var count = parseInt(elements.item(2).textContent)
 
             return fetch(`${type}/${id}`, {
                 method: 'PUT',
@@ -216,14 +254,16 @@ function like(span) {
                 })
             })
             .then(() =>{
-                if (elements.item(3).value === `Like ${type}`) {
+                if (elements.item(3).value === `Like ${titleCase(type)}`) {
                     console.log("Liked")
                     elements.item(1).style.color = "red"
-                    elements.item(3).value = `Unlike ${type}`
+                    elements.item(2).textContent = count += 1
+                    elements.item(3).value = `Unlike ${titleCase(type)}`
                 } else {
                     console.log("Unliked")
                     elements.item(1).style.color = "grey"
-                    elements.item(3).value = `Like ${type}`
+                    elements.item(2).textContent = count -= 1
+                    elements.item(3).value = `Like ${titleCase(type)}`
                 }
             })
             .catch(error => {
@@ -235,4 +275,8 @@ function like(span) {
             console.log(error);
         });
 
+}
+
+function titleCase(string){
+    return string[0].toUpperCase() + string.slice(1).toLowerCase();
 }

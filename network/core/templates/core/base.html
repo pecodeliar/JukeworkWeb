@@ -5,9 +5,8 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="{% static 'core/styles.css' %}?ver=1.2" rel="stylesheet">
         {% block styles %}
-        <!--<link href="{% static 'core/beach.css' %}?ver=1.2" rel="stylesheet">
-        <link href="{% static 'core/styles.css' %}?ver=1.2" rel="stylesheet">-->
         {% endblock %}
         <!--<script defer src="{% static 'core/script.js' %}"></script>-->
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
