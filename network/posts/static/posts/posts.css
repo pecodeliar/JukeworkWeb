@@ -44,3 +44,76 @@
 .post-crt-btn {
     margin-top: 10px;
 }
+
+/* ===== Post Element Cards ===== */
+
+.post-card {
+    margin-top: 20px;
+    background-color: #242222;
+    border-radius: 10px;
+    color: white;
+}
+
+.post-pfp {
+    width: 70px;
+    margin: 10px;
+    margin-top: 20px;
+    margin-right: 0px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.post-pfp img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.misc-div {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.post-top-deets {
+}
+
+.post-full-name {
+}
+
+.post-user-create {
+    color: gray;
+}
+
+.post-actions {
+    display: inline-block;
+    outline: gray solid 1px;
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.post-like-heart {
+    display: inline-block;
+    margin: 5px;
+    margin-left: 10px;
+}
+
+.like-cnt {
+    display: inline-block;
+    margin: 5px;
+}
+
+.post-like-btn {
+    display: inline-block;
+    margin: 5px;
+    outline: none;
+    border: none;
+    background-color: #242222;
+    color: white;
+    margin-right: 10px;
+}
+
+.post-content-cont {
+}

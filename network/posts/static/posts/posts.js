@@ -125,9 +125,12 @@ function loadPosts() {
 
                 const postCard = postElement(post.fields, post.pk, user)
                 const help = likePostButton(post.fields, post.pk, loggedInUser)
-
-                parent.append(postCard, help);
-                help.addEventListener("click", () => like(help))
+                //console.log(post.fields, post.pk, loggedInUser)
+                postCard.querySelector(".misc-div").append(help)
+                //postCard.append(help)
+                parent.append(postCard);
+                //console.log(help.querySelector("span"))
+                help.addEventListener("click", () => like(help.querySelector("span")))
             })
             .catch(error => {
                 console.log(error);
@@ -143,6 +146,7 @@ function loadPosts() {
 }
 
 function postElement(post, id, creator) {
+    //console.log(post, id, creator)
 
     // Make parent
     const card = document.createElement("div");
@@ -157,36 +161,37 @@ function postElement(post, id, creator) {
     pfp.src = creator.pfp_url;
     pfpDiv.append(pfp)
 
+    // Everything else div
+    const miscDiv = document.createElement("div");
+    miscDiv.setAttribute("class", "misc-div");
+
     // Top of the card with user's names and post creation date
     const topDeets = document.createElement("div");
     topDeets.setAttribute("class", "post-top-deets");
-    const fullName = document.createElement("p");
+    const fullName = document.createElement("span");
     fullName.setAttribute("class", "post-full-name");
     fullName.innerText = `${creator.first_name} ${creator.last_name}`
-    const userAndCreation = document.createElement("p");
+    const userAndCreation = document.createElement("span");
     userAndCreation.setAttribute("class", "post-user-create");
-    userAndCreation.innerText = `${creator.username} • ${post.creation_date}`;
+    userAndCreation.innerText = ` @${creator.username} • ${post.creation_date}`;
     topDeets.append(fullName, userAndCreation)
 
     // Post Content
     const postContentDiv = document.createElement("div");
     postContentDiv.setAttribute("class", "post-content-cont");
-    const postContent = document.createElement("p");
+    const postContent = document.createElement("span");
     postContent.setAttribute("class", "post-content-text");
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
 
     // -- Action Section (Comment and Like) --
-    const actions = document.createElement("div");
-    actions.setAttribute("class", "post-actions");
+    //const actions = document.createElement("div");
+    //actions.setAttribute("class", "post-actions");
 
-    //Like Button
-
-
-    //actions.append(likeSpan);
+    miscDiv.append(topDeets, postContentDiv)
 
     // Appendings
-    card.append(pfpDiv, topDeets, postContentDiv, actions);
+    card.append(pfpDiv, miscDiv);
 
     return card;
 
@@ -194,20 +199,25 @@ function postElement(post, id, creator) {
 
 function likePostButton(post, id, creator) {
 
+    //console.log(post, id, creator)
+
+    const actions = document.createElement("div");
+    actions.setAttribute("class", "post-actions");
+
     const likeSpan = document.createElement("span");
     likeSpan.setAttribute("class", "like-span");
     const likeIcon = document.createElement("i");
-    likeIcon.setAttribute("class", "bx bxs-heart");
+    likeIcon.setAttribute("class", "bx bxs-heart post-like-heart");
     likeIcon.setAttribute("data-id", id);
     likeIcon.setAttribute("data-type", "post");
     const likeCount = document.createElement("p");
     likeCount.setAttribute("class", "like-cnt");
     likeCount.innerText = post.likers["length"]
-    console.log(post.likers["length"])
     likeCount.setAttribute("data-id", id);
     likeCount.setAttribute("data-type", "post");
     const likeBtn = document.createElement("input");
     likeBtn.setAttribute("type", "button");
+    likeBtn.setAttribute("class", "post-like-btn");
     likeBtn.setAttribute("data-id", id);
     likeBtn.setAttribute("data-type", "post");
     const liked = post.likers.includes(loggedInUser);
@@ -221,14 +231,16 @@ function likePostButton(post, id, creator) {
     likeSpan.setAttribute("data-id", id);
     likeSpan.setAttribute("data-type", "post");
     likeSpan.append(likeIcon, likeCount, likeBtn);
+    actions.append(likeSpan)
 
-    return likeSpan;
+    return actions;
 
 }
 
 function like(span) {
 
-    console.log("Pressed like button")
+    console.log(span)
+
     const csrftoken = getCookie('csrftoken');
 
     // Get id and like type (post or comment) from dataset
@@ -241,8 +253,8 @@ function like(span) {
         })
         .then(post => {
 
-            const elements = document.querySelectorAll(`[data-type='${id}'], [data-type='${type}']`)
-            console.log(elements)
+            const elements = document.querySelectorAll(`[data-id='${id}']`)
+            //console.log(elements)
             var count = parseInt(elements.item(2).textContent)
 
             return fetch(`${type}/${id}`, {
@@ -255,12 +267,10 @@ function like(span) {
             })
             .then(() =>{
                 if (elements.item(3).value === `Like ${titleCase(type)}`) {
-                    console.log("Liked")
                     elements.item(1).style.color = "red"
                     elements.item(2).textContent = count += 1
                     elements.item(3).value = `Unlike ${titleCase(type)}`
                 } else {
-                    console.log("Unliked")
                     elements.item(1).style.color = "grey"
                     elements.item(2).textContent = count -= 1
                     elements.item(3).value = `Like ${titleCase(type)}`
