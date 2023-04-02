@@ -11,7 +11,7 @@ urlpatterns = [
     # API routes
     path("", views.posts, name="posts"),
     path("following", views.following, name="following"),
-    path("genre/<str:genre_code>", views.genre, name="genre"),
+    path("<str:genre_code>", views.genre, name="genre"),
     path("post/<int:post_id>", views.post, name="post"),
     path("post/<int:post_id>/comments", views.comments, name="comments"),
     path("comment/<int:comment_id>", views.comment, name="comment"),

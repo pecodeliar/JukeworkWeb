@@ -33,9 +33,10 @@ def posts(request):
 
 def genre(request, genre_code):
     users = User.objects.filter(genre=genre_code)
-    posts = Post.objects.filter(creator__in=users).order_by("-timestamp").all()
+    posts = Post.objects.filter(creator__in=users).order_by("-creation_date").all()
     if request.method == "GET":
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        data = serializers.serialize('json', posts)
+        return JsonResponse(data, safe=False)
     else:
         return JsonResponse({
             "error": "GET required."

@@ -1,3 +1,30 @@
+:root {
+
+    /* ===== Colors ===== */
+
+    --background: #000000;
+    --on-background: #e3e2e6;
+    --primary-container: #a8c8ff;
+    --on-primary-container: #003062;
+    --primary: #00468a;
+    --on-primary: #d6e3ff;
+    --secondary: #5f3180;
+    --secondary-container: #e3b5ff;
+    --on-secondary-container: #471867;
+    --on-secondary: #f3daff;
+    --accent: #7a2851;
+    --on-accent: #ffd8e5;
+    --accent-container: #5d0f3a;
+    --on-accent-container: #ffb0cf;
+    --accent-container-hover: #00363f;
+    --focus-outline: #53d7f1;
+    --error: #93000a;
+    --on-error: #ffdad6;
+    --variant: #43474e;
+    --on-variant: #c4c6cf;
+
+}
+
 .round-btn {
     border: none;
     cursor: pointer;
@@ -5,4 +32,18 @@
     margin: 0 4px;
     padding: 5px 20px;
     font-weight: 560;
+}
+
+/* ===== Navigation Bar ===== */
+
+.gnr-dropdown-cnt {
+    display: none;
+    position: absolute;
+    z-index: 1;
+}
+
+.gnr-dropdown-item {
+    padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }

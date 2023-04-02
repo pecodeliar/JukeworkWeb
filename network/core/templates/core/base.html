@@ -8,10 +8,16 @@
         <link href="{% static 'core/styles.css' %}?ver=1.2" rel="stylesheet">
         {% block styles %}
         {% endblock %}
-        <!--<script defer src="{% static 'core/script.js' %}"></script>-->
+        <script defer src="{% static 'core/script.js' %}"></script>
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     </head>
     <header>
+        <nav>
+            {% if user.is_authenticated %}
+            <div class="user-menu">
+            </div>
+            {% endif %}
+        </nav>
     </header>
     <body>
         {% block body %}
