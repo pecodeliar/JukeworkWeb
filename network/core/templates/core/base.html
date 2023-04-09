@@ -14,7 +14,7 @@
     <header>
         <nav>
             {% if user.is_authenticated %}
-            <div class="user-menu">
+            <div id="user-menu" data-user="{{ user.id }}">
             </div>
             {% endif %}
         </nav>

@@ -239,7 +239,7 @@ function likePostButton(post, id, creator) {
 
 function like(span) {
 
-    console.log(span)
+    //console.log(span)
 
     const csrftoken = getCookie('csrftoken');
 
