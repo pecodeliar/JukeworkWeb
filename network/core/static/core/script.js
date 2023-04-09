@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function baseNavbar() {
 
     const navBar = document.createElement("div");
+    navBar.setAttribute("class", "nav-div");
 
     // Brand Div
     const brand = document.createElement("div");
@@ -45,6 +46,8 @@ function baseNavbar() {
     // Dropdown
 
     const dropdownDiv = genreDropdownMenu();
+
+
 
     navBar.append(dropdownDiv);
     return navBar;
@@ -79,7 +82,7 @@ function genreDropdownMenu() {
 
 
     const dropdownCnt = document.createElement("div");
-    dropdownCnt.setAttribute("class", "gnr-dropdown-cnt");
+    dropdownCnt.setAttribute("id", "gnr-dropdown-cnt");
     dropdownDiv.append(dropdownCnt);
 
     Object.entries(genres).forEach(genre => {
@@ -92,9 +95,18 @@ function genreDropdownMenu() {
 
     })
     dropdownSpan.addEventListener("click", () => {
-        console.log("Clicked")
-        dropdownCnt.style.display = "block"
+        dropdownCnt.style.display = "block";
     });
+
+    // https://www.techiedelight.com/hide-div-click-outside-javascript/
+
+    document.addEventListener('mouseup', function(e) {
+        var container = document.getElementById('gnr-dropdown-cnt');
+        if (!container.contains(e.target)) {
+            container.style.display = 'none';
+        }
+    });
+
 
     return dropdownDiv;
 
