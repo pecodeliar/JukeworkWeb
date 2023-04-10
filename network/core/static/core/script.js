@@ -29,7 +29,8 @@ function baseNavbar() {
     const brandName = document.createElement("p");
     brandName.setAttribute("class", "brand-name");
     brandName.innerText = "Jukework";
-    brand.append(brandLink, brandIcon, brandName);
+    brandLink.append(brandIcon, brandName);
+    brand.append(brandLink);
     navBar.append(brand);
 
 
@@ -83,16 +84,13 @@ function genreDropdownMenu() {
     dropdownDiv.setAttribute("class", "gnr-dropdown");
 
     // Span button that once clicked will show dropdown
-    const dropdownSpan = document.createElement("span");
-    dropdownSpan.setAttribute("class", "genre-span");
     const dropdownBtn = document.createElement("input");
     dropdownBtn.setAttribute("type", "button");
     dropdownBtn.setAttribute("class", "genre-btn");
     dropdownBtn.value = "Filter by Genres..."
     const dropdownIcon = document.createElement("i");
     dropdownIcon.setAttribute("class", "bx bx-chevron-down genre-arw");
-    dropdownSpan.append(dropdownBtn, dropdownIcon);
-    dropdownDiv.append(dropdownSpan);
+    dropdownDiv.append(dropdownBtn, dropdownIcon);
 
 
     const dropdownCnt = document.createElement("div");
@@ -108,7 +106,7 @@ function genreDropdownMenu() {
         dropdownCnt.append(genreLink)
 
     })
-    dropdownSpan.addEventListener("click", () => {
+    dropdownDiv.addEventListener("click", () => {
         dropdownCnt.style.display = "block";
     });
 

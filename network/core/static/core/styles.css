@@ -38,6 +38,35 @@ body {
     font-weight: 560;
 }
 
+/* ===== Keyboard User Skip Button ===== */
+
+a.skip-main {
+    left:-999px;
+    position:absolute;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    z-index:-999;
+}
+
+a.skip-main:focus, a.skip-main:active {
+    color: #fff;
+    background-color:#000;
+    left: auto;
+    top: auto;
+    width: 30%;
+    height: auto;
+    overflow:auto;
+    margin: 10px 35%;
+    padding:5px;
+    border-radius: 15px;
+    border:4px solid var(--primary);
+    text-align:center;
+    font-size:1.2em;
+    z-index:999;
+}
+
 /* ===== Navigation Bar ===== */
 
 nav {
@@ -52,6 +81,11 @@ nav {
     align-items: center;
 }
 
+.nb-brand a{
+    font-size: 1.2rem;
+    color: var(--on-accent);
+}
+
 .nb-brand i{
     display: inline-block;
     margin: 4px;
@@ -60,15 +94,37 @@ nav {
 .nb-brand p{
     display: inline-block;
     margin: 0;
-    margin-left: 15px;
+    margin-left: 10px;
 }
 
-.genre-span {
+.gnr-dropdown {
+    display: inline-block;
     margin-left: 35px;
+    padding: 6px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
 }
 
-.genre-span i{
+.gnr-dropdown input:focus {
+    outline: var(--accent) solid 3px;
+}
+
+.gnr-dropdown:hover {
+    background-color: var(--accent);
+}
+
+.genre-btn i{
     margin-left: 15px;
+}
+
+.genre-btn:hover {
+    background-color: var(--accent);
+}
+
+.genre-btn:focus {
+    background-color: var(--accent);
 }
 
 .genre-btn {
@@ -78,21 +134,20 @@ nav {
     color: var(--on-primary);
 }
 
-.gnr-dropdown {
-    display: inline-block;
-}
-
 #gnr-dropdown-cnt {
     display: none;
     position: absolute;
     z-index: 1;
-    margin-left: 35px;
+    left: 160px;
+    padding-right: 5px;
+    padding-left: 1px;
+    margin-top: 20px;
     background-color: #242222;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    border-right: 1px solid var(--accent);
-    border-bottom: 1px solid var(--accent);
-    border-left: 1px solid var(--accent);
+    outline: var(--accent) solid 1px;
 }
 
 #gnr-dropdown-cnt a{
@@ -116,7 +171,17 @@ nav {
     outline: var(--secondary) solid 1px;
     border-radius: 30px;
     padding: 5px 10px;
-    color: var(--on-primary);
+    color: var(--on-secondary);
+}
+
+.sign-in-link:hover {
+    background-color: var(--secondary);
+    color: var(--on-secondary);
+    text-decoration: none;
+}
+
+.sign-in-link:focus {
+    outline: var(--on-secondary) solid 3px;
 }
 
 .sign-in-link i{

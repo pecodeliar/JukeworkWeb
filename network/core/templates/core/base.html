@@ -12,6 +12,7 @@
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     </head>
     <header>
+        <a class="skip-main" href="#maincontent">Skip to main content</a>
         <nav>
             {% if user.is_authenticated %}
             <div id="user-menu" data-user="{{ user.id }}">
@@ -20,6 +21,9 @@
         </nav>
     </header>
     <body>
+        <div class="skiptarget">
+            <a id="maincontent">-</a>
+        </div>
         {% block body %}
         {% endblock %}
     </body>
