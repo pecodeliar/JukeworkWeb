@@ -71,13 +71,22 @@ a.skip-main:focus, a.skip-main:active {
 
 nav {
     background-color: #242222;
-    padding: 10px;
     position: relative;
     color: var(--on-primary);
 }
 
-.nav-div {
+nav ul {
     display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+nav li{
+    list-style: none;
+    margin-bottom: 0rem;
+}
+
+.nav-div {
     align-items: center;
 }
 
@@ -97,7 +106,7 @@ nav {
     margin-left: 10px;
 }
 
-.gnr-dropdown {
+.nav-dropdown {
     display: inline-block;
     margin-left: 35px;
     padding: 6px;
@@ -107,27 +116,39 @@ nav {
     border-bottom-left-radius: 15px;
 }
 
-.gnr-dropdown input:focus {
+.nav-dropdown input:focus {
+    outline: var(--accent) solid 3px;
+    border-radius: 30px;
+}
+
+.nav-dropdown:hover {
     outline: var(--accent) solid 3px;
 }
 
-.gnr-dropdown:hover {
-    background-color: var(--accent);
+.pro-dropdown {
+    display: inline-block;
+    margin-left: 35px;
+    padding: 6px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
 }
 
-.genre-btn i{
+.pro-dropdown input:focus {
+    outline: var(--secondary) solid 3px;
+    border-radius: 30px;
+}
+
+.pro-dropdown:hover {
+    outline: var(--secondary) solid 3px;
+}
+
+.drpdwn-btn i{
     margin-left: 15px;
 }
 
-.genre-btn:hover {
-    background-color: var(--accent);
-}
-
-.genre-btn:focus {
-    background-color: var(--accent);
-}
-
-.genre-btn {
+.drpdwn-btn {
     outline: none;
     border: none;
     background-color: #242222;
@@ -154,14 +175,35 @@ nav {
      color: var(--on-primary);
 }
 
-.gnr-dropdown-item {
+#pro-dropdown-cnt {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    padding-right: 5px;
+    padding-left: 1px;
+    margin-top: 20px;
+    background-color: #242222;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    outline: var(--secondary) solid 1px;
+}
+
+#pro-dropdown-cnt a{
+    color: var(--on-secondary);
+}
+
+.nav-dropdown-item {
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
 
-.nav-right {
+#nav-right {
     margin-left: auto;
+    margin-right: 10px;
     order: 2;
 }
 
