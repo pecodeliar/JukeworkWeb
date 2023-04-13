@@ -29,6 +29,7 @@ function baseNavbar() {
     brandLink.setAttribute("href", "#");
     const brandIcon = document.createElement("i");
     brandIcon.setAttribute("class", "bx bxs-music brand-logo");
+    brandIcon.setAttribute("aria-hidden", "true");
     const brandName = document.createElement("p");
     brandName.setAttribute("class", "brand-name");
     brandName.innerText = "Jukework";
@@ -67,6 +68,7 @@ function baseNavbar() {
         signInLink.value = "Sign In"
         const signInIcon = document.createElement("i");
         signInIcon.setAttribute("class", "bx bx-user-circle");
+        signInIcon.setAttribute("aria-hidden", "true");
         const signInText = document.createElement("p");
         signInText.setAttribute("class", "sign-in-text");
         signInText.innerText = "Log In"
@@ -101,6 +103,7 @@ function genreDropdownMenu() {
     dropdownBtn.value = "Filter by Genres..."
     const dropdownIcon = document.createElement("i");
     dropdownIcon.setAttribute("class", "bx bx-chevron-down genre-arw");
+    dropdownIcon.setAttribute("aria-hidden", "true");
     dropdownDiv.append(dropdownBtn, dropdownIcon);
 
 
@@ -150,6 +153,7 @@ function profileDropdownMenu() {
     dropdownBtn.setAttribute("class", "drpdwn-btn");
     const dropdownIcon = document.createElement("i");
     dropdownIcon.setAttribute("class", "bx bx-chevron-down profile-arw");
+    dropdownIcon.setAttribute("aria-hidden", "true");
     dropdownDiv.append(dropdownBtn, dropdownIcon);
 
 

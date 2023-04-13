@@ -67,9 +67,12 @@ function composePost() {
     const formTextDiv = document.createElement("div");
     formTextDiv.setAttribute("class", "form-text-div");
     const formText = document.createElement("textarea");
-    formText.setAttribute("class", "form-text");
+    formText.setAttribute("id", "form-text");
     formText.placeholder = "Enter post content..."
-    formTextDiv.append(formText)
+    const formTextLabel = document.createElement("label");
+    formTextLabel.setAttribute("for", "form-text");
+    formTextLabel.innerText = "Enter text for a new post:";
+    formTextDiv.append(formTextLabel, formText)
     formRow.append(formTextDiv)
 
     const csrftoken = getCookie('csrftoken');
@@ -157,7 +160,7 @@ function postElement(post, id, creator) {
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "post-pfp");
     const pfp = document.createElement("img");
-    pfp.alt = creator.username;
+    pfp.alt = "";
     pfp.src = creator.pfp_url;
     pfpDiv.append(pfp)
 
@@ -210,6 +213,7 @@ function likePostButton(post, id, creator) {
     likeIcon.setAttribute("class", "bx bxs-heart post-like-heart");
     likeIcon.setAttribute("data-id", id);
     likeIcon.setAttribute("data-type", "post");
+    likeIcon.setAttribute("aria-hidden", "true");
     const likeCount = document.createElement("p");
     likeCount.setAttribute("class", "like-cnt");
     likeCount.innerText = post.likers["length"]
