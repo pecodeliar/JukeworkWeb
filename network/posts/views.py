@@ -59,13 +59,13 @@ def create(request):
                 }, status=400)
             post = Post(creator=creator, content=content)
             post.save()
-
+            data = serializers.serialize('json', [post, ])
+            #return JsonResponse(data, safe=False)
+            return JsonResponse(data, safe=False, status=201)
     else:
         return JsonResponse({
             "error": "Type of creation required."
         }, status=400)
-
-    return JsonResponse({"message": "Post sent successfully."}, status=201)
 
 
 

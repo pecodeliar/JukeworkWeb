@@ -51,6 +51,8 @@ function composePost() {
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
 
+    // let fetchedUser = null
+
     // Get user information for PFP
     fetch(`/users/${loggedInUser}`)
     .then(response => response.json() )
@@ -58,6 +60,7 @@ function composePost() {
 
         pfp.alt = user.username;
         pfp.src = user.pfp_url;
+        fetchedUser = user;
 
     })
     .catch(error => {
@@ -91,13 +94,22 @@ function composePost() {
                 content: formText.value,
             })
           })
-          .then(response => {
-            if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
-        })
+          .then(response => response.json())
           .then(result => {
-              // Print result
-              console.log(result);
-          });
+                // Print result
+                post = JSON.parse(result)
+                console.log(formText);
+                //formText.value = "";
+
+                const postCard = postElement(post[0].fields, post[0].pk, fetchedUser)
+                const help = likePostButton(post[0].fields, post[0].pk, loggedInUser)
+                postCard.querySelector(".misc-div").append(help)
+                document.querySelector('#posts-view').prepend(postCard);
+                help.addEventListener("click", () => {
+                    like(help)
+                    console.log("Done the click!")
+                })
+          })
 
     });
 
