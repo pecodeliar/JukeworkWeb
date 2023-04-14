@@ -98,9 +98,7 @@ function composePost() {
           .then(result => {
                 // Print result
                 post = JSON.parse(result)
-                console.log(formText.value);
                 formText.value = "";
-                console.log(formText.value);
 
                 const postCard = postElement(post[0].fields, post[0].pk, fetchedUser)
                 const help = likePostButton(post[0].fields, post[0].pk, loggedInUser)
