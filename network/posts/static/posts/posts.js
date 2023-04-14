@@ -77,10 +77,9 @@ function composePost() {
 
     const csrftoken = getCookie('csrftoken');
 
-    const postButton = document.createElement("input");
-    postButton.setAttribute("type", "submit");
+    const postButton = document.createElement("button");
     postButton.setAttribute("class", "float-right round-btn post-crt-btn");
-    postButton.setAttribute("value", "Create Post");
+    postButton.innerText = "Create Post";
     postButton.addEventListener("click", () => {
 
         fetch('/posts/create', {
@@ -130,10 +129,14 @@ function loadPosts() {
                 const help = likePostButton(post.fields, post.pk, loggedInUser)
                 //console.log(post.fields, post.pk, loggedInUser)
                 postCard.querySelector(".misc-div").append(help)
+                //console.log(help.childNodes)
                 //postCard.append(help)
                 parent.append(postCard);
-                //console.log(help.querySelector("span"))
-                help.addEventListener("click", () => like(help.querySelector("span")))
+                //console.log(help.querySelector("button"))
+                help.addEventListener("click", () => {
+                    like(help)
+                    console.log("Done the click!")
+                })
             })
             .catch(error => {
                 console.log(error);
@@ -152,7 +155,7 @@ function postElement(post, id, creator) {
     //console.log(post, id, creator)
 
     // Make parent
-    const card = document.createElement("div");
+    const card = document.createElement("article");
     card.setAttribute("class", "post-card");
 
 
@@ -187,10 +190,6 @@ function postElement(post, id, creator) {
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
 
-    // -- Action Section (Comment and Like) --
-    //const actions = document.createElement("div");
-    //actions.setAttribute("class", "post-actions");
-
     miscDiv.append(topDeets, postContentDiv)
 
     // Appendings
@@ -202,13 +201,10 @@ function postElement(post, id, creator) {
 
 function likePostButton(post, id, creator) {
 
-    //console.log(post, id, creator)
-
-    const actions = document.createElement("div");
-    actions.setAttribute("class", "post-actions");
-
-    const likeSpan = document.createElement("span");
-    likeSpan.setAttribute("class", "like-span");
+    const likeBtn = document.createElement("button");
+    likeBtn.setAttribute("class", "post-like-btn");
+    likeBtn.setAttribute("data-id", id);
+    likeBtn.setAttribute("data-type", "post");
     const likeIcon = document.createElement("i");
     likeIcon.setAttribute("class", "bx bxs-heart post-like-heart");
     likeIcon.setAttribute("data-id", id);
@@ -219,37 +215,45 @@ function likePostButton(post, id, creator) {
     likeCount.innerText = post.likers["length"]
     likeCount.setAttribute("data-id", id);
     likeCount.setAttribute("data-type", "post");
-    const likeBtn = document.createElement("input");
-    likeBtn.setAttribute("type", "button");
-    likeBtn.setAttribute("class", "post-like-btn");
+    const liked = post.likers.includes(loggedInUser);
+
+    // Check if user has logged in
+    if (loggedInUser === null) {
+        likeBtn.disabled = "true";
+        likeIcon.style.color = "grey";
+        likeBtn.innerText = `Likers`;
+    } else {
+        if (liked === false) {
+            likeBtn.innerText = `Like Post`;
+            likeIcon.style.color = "grey";
+        } else {
+            likeBtn.innerText = `Unlike Post`;
+            likeIcon.style.color = "red";
+        }
+    }
+
+
     likeBtn.setAttribute("data-id", id);
     likeBtn.setAttribute("data-type", "post");
-    const liked = post.likers.includes(loggedInUser);
-    if (liked == false) {
-        likeBtn.value = `Like Post`
-        likeIcon.style.color = "grey"
-    } else {
-        likeBtn.value = `Unlike Post`
-        likeIcon.style.color = "red"
-    }
-    likeSpan.setAttribute("data-id", id);
-    likeSpan.setAttribute("data-type", "post");
-    likeSpan.append(likeIcon, likeCount, likeBtn);
-    actions.append(likeSpan)
+    likeBtn.append(likeIcon, likeCount);
+    //actions.append(likeBtn)
 
-    return actions;
+    return likeBtn;
 
 }
 
-function like(span) {
+function like(button) {
 
-    //console.log(span)
+    //console.log(button)
 
     const csrftoken = getCookie('csrftoken');
 
     // Get id and like type (post or comment) from dataset
-    const id = span.dataset.id;
-    const type = span.dataset.type;
+    const id = button.dataset.id;
+    const type = button.dataset.type;
+    const elements = document.querySelectorAll(`[data-id='${id}']`)
+    const btn = elements.item(0)
+    const action = btn.innerText.split(" ")[0]
 
         fetch(`${type}/${id}`)
         .then(response => {
@@ -257,7 +261,7 @@ function like(span) {
         })
         .then(post => {
 
-            const elements = document.querySelectorAll(`[data-id='${id}']`)
+            //const elements = document.querySelectorAll(`[data-id='${id}']`)
             //console.log(elements)
             var count = parseInt(elements.item(2).textContent)
 
@@ -266,18 +270,18 @@ function like(span) {
                 headers: {'X-CSRFToken': csrftoken},
                 mode: 'same-origin',
                 body: JSON.stringify({
-                    action: elements.item(3).value.split(" ")[0]
+                    action: action
                 })
             })
             .then(() =>{
-                if (elements.item(3).value === `Like ${titleCase(type)}`) {
-                    elements.item(1).style.color = "red"
+                if (btn.childNodes[0].nodeValue === `Like ${titleCase(type)}`) {
+                    btn.childNodes[0].nodeValue = `Unlike ${titleCase(type)}`
+                    elements.item(1).style.color = "red";
                     elements.item(2).textContent = count += 1
-                    elements.item(3).value = `Unlike ${titleCase(type)}`
                 } else {
+                    btn.childNodes[0].nodeValue = `Like ${titleCase(type)}`
                     elements.item(1).style.color = "grey"
                     elements.item(2).textContent = count -= 1
-                    elements.item(3).value = `Like ${titleCase(type)}`
                 }
             })
             .catch(error => {
@@ -288,6 +292,8 @@ function like(span) {
         .catch(error => {
             console.log(error);
         });
+
+        //console.log(elements, "Like function done");
 
 }
 

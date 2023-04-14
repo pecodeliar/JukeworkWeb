@@ -47,6 +47,20 @@
 
 .post-crt-btn {
     margin-top: 10px;
+    background-color: var(--on-primary);
+    color: var(--primary);
+}
+
+.post-crt-btn:focus {
+    color: var(--on-primary);
+    background-color: var(--primary);
+    outline: var(--on-primary) solid 3px;
+}
+
+.post-crt-btn:hover {
+    color: var(--on-primary);
+    background-color: var(--primary);
+    outline: var(--on-primary) solid 1px;
 }
 
 /* ===== Post Element Cards ===== */
@@ -90,14 +104,6 @@
     color: gray;
 }
 
-.post-actions {
-    display: inline-block;
-    outline: gray solid 1px;
-    border-radius: 30px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
 .post-like-heart {
     display: inline-block;
     margin: 5px;
@@ -112,12 +118,18 @@
 .post-like-btn {
     display: inline-block;
     margin: 5px;
-    outline: none;
     border: none;
     background-color: #242222;
     color: white;
-    margin-right: 10px;
+    outline: gray solid 1px;
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.post-content-cont {
+.post-like-btn:focus {
+    outline: red solid 3px;
 }

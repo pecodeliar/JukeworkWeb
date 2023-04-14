@@ -27,7 +27,7 @@ def posts(request):
         return JsonResponse(data, safe=False)
     else:
         return JsonResponse({
-            "error": "GET required."
+            "error": "GET required for Posts views."
         }, status=400)
 
 
@@ -39,7 +39,7 @@ def genre(request, genre_code):
         return JsonResponse(data, safe=False)
     else:
         return JsonResponse({
-            "error": "GET required."
+            "error": "GET required for genre view."
         }, status=400)
 
 
@@ -173,5 +173,5 @@ def following(request):
         return JsonResponse(data, safe=False)
     else:
         return JsonResponse({
-            "error": "GET required."
+            "error": "GET required for following view."
         }, status=400)

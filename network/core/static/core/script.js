@@ -95,16 +95,17 @@ function genreDropdownMenu() {
 
     const dropdownDiv = document.createElement("div");
     dropdownDiv.setAttribute("class", "nav-dropdown");
+    dropdownDiv.setAttribute("aria-expanded", "false");
 
     // Span button that once clicked will show dropdown
-    const dropdownBtn = document.createElement("input");
-    dropdownBtn.setAttribute("type", "button");
+    const dropdownBtn = document.createElement("button");
     dropdownBtn.setAttribute("class", "drpdwn-btn");
-    dropdownBtn.value = "Filter by Genres..."
+    dropdownBtn.innerText = "Filter by Genres..."
     const dropdownIcon = document.createElement("i");
     dropdownIcon.setAttribute("class", "bx bx-chevron-down genre-arw");
     dropdownIcon.setAttribute("aria-hidden", "true");
-    dropdownDiv.append(dropdownBtn, dropdownIcon);
+    dropdownBtn.append(dropdownIcon);
+    dropdownDiv.append(dropdownBtn);
 
 
     const dropdownCnt = document.createElement("div");
@@ -146,15 +147,12 @@ function profileDropdownMenu() {
 
     const dropdownDiv = document.getElementById("user-menu");
     dropdownDiv.setAttribute("class", "pro-dropdown");
+    dropdownDiv.setAttribute("aria-expanded", "false");
 
     // Span button that once clicked will show dropdown
-    const dropdownBtn = document.createElement("input");
-    dropdownBtn.setAttribute("type", "button");
+    const dropdownBtn = document.createElement("button");
     dropdownBtn.setAttribute("class", "drpdwn-btn");
-    const dropdownIcon = document.createElement("i");
-    dropdownIcon.setAttribute("class", "bx bx-chevron-down profile-arw");
-    dropdownIcon.setAttribute("aria-hidden", "true");
-    dropdownDiv.append(dropdownBtn, dropdownIcon);
+    dropdownDiv.append(dropdownBtn);
 
 
     const dropdownCnt = document.createElement("div");
@@ -190,7 +188,11 @@ function profileDropdownMenu() {
     .then(response => response.json() )
     .then(user => {
 
-        dropdownBtn.value = user.username;
+        dropdownBtn.innerText = user.username;
+        const dropdownIcon = document.createElement("i");
+        dropdownIcon.setAttribute("class", "bx bx-chevron-down profile-arw");
+        dropdownIcon.setAttribute("aria-hidden", "true");
+        dropdownBtn.append(dropdownIcon);
 
     })
     .catch(error => {
