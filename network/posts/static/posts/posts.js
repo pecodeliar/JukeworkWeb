@@ -98,7 +98,7 @@ function composePost() {
           .then(result => {
                 // Print result
                 post = JSON.parse(result)
-                console.log(formText);
+                console.log(formText.value);
                 //formText.value = "";
 
                 const postCard = postElement(post[0].fields, post[0].pk, fetchedUser)
@@ -107,7 +107,6 @@ function composePost() {
                 document.querySelector('#posts-view').prepend(postCard);
                 help.addEventListener("click", () => {
                     like(help)
-                    console.log("Done the click!")
                 })
           })
 
