@@ -90,7 +90,6 @@ def post(request, post_id):
                 }, status=400)
         # User is likeing the content
         elif data.get("action") is not None:
-            print(data)
             if data.get("action") == "Like":
                 post.likers.add(request.user.id)
                 post.save()
@@ -100,7 +99,6 @@ def post(request, post_id):
                 post.save()
                 return HttpResponse(status=204)
         else:
-                print("something went wrong")
                 return JsonResponse({
                     "error": "Something went wrong."
                 }, status=400)
@@ -140,7 +138,6 @@ def comment(request, comment_id):
                 }, status=400)
         # User is likeing the content
         elif data.get("action") is not None:
-            print(data)
             if data.get("action") == "Like":
                 comment.likers.add(request.user.id)
                 comment.save()
@@ -150,7 +147,6 @@ def comment(request, comment_id):
                 comment.save()
                 return HttpResponse(status=204)
         else:
-                print("something went wrong")
                 return JsonResponse({
                     "error": "Something went wrong."
                 }, status=400)
@@ -166,7 +162,6 @@ def following(request):
     user = User.objects.get(pk=request.user.pk)
     # Figure out who the logged in user is following
     following = user.following.all()
-    print(following)
     posts = Post.objects.filter(creator__in=following).order_by('-creation_date')
     if request.method == "GET":
         data = serializers.serialize('json', posts)
