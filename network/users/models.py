@@ -20,8 +20,8 @@ class User(AbstractUser):
         (POP, "Pop")
     ]
     profile_picture = models.URLField(blank=True, default="https://static.vecteezy.com/system/resources/thumbnails/004/582/531/small/music-note-icon-design-symbol-music-note-sound-melody-musical-for-multimedia-free-vector.jpg")
-    following = models.ManyToManyField("self", symmetrical=False, related_name="user_following", blank=True, null=True)
-    followers = models.ManyToManyField("self", symmetrical=False, related_name="user_followers", blank=True, null=True)
+    following = models.ManyToManyField("self", symmetrical=False, related_name="user_following", blank=True)
+    followers = models.ManyToManyField("self", symmetrical=False, related_name="user_followers", blank=True)
     banner = models.URLField(blank=True, default="https://cdn.pixabay.com/photo/2014/01/15/12/44/classical-music-245590_1280.jpg")
     genre = models.CharField(
         max_length=2,

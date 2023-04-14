@@ -18,7 +18,7 @@ class NewUserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "first_name", "password1", "password2")
+        fields = ("username", "email", "first_name", "password1", "password2", "profile_picture", "banner", "genre")
         widgets = {
             'username': forms.TextInput(attrs={'placeholder': 'Enter a username'}),
             'first_name': forms.TextInput(attrs={'placeholder': 'Enter your name'})
@@ -61,34 +61,35 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
+        print("In Post fork")
 
         form = NewUserForm(request.POST)
+        print("Form variable created")
 
         if form.is_valid():
+            print("Form check")
             user = form.save()
-            username = form.cleaned_data["username"]
-            email = form.cleaned_data["email"]
-            first_name = form.cleaned_data["first_name"]
-            password = request.POST["password1"]
-            confirmation = request.POST["password2"]
-
             # Attempt to create new user
-            try:
+            """try:
                 user = User.objects.create_user(username, email, password, first_name=first_name)
                 user.save()
             except IntegrityError:
                 return render(request, "users/register.html", {
                     "message": "Username already taken."
                 })
+            else:"""
+            print("Form is actually valid")
             login(request, user)
             return HttpResponseRedirect(reverse("core:index"))
         else:
+            print("Form not valid")
             print(form.errors.as_json())
             return render(request, "users/register.html", {
                     "message": form.errors,
                     "form_fields": list(NewUserForm())
                 })
     else:
+        print("Somethin' went wrong")
         return render(request, "users/register.html", {
             "form_fields": list(NewUserForm())
         })
