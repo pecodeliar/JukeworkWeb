@@ -51,8 +51,6 @@ function composePost() {
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
 
-    // let fetchedUser = null
-
     // Get user information for PFP
     fetch(`/users/${loggedInUser}`)
     .then(response => response.json() )
@@ -117,43 +115,26 @@ function composePost() {
 
 }
 
-function loadPosts() {
+async function loadPosts() {
 
     // Select posts div
     const parent = document.querySelector('#posts-view');
 
-    fetch('/posts')
+    const response = await fetch('/posts')
     .then(response => response.json() )
     .then(json => {
         posts = JSON.parse(json)
-        posts.forEach(post => {
+        for (const index in posts) {
 
-             // Get user information
-            fetch(`/users/${post.fields.creator}`)
-            .then(response => response.json() )
-            .then(user => {
-
-
-
-                const postCard = postElement(post.fields, post.pk, user)
-                const help = likePostButton(post.fields, post.pk, loggedInUser)
-                //console.log(post.fields, post.pk, loggedInUser)
-                postCard.querySelector(".misc-div").append(help)
-                //console.log(help.childNodes)
-                //postCard.append(help)
-                parent.append(postCard);
-                //console.log(help.querySelector("button"))
-                help.addEventListener("click", () => {
-                    like(help)
-                    console.log("Done the click!")
-                })
+            const postCard = postElement(posts[index].fields, posts[index].pk)
+            const help = likePostButton(posts[index].fields, posts[index].pk, loggedInUser)
+            postCard.querySelector(".misc-div").append(help)
+            parent.append(postCard)
+            help.addEventListener("click", () => {
+                like(help)
             })
-            .catch(error => {
-                console.log(error);
-            });
 
-        })
-
+        }
     })
     .catch(error => {
         console.log(error);
@@ -161,8 +142,7 @@ function loadPosts() {
 
 }
 
-function postElement(post, id, creator) {
-    //console.log(post, id, creator)
+function postElement(post, id) {
 
     // Make parent
     const card = document.createElement("article");
@@ -173,8 +153,6 @@ function postElement(post, id, creator) {
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "post-pfp");
     const pfp = document.createElement("img");
-    pfp.alt = "";
-    pfp.src = creator.pfp_url;
     pfpDiv.append(pfp)
 
     // Everything else div
@@ -186,11 +164,24 @@ function postElement(post, id, creator) {
     topDeets.setAttribute("class", "post-top-deets");
     const fullName = document.createElement("span");
     fullName.setAttribute("class", "post-full-name");
-    fullName.innerText = `${creator.first_name} ${creator.last_name}`
     const userAndCreation = document.createElement("span");
     userAndCreation.setAttribute("class", "post-user-create");
-    userAndCreation.innerText = ` @${creator.username} • ${post.creation_date}`;
     topDeets.append(fullName, userAndCreation)
+
+    // Get user information
+    fetch(`/users/${post.creator}`)
+    .then(response => response.json() )
+    .then(user => {
+
+       pfp.alt = "";
+       pfp.src = user.pfp_url;
+       fullName.innerText = `${user.first_name}`
+       userAndCreation.innerText = ` @${user.username} • ${post.creation_date}`;
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
 
     // Post Content
     const postContentDiv = document.createElement("div");
@@ -271,8 +262,6 @@ function like(button) {
         })
         .then(post => {
 
-            //const elements = document.querySelectorAll(`[data-id='${id}']`)
-            //console.log(elements)
             var count = parseInt(elements.item(2).textContent)
 
             return fetch(`${type}/${id}`, {
