@@ -2,7 +2,7 @@
 
 .form-div {
     margin-top: 10px;
-    background-color: #242222;
+    background-color: var(--main);
     padding-right: 10px;
     padding-bottom: 60px;
     padding-top: 10px;
@@ -23,9 +23,6 @@
 .create-post-pfp img {
     height: 50px;
     width: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
 }
 
 .form-text-div {
@@ -67,7 +64,7 @@
 
 .post-card {
     margin-top: 20px;
-    background-color: #242222;
+    background-color: var(--main);
     border-radius: 10px;
     color: white;
 }
@@ -107,7 +104,7 @@
 .post-like-heart {
     display: inline-block;
     margin: 5px;
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .like-cnt {
@@ -119,7 +116,7 @@
     display: inline-block;
     margin: 5px;
     border: none;
-    background-color: #242222;
+    background-color: var(--main);
     color: white;
     outline: gray solid 1px;
     border-radius: 30px;
@@ -127,7 +124,7 @@
     margin-bottom: 15px;
     padding: 5px;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 17px;
 }
 
 .post-like-btn:focus {
@@ -154,4 +151,76 @@
 
 #load-btn:hover {
     background-color: var(--primary);
+}
+
+
+/* ===== Full Post View ===== */
+
+.back-btn {
+    outline: gray solid 1px;
+    background-color: var(--background);
+    margin-bottom: 20px;
+    color: var(--on-background);
+    vertical-align: middle;
+    display: inline-block;
+    height: 50px;
+}
+
+.back-btn i {
+    padding-right: 5px;
+    font-size: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.back-btn span {
+    vertical-align: middle;
+    padding-right: 5px;
+}
+
+.post-view-card {
+    background-color: var(--main);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.post-view-user-cont {
+    display: inline-block;
+    padding: 10px;
+}
+
+.post-view-pfp {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.post-view-pfp img {
+    height: 50px;
+    width: 50px;
+}
+
+.user-info-div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.user-info-div p{
+    margin: 0;
+}
+
+.post-view-content-text {
+    padding: 15px;
+}
+
+.post-view-timestamp-cont {
+}
+
+.post-view-time {
+    padding: 10px;
+}
+
+.full-buttons-div {
+    text-align: center;
 }

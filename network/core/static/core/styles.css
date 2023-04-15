@@ -4,6 +4,7 @@
 
     --background: #000000;
     --on-background: #e3e2e6;
+    --main: #242222;
     --primary-container: #a8c8ff;
     --on-primary-container: #003062;
     --primary: #00468a;
@@ -39,6 +40,12 @@ body {
     font-weight: 560;
 }
 
+.round-pfp img{
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
 /* ===== Keyboard User Skip Button ===== */
 
 a.skip-main {
@@ -71,7 +78,7 @@ a.skip-main:focus, a.skip-main:active {
 /* ===== Navigation Bar ===== */
 
 nav {
-    background-color: #242222;
+    background-color: var(--main);
     position: relative;
     color: var(--on-primary);
 }
@@ -154,7 +161,7 @@ nav li{
 .drpdwn-btn {
     outline: none;
     border: none;
-    background-color: #242222;
+    background-color: var(--main);
     color: var(--on-primary);
 }
 
@@ -166,7 +173,7 @@ nav li{
     padding-right: 5px;
     padding-left: 1px;
     margin-top: 20px;
-    background-color: #242222;
+    background-color: var(--main);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border-bottom-left-radius: 15px;
@@ -186,7 +193,7 @@ nav li{
     padding-right: 5px;
     padding-left: 1px;
     margin-top: 20px;
-    background-color: #242222;
+    background-color: var(--main);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border-bottom-left-radius: 15px;

@@ -15,6 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -132,7 +142,7 @@ async function loadPosts() {
     const response = await fetch('/posts')
     .then(response => response.json() )
     .then(json => {
-        allPosts = JSON.parse(json)
+        allPosts = shuffleArray(JSON.parse(json))
         postLimit = allPosts.length
     })
     .catch(error => {
@@ -193,7 +203,7 @@ function postElement(post, id) {
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
-    pfpDiv.setAttribute("class", "post-pfp");
+    pfpDiv.setAttribute("class", "round-pfp post-pfp");
     const pfp = document.createElement("img");
     pfpDiv.append(pfp)
 
@@ -238,6 +248,48 @@ function postElement(post, id) {
     // Appendings
     card.append(pfpDiv, miscDiv);
 
+    // Card Click Even to Show Full Post View
+    card.addEventListener("click", () => {
+
+        console.log(post);
+
+        const parent = document.querySelector('#post-view');
+
+        // Show the post full view and hide other posts
+        parent.style.display = "block";
+        const allPosts = document.querySelector('#posts-view');
+        allPosts.style.display = "none";
+
+        // Add a back button
+        const backButton = document.createElement("button");
+        backButton.setAttribute("class", "round-btn back-btn");
+        //backButton.innerText = "Back to All Posts";
+        const backBtnIcon = document.createElement("i");
+        backBtnIcon.setAttribute("class", "bx bx-left-arrow-alt");
+        backButton.prepend(backBtnIcon);
+        const btnText = document.createElement("span");
+        btnText.innerText = "Back to All Posts";
+        backButton.append(btnText);
+        parent.append(backButton);
+        backButton.addEventListener("click", () => {
+            allPosts.style.display = "block";
+            parent.style.display = "none";
+            parent.innerText = "";
+        })
+
+        const fullView = postView(post)
+        const buttonsDiv = fullView.querySelector(".full-buttons-div")
+
+        // Adding Like functionality
+        const likeBtn = likePostButton(post, id, loggedInUser)
+        buttonsDiv.append(likeBtn)
+        parent.append(fullView);
+        likeBtn.addEventListener("click", () => {
+            like(help)
+        })
+
+    })
+
     return card;
 
 }
@@ -264,7 +316,7 @@ function likePostButton(post, id, creator) {
     if (loggedInUser === null) {
         likeBtn.disabled = "true";
         likeIcon.style.color = "grey";
-        likeBtn.innerText = `Likers`;
+        likeBtn.innerText = `Like(s)`;
     } else {
         if (liked === false) {
             likeBtn.innerText = `Like Post`;
@@ -278,7 +330,7 @@ function likePostButton(post, id, creator) {
 
     likeBtn.setAttribute("data-id", id);
     likeBtn.setAttribute("data-type", "post");
-    likeBtn.append(likeIcon, likeCount);
+    likeBtn.prepend(likeIcon, likeCount);
     //actions.append(likeBtn)
 
     return likeBtn;
@@ -338,6 +390,74 @@ function like(button) {
 
 }
 
-function titleCase(string){
+function titleCase(string) {
     return string[0].toUpperCase() + string.slice(1).toLowerCase();
+}
+
+function postView(post) {
+
+    // Make post parent
+    const postParent = document.createElement("article");
+    postParent.setAttribute("class", "post-view-card");
+
+    // Div to hold user information
+    const postUserDiv = document.createElement("div");
+    postUserDiv.setAttribute("class", "post-view-user-cont");
+
+    // Post User Profile Picture Div
+    const pfpDiv = document.createElement("div");
+    pfpDiv.setAttribute("class", "round-pfp post-view-pfp");
+    const pfp = document.createElement("img");
+    pfpDiv.append(pfp);
+
+    // Post User Info Div
+    const postUserInfo = document.createElement("div");
+    postUserInfo.setAttribute("class", "user-info-div");
+    const fullName = document.createElement("p");
+    fullName.setAttribute("class", "user-info-full-name");
+    const username = document.createElement("p");
+    username.setAttribute("class", "user-info-username");
+    postUserInfo.append(fullName, username);
+
+    postUserDiv.append(pfpDiv, postUserInfo);
+
+    // Get user information
+    fetch(`/users/${post.creator}`)
+    .then(response => response.json() )
+    .then(user => {
+
+       pfp.alt = "";
+       pfp.src = user.pfp_url;
+       fullName.innerText = `${user.first_name}`;
+       username.innerText = `@${user.username}`;
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+    // Post Content Div
+    const postContentDiv = document.createElement("div");
+    postContentDiv.setAttribute("class", "post-view-content-cont");
+    const postContent = document.createElement("p");
+    postContent.setAttribute("class", "post-view-content-text");
+    postContent.innerText = post.content;
+    postContentDiv.append(postContent);
+
+    // Post Timestamp
+    const postTimestampDiv = document.createElement("div");
+    postTimestampDiv.setAttribute("class", "post-view-timestamp-cont");
+    const postTimestamp = document.createElement("p");
+    postTimestamp.setAttribute("class", "post-view-time");
+    postTimestamp.innerText = post.creation_date;
+    postTimestampDiv.append(postTimestamp);
+
+    // Make Buttons Div
+    const buttonsDiv = document.createElement("div");
+    buttonsDiv.setAttribute("class", "full-buttons-div");
+
+    postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
+
+    return postParent;
+
 }
