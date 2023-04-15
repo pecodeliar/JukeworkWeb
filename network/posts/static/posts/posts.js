@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#post-form').append(form);
     };
 
-    const article = document.querySelector("#electric-cars");
+    const title = document.querySelector("#posts-title");
+    title.innerText = "Home"
 
     loadPosts();
+    genreSideBarSelect();
 
 });
 
@@ -125,12 +127,14 @@ function composePost() {
 
 }
 
-async function loadPosts() {
+async function loadPosts(genre="") {
 
-    // Select posts div
+    // Select posts div and empty it
     const parent = document.querySelector("#posts-view");
+    parent.innerText = ""
     const innerParent = document.createElement("div");
     innerParent.setAttribute("id", "posts-cont");
+    innerParent.setAttribute("class", "posts-child");
     parent.append(innerParent);
 
     // https://webdesign.tutsplus.com/tutorials/how-to-implement-a-load-more-button-with-vanilla-javascript--cms-42080
@@ -139,15 +143,31 @@ async function loadPosts() {
     const postIncrease = 15;
     let currentPage = 1;
 
-    const response = await fetch('/posts')
-    .then(response => response.json() )
-    .then(json => {
-        allPosts = shuffleArray(JSON.parse(json))
-        postLimit = allPosts.length
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    if (genre === "") {
+
+        const response = await fetch('/posts')
+        .then(response => response.json() )
+        .then(json => {
+            allPosts = shuffleArray(JSON.parse(json))
+            postLimit = allPosts.length
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    } else {
+
+        const response = await fetch(`/posts/genre/${genre}`)
+        .then(response => response.json() )
+        .then(json => {
+            allPosts = shuffleArray(JSON.parse(json))
+            postLimit = allPosts.length
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    }
 
     // Load More Button
     const loadMoreDiv = document.createElement("div");
@@ -251,14 +271,21 @@ function postElement(post, id) {
     // Card Click Even to Show Full Post View
     card.addEventListener("click", () => {
 
-        console.log(post);
-
         const parent = document.querySelector('#post-view');
+        const container = parent.parentElement
+        container.classList.remove("posts-container");
 
         // Show the post full view and hide other posts
         parent.style.display = "block";
         const allPosts = document.querySelector('#posts-view');
         allPosts.style.display = "none";
+        const sideBar = document.querySelector('#side-view');
+        sideBar.style.display = "none";
+
+        // Change title and store for Later
+        const title = document.querySelector("#posts-title");
+        const titleText = title.innerText;
+        title.innerText = `${titleText} - Post`
 
         // Add a back button
         const backButton = document.createElement("button");
@@ -266,15 +293,20 @@ function postElement(post, id) {
         //backButton.innerText = "Back to All Posts";
         const backBtnIcon = document.createElement("i");
         backBtnIcon.setAttribute("class", "bx bx-left-arrow-alt");
+        backBtnIcon.setAttribute("aria-hidden", "true");
         backButton.prepend(backBtnIcon);
         const btnText = document.createElement("span");
         btnText.innerText = "Back to All Posts";
         backButton.append(btnText);
         parent.append(backButton);
+
         backButton.addEventListener("click", () => {
+            container.classList.add("posts-container");
             allPosts.style.display = "block";
+            sideBar.style.display = "block";
             parent.style.display = "none";
             parent.innerText = "";
+            title.innerText = titleText
         })
 
         const fullView = postView(post)
@@ -338,8 +370,6 @@ function likePostButton(post, id, creator) {
 }
 
 function like(button) {
-
-    //console.log(button)
 
     const csrftoken = getCookie('csrftoken');
 
@@ -459,5 +489,79 @@ function postView(post) {
     postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
 
     return postParent;
+
+}
+
+function genreSideBarSelect() {
+
+    const genres = {
+        "Jazz": "JZ",
+        "R&B / Soul": "RB",
+        "Hip-Hop": "HH",
+        "Classical": "IN",
+        "Folk / Acoustic": "FK",
+        "Indie / Alternative": "IE",
+        "Pop": "PP"
+    };
+
+    const parent = document.querySelector("#side-view");
+
+    const sidebarDiv = document.createElement("div");
+    sidebarDiv.setAttribute("id", "genre-sidebar");
+    //sidebarDiv.setAttribute("class", "posts-child");
+    parent.append(sidebarDiv);
+
+    const sidebarFS = document.createElement("fieldset");
+    //sidebarFS.setAttribute("class", "genre-sidebar");
+    sidebarDiv.append(sidebarFS);
+
+    const allPostsDiv = document.createElement("div");
+    allPostsDiv.setAttribute("class", "sb-genre-cont");
+    const allPostsInput = document.createElement("input");
+    allPostsInput.setAttribute("class", "sb-genre-item");
+    allPostsInput.setAttribute("checked" ,"");
+    allPostsInput.setAttribute("type", "radio");
+    allPostsInput.setAttribute("name", "genre");
+    allPostsInput.setAttribute("id", "all");
+    allPostsInput.setAttribute("value", "All");
+    const allPostsInputLabel = document.createElement("label");
+    allPostsInputLabel.setAttribute("for", `all`);
+    allPostsInputLabel.innerText = `All Posts`;
+    allPostsInput.addEventListener("click", () => {
+
+        const title = document.querySelector("#posts-title");
+        title.innerText = "Home"
+        loadPosts()
+
+    });
+    allPostsDiv.append(allPostsInput, allPostsInputLabel)
+    sidebarFS.append(allPostsDiv)
+
+    Object.entries(genres).forEach(genre => {
+
+        const genreDiv = document.createElement("div");
+        genreDiv.setAttribute("class", "sb-genre-cont")
+        const genreInput = document.createElement("input");
+        genreInput.setAttribute("class", "sb-genre-item");
+        genreInput.setAttribute("type", "radio");
+        genreInput.setAttribute("name", "genre");
+        genreInput.setAttribute("id", `${genre[1]}`);
+        genreInput.setAttribute("value", `${genre[1]}`);
+        const genreInputLabel = document.createElement("label");
+        genreInputLabel.setAttribute("for", `${genre[1]}`);
+        genreInputLabel.innerText = `${genre[0]}`;
+
+        genreInput.addEventListener("click", () => {
+
+            const title = document.querySelector("#posts-title");
+            title.innerText = `${genre[0]}`;
+            loadPosts(genre[1]);
+
+        });
+
+        genreDiv.append(genreInput, genreInputLabel)
+        sidebarFS.append(genreDiv)
+
+    })
 
 }

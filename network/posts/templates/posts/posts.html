@@ -7,12 +7,17 @@
 
 {% block body %}
 
-<div class="container">
+<h2 id="posts-title" class="container"></h2>
+
+<div class="container posts-container">
 
     {% if user.is_authenticated %}
         <div id="post-form" data-user="{{ user.id }}">
         </div>
     {% endif %}
+
+    <div id="side-view">
+    </div>
 
     <div id="posts-view">
     </div>

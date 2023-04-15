@@ -165,26 +165,6 @@ nav li{
     color: var(--on-primary);
 }
 
-#gnr-dropdown-cnt {
-    display: none;
-    position: absolute;
-    z-index: 1;
-    left: 160px;
-    padding-right: 5px;
-    padding-left: 1px;
-    margin-top: 20px;
-    background-color: var(--main);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    outline: var(--accent) solid 1px;
-}
-
-#gnr-dropdown-cnt a{
-     color: var(--on-primary);
-}
-
 #pro-dropdown-cnt {
     display: none;
     position: absolute;

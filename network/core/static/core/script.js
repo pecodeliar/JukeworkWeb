@@ -44,11 +44,6 @@ function baseNavbar() {
 
     // Dropdown
 
-    const gDdLi = document.createElement("li");
-    const genreDropdownDiv = genreDropdownMenu();
-    gDdLi.append(genreDropdownDiv);
-    unOrLi.append(gDdLi);
-
     // Check if user is logged in
     const check = document.getElementById("user-menu");
     if (check !== null) {
@@ -79,68 +74,6 @@ function baseNavbar() {
     }
 
     return navBar;
-}
-
-function genreDropdownMenu() {
-
-    const genres = {
-        "Jazz": "JZ",
-        "R&B / Soul": "RB",
-        "Hip-Hop": "HH",
-        "Classical": "IN",
-        "Folk / Acoustic": "FK",
-        "Indie / Alternative": "IE",
-        "Pop": "PP"
-    };
-
-    const dropdownDiv = document.createElement("div");
-    dropdownDiv.setAttribute("class", "nav-dropdown");
-    dropdownDiv.setAttribute("aria-expanded", "false");
-
-    // Span button that once clicked will show dropdown
-    const dropdownBtn = document.createElement("button");
-    dropdownBtn.setAttribute("class", "drpdwn-btn");
-    dropdownBtn.innerText = "Filter by Genres..."
-    const dropdownIcon = document.createElement("i");
-    dropdownIcon.setAttribute("class", "bx bx-chevron-down genre-arw");
-    dropdownIcon.setAttribute("aria-hidden", "true");
-    dropdownBtn.append(dropdownIcon);
-    dropdownDiv.append(dropdownBtn);
-
-
-    const dropdownCnt = document.createElement("div");
-    dropdownCnt.setAttribute("id", "gnr-dropdown-cnt");
-    dropdownDiv.append(dropdownCnt);
-
-    Object.entries(genres).forEach(genre => {
-
-        const genreLink = document.createElement("a");
-        genreLink.setAttribute("class", "nav-dropdown-item");
-        genreLink.setAttribute("href", `posts/${genre[1]}`);
-        genreLink.innerText = genre[0]
-        dropdownCnt.append(genreLink)
-
-    })
-    dropdownDiv.addEventListener("click", () => {
-        dropdownCnt.style.display = "block";
-        dropdownBtn.style.backgroundColor = "var(--accent)";
-        dropdownDiv.style.backgroundColor = "var(--accent)";
-    });
-
-    // https://www.techiedelight.com/hide-div-click-outside-javascript/
-
-    document.addEventListener('mouseup', function(e) {
-        var container = document.getElementById('gnr-dropdown-cnt');
-        if (!container.contains(e.target)) {
-            container.style.display = 'none';
-            dropdownBtn.style.backgroundColor = "";
-            dropdownDiv.style.backgroundColor = "";
-        }
-    });
-
-
-    return dropdownDiv;
-
 }
 
 function profileDropdownMenu() {
