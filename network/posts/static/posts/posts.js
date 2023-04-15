@@ -118,26 +118,68 @@ function composePost() {
 async function loadPosts() {
 
     // Select posts div
-    const parent = document.querySelector('#posts-view');
+    const parent = document.querySelector("#posts-view");
+    const innerParent = document.createElement("div");
+    innerParent.setAttribute("id", "posts-cont");
+    parent.append(innerParent);
+
+    // https://webdesign.tutsplus.com/tutorials/how-to-implement-a-load-more-button-with-vanilla-javascript--cms-42080
+    let allPosts = null
+
+    const postIncrease = 15;
+    let currentPage = 1;
 
     const response = await fetch('/posts')
     .then(response => response.json() )
     .then(json => {
-        posts = JSON.parse(json)
-        for (const index in posts) {
+        allPosts = JSON.parse(json)
+        postLimit = allPosts.length
+    })
+    .catch(error => {
+        console.log(error);
+    });
 
-            const postCard = postElement(posts[index].fields, posts[index].pk)
-            const help = likePostButton(posts[index].fields, posts[index].pk, loggedInUser)
+    // Load More Button
+    const loadMoreDiv = document.createElement("div");
+    loadMoreDiv.setAttribute("id", "load-btn-div");
+    const loadMore = document.createElement("button");
+    loadMore.setAttribute("id", "load-btn");
+    loadMore.setAttribute("class", "")
+    loadMore.innerText = "Load More Posts";
+
+    const addPosts = (pageIndex) => {
+
+        currentPage = pageIndex;
+
+        const startRange = (pageIndex - 1) * postIncrease;
+        let endRange = pageIndex * postIncrease;
+
+        if (allPosts.length < endRange) {
+            endRange = allPosts.length - 1;
+            loadMore.classList.add("disabled");
+            loadMore.setAttribute("disabled", true);
+        }
+
+        for (let i = startRange + 1; i <= endRange; i++) {
+            const postCard = postElement(allPosts[i].fields, allPosts[i].pk)
+            const help = likePostButton(allPosts[i].fields, allPosts[i].pk, loggedInUser)
             postCard.querySelector(".misc-div").append(help)
-            parent.append(postCard)
+            innerParent.append(postCard)
             help.addEventListener("click", () => {
                 like(help)
             })
 
         }
-    })
-    .catch(error => {
-        console.log(error);
+    };
+
+    addPosts(currentPage);
+
+    loadMoreDiv.append(loadMore);
+    parent.append(loadMoreDiv);
+    loadMore.addEventListener("click", () => {
+
+        addPosts(currentPage + 1);
+
     });
 
 }

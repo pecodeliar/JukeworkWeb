@@ -133,3 +133,25 @@
 .post-like-btn:focus {
     outline: red solid 3px;
 }
+
+#load-btn-div {
+    text-align: center;
+}
+
+#load-btn {
+    width: 50%;
+    margin: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--variant-hover);
+    color: var(--on-primary);
+}
+
+#load-btn:focus {
+    outline: var(--on-primary) solid 3px;
+}
+
+#load-btn:hover {
+    background-color: var(--primary);
+}

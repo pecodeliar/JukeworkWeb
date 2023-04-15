@@ -21,7 +21,7 @@ def index(request):
 
 # API routes
 def posts(request):
-    posts = Post.objects.order_by("-creation_date")
+    posts = Post.objects.order_by("creation_date")
     if request.method == "GET":
         data = serializers.serialize('json', posts)
         return JsonResponse(data, safe=False)
