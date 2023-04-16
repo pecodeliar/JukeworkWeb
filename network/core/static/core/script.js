@@ -59,7 +59,7 @@ function baseNavbar() {
 
         // Make a sign in button
         const signInLink = document.createElement("a");
-        signInLink.setAttribute("href", `/users/login`);
+        signInLink.setAttribute("href", `/auth/login`);
         signInLink.setAttribute("class", "sign-in-link");
         signInLink.value = "Sign In"
         const signInIcon = document.createElement("i");
@@ -72,7 +72,7 @@ function baseNavbar() {
 
         // Make register button
         const registerLink = document.createElement("a");
-        registerLink.setAttribute("href", `/users/register`);
+        registerLink.setAttribute("href", `/auth/register`);
         registerLink.setAttribute("class", "sign-in-link");
         registerLink.setAttribute("id", "reg-link");
         registerLink.value = "Sign In"
@@ -135,7 +135,7 @@ function profileDropdownMenu() {
 
     const logoutLink = document.createElement("a");
     logoutLink.setAttribute("class", "nav-dropdown-item");
-    logoutLink.setAttribute("href", `/users/logout`);
+    logoutLink.setAttribute("href", `/auth/logout`);
     logoutLink.innerText = "Logout";
     const logoutLinkIcon = document.createElement("i");
     logoutLinkIcon.setAttribute("class", "bx bxs-log-out");
@@ -143,7 +143,7 @@ function profileDropdownMenu() {
     dropdownCnt.append(logoutLink);
 
     // Get user information
-    fetch(`/users/api/${loggedInBarUser}`)
+    fetch(`/profiles/api/profile/${loggedInBarUser}`)
     .then(response => response.json() )
     .then(user => {
 

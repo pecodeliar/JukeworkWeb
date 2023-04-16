@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const title = document.querySelector("#posts-title");
-    title.innerText = "Home"
-
-    loadPosts();
-    genreSideBarSelect();
+    if (title !== null) {
+        loadPosts();
+        genreSideBarSelect();
+    };
 
 });
 
@@ -65,7 +65,7 @@ function composePost() {
     formRow.append(pfpDiv)
 
     // Get user information for PFP
-    fetch(`users/api/${loggedInUser}`)
+    fetch(`profiles/api/profile/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -236,8 +236,10 @@ function postElement(post, id) {
     // Profile Picture
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "round-pfp post-pfp");
+    const pfpLink = document.createElement("a");
     const pfp = document.createElement("img");
-    pfpDiv.append(pfp)
+    pfpLink.append(pfp);
+    pfpDiv.append(pfpLink);
 
     // Everything else div
     const miscDiv = document.createElement("div");
@@ -246,20 +248,29 @@ function postElement(post, id) {
     // Top of the card with user's names and post creation date
     const topDeets = document.createElement("div");
     topDeets.setAttribute("class", "post-top-deets");
-    const fullName = document.createElement("span");
+    const fullName = document.createElement("a");
     fullName.setAttribute("class", "post-full-name");
     const userAndCreation = document.createElement("span");
     userAndCreation.setAttribute("class", "post-user-create");
     topDeets.append(fullName, userAndCreation)
 
+    // Checking if this is the profiles page or index
+    let check = ""
+    const title = document.querySelector("#posts-title");
+    if (title !== null) {
+        check = "profiles/"
+    };
+
     // Get user information
-    fetch(`users/api/${post.creator}`)
+    fetch(`${check}api/profile/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
         pfp.alt = "";
         pfp.src = user.pfp_url;
         fullName.innerText = `${user.first_name}`
+        fullName.setAttribute("href", `profiles/${user.id}`);
+        pfpLink.setAttribute("href", `profiles/${user.id}`);
         const dateObj = new Date(post.creation_date);
         let dateConv = dateObj.toDateString();
         // Subtracing 4 to get the year and replace space with a comma
@@ -474,13 +485,15 @@ function postView(post) {
     // Post User Profile Picture Div
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "round-pfp post-view-pfp");
+    const pfpLink = document.createElement("a");
     const pfp = document.createElement("img");
-    pfpDiv.append(pfp);
+    pfpLink.append(pfp);
+    pfpDiv.append(pfpLink);
 
     // Post User Info Div
     const postUserInfo = document.createElement("div");
     postUserInfo.setAttribute("class", "user-info-div");
-    const fullName = document.createElement("p");
+    const fullName = document.createElement("a");
     fullName.setAttribute("class", "user-info-full-name");
     const username = document.createElement("p");
     username.setAttribute("class", "user-info-username");
@@ -489,7 +502,7 @@ function postView(post) {
     postUserDiv.append(pfpDiv, postUserInfo);
 
     // Get user information
-    fetch(`/users/api/${post.creator}`)
+    fetch(`/profiles/api/profile/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -497,6 +510,8 @@ function postView(post) {
        pfp.src = user.pfp_url;
        fullName.innerText = `${user.first_name}`;
        username.innerText = `@${user.username}`;
+       fullName.setAttribute("href", `profiles/${user.id}`);
+    pfpLink.setAttribute("href", `profiles/${user.id}`);
 
     })
     .catch(error => {
