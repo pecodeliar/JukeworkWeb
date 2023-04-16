@@ -44,7 +44,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             print("good")
-            return HttpResponseRedirect(reverse("posts:index"))
+            return HttpResponseRedirect(reverse("core:index"))
         else:
             print("failed")
             return render(request, "users/login.html", {
@@ -56,7 +56,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("posts:index"))
+    return HttpResponseRedirect(reverse("core:index"))
 
 
 def register(request):
@@ -80,7 +80,7 @@ def register(request):
             else:"""
             print("Form is actually valid")
             login(request, user)
-            return HttpResponseRedirect(reverse("posts:index"))
+            return HttpResponseRedirect(reverse("core:index"))
         else:
             print("Form not valid")
             print(form.errors.as_json())

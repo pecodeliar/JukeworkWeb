@@ -82,11 +82,10 @@ function profileDropdownMenu() {
     dropdownDiv.setAttribute("class", "pro-dropdown");
     dropdownDiv.setAttribute("aria-expanded", "false");
 
-    // Span button that once clicked will show dropdown
+    // Button that once clicked will show dropdown
     const dropdownBtn = document.createElement("button");
     dropdownBtn.setAttribute("class", "drpdwn-btn");
     dropdownDiv.append(dropdownBtn);
-
 
     const dropdownCnt = document.createElement("div");
     dropdownCnt.setAttribute("id", "pro-dropdown-cnt");
@@ -96,24 +95,36 @@ function profileDropdownMenu() {
     profileLink.setAttribute("class", "nav-dropdown-item");
     profileLink.setAttribute("href", `#`);
     profileLink.innerText = "Profile";
+    const profileLinkIcon = document.createElement("i");
+    profileLinkIcon.setAttribute("class", "bx bxs-user");
+    profileLink.prepend(profileLinkIcon);
     dropdownCnt.append(profileLink);
 
     const followingLink = document.createElement("a");
     followingLink.setAttribute("class", "nav-dropdown-item");
     followingLink.setAttribute("href", `#`);
     followingLink.innerText = "Following";
+    const followingLinkIcon = document.createElement("i");
+    followingLinkIcon.setAttribute("class", "bx bxs-group");
+    followingLink.prepend(followingLinkIcon);
     dropdownCnt.append(followingLink);
 
     const settingsLink = document.createElement("a");
     settingsLink.setAttribute("class", "nav-dropdown-item");
     settingsLink.setAttribute("href", `#`);
     settingsLink.innerText = "Settings";
+    const settingsLinkIcon = document.createElement("i");
+    settingsLinkIcon.setAttribute("class", "bx bxs-cog");
+    settingsLink.prepend(settingsLinkIcon);
     dropdownCnt.append(settingsLink);
 
     const logoutLink = document.createElement("a");
     logoutLink.setAttribute("class", "nav-dropdown-item");
     logoutLink.setAttribute("href", `/users/logout`);
     logoutLink.innerText = "Logout";
+    const logoutLinkIcon = document.createElement("i");
+    logoutLinkIcon.setAttribute("class", "bx bxs-log-out");
+    logoutLink.prepend(logoutLinkIcon);
     dropdownCnt.append(logoutLink);
 
     // Get user information
@@ -122,6 +133,17 @@ function profileDropdownMenu() {
     .then(user => {
 
         dropdownBtn.innerText = user.username;
+
+        // Profile Picture
+        const pfpDiv = document.createElement("div");
+        pfpDiv.setAttribute("class", "nav-bar-pfp round-pfp");
+        const pfp = document.createElement("img");
+        pfp.setAttribute("aria-hidden", "true");
+        pfp.alt = "";
+        pfp.src = user.pfp_url;
+        pfpDiv.append(pfp);
+        dropdownBtn.prepend(pfpDiv);
+
         const dropdownIcon = document.createElement("i");
         dropdownIcon.setAttribute("class", "bx bx-chevron-down profile-arw");
         dropdownIcon.setAttribute("aria-hidden", "true");
