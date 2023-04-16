@@ -135,7 +135,7 @@ function profileDropdownMenu() {
 
     const logoutLink = document.createElement("a");
     logoutLink.setAttribute("class", "nav-dropdown-item");
-    logoutLink.setAttribute("href", `/users/logout`);
+    logoutLink.setAttribute("href", `/auth/logout`);
     logoutLink.innerText = "Logout";
     const logoutLinkIcon = document.createElement("i");
     logoutLinkIcon.setAttribute("class", "bx bxs-log-out");
