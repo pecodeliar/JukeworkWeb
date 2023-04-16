@@ -65,7 +65,7 @@ function composePost() {
     formRow.append(pfpDiv)
 
     // Get user information for PFP
-    fetch(`/users/${loggedInUser}`)
+    fetch(`users/api/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -96,7 +96,7 @@ function composePost() {
     postButton.innerText = "Create Post";
     postButton.addEventListener("click", () => {
 
-        fetch('/posts/create', {
+        fetch('/posts/api/create', {
             method: 'POST',
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
@@ -154,7 +154,7 @@ async function loadPosts(genre="") {
 
     if (genre === "") {
 
-        const response = await fetch('/posts')
+        const response = await fetch('/posts/api/all')
         .then(response => response.json() )
         .then(json => {
             // allPosts = shuffleArray(JSON.parse(json))
@@ -167,7 +167,7 @@ async function loadPosts(genre="") {
 
     } else {
 
-        const response = await fetch(`/posts/genre/${genre}`)
+        const response = await fetch(`/posts/api/genre/${genre}`)
         .then(response => response.json() )
         .then(json => {
             //allPosts = shuffleArray(JSON.parse(json))
@@ -253,7 +253,7 @@ function postElement(post, id) {
     topDeets.append(fullName, userAndCreation)
 
     // Get user information
-    fetch(`/users/${post.creator}`)
+    fetch(`users/api/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -409,7 +409,7 @@ function like(button) {
         btnTwo = elements.item(3)
     }
 
-        fetch(`${type}/${id}`)
+        fetch(`posts/api/${type}/${id}`)
         .then(response => {
             if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
         })
@@ -417,7 +417,7 @@ function like(button) {
 
             var count = parseInt(elements.item(2).textContent)
 
-            return fetch(`${type}/${id}`, {
+            return fetch(`posts/api/${type}/${id}`, {
                 method: 'PUT',
                 headers: {'X-CSRFToken': csrftoken},
                 mode: 'same-origin',
@@ -491,7 +491,7 @@ function postView(post) {
     postUserDiv.append(pfpDiv, postUserInfo);
 
     // Get user information
-    fetch(`/users/${post.creator}`)
+    fetch(`/users/api/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 

@@ -117,7 +117,7 @@ function profileDropdownMenu() {
     dropdownCnt.append(logoutLink);
 
     // Get user information
-    fetch(`/users/${loggedInBarUser}`)
+    fetch(`/users/api/${loggedInBarUser}`)
     .then(response => response.json() )
     .then(user => {
 

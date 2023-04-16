@@ -13,12 +13,6 @@ from django.core import serializers
 
 # Create your views here.
 
-
-def index(request):
-    return render(request, "posts/posts.html")
-
-
-
 # API routes
 def posts(request):
     posts = Post.objects.order_by("-creation_date")
