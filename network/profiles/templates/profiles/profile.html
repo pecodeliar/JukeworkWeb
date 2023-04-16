@@ -3,6 +3,7 @@
 
 {% block styles %}
 <link href="{% static 'profiles/profile.css' %}?ver=1.2" rel="stylesheet">
+<link href="{% static 'posts/posts.css' %}?ver=1.2" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -27,5 +28,6 @@
 
 {% csrf_token %}
 {% block script %}
+    <script src="{% static 'posts/posts.js' %}"></script>
     <script src="{% static 'profiles/profile.js' %}"></script>
 {% endblock %}

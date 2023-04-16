@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     loadProfileInfo();
-    profileNavBar()
+    profileNavBar();
+    loadActions("posts");
 
 });
 
@@ -99,13 +100,10 @@ function loadProfileInfo() {
     .then(response => response.json() )
     .then(user => {
 
-        console.log(user)
-
         fetchedUser = user;
         bannerImg.src = user.banner_url;
         pfp.src = user.pfp_url;
         username.innerText = user.username;
-        postCount.innerHTML = `0 posts`;
         followerCount.innerHTML = `${user.followers.length} followers`;
         followingCount.innerHTML = `${user.following.length} following`;
         fullname.innerText = user.first_name;
@@ -144,6 +142,16 @@ function loadProfileInfo() {
         console.log(error);
     });*/
 
+    fetch(`api/profile/21/posts`)
+    .then(response => response.json())
+    .then(json => {
+
+        const data = JSON.parse(json)
+        postCount.innerHTML = `${data.length} posts`;
+
+
+    });
+
 }
 
 function profileNavBar() {
@@ -161,7 +169,9 @@ function profileNavBar() {
     const postsLi = document.createElement("li");
     const postsBtn = document.createElement("button");
     postsBtn.setAttribute("class", "profile-nav-btn");
+    postsBtn.setAttribute("id", "profile-nav-posts-btn");
     postsBtn.innerText = "Posts";
+    postsBtn.style.backgroundColor = "grey";
     const postsBtnIcon = document.createElement("i");
     postsBtnIcon.setAttribute("class", "bx bx-grid");
     postsBtnIcon.setAttribute("aria-hidden", "true");
@@ -172,6 +182,7 @@ function profileNavBar() {
     const commentsLi = document.createElement("li");
     const commentsBtn = document.createElement("button");
     commentsBtn.setAttribute("class", "profile-nav-btn");
+    commentsBtn.setAttribute("id", "profile-nav-comments-btn");
     commentsBtn.innerText = "Comments";
     const commentsBtnIcon = document.createElement("i");
     commentsBtnIcon.setAttribute("class", "bx bx-message-rounded");
@@ -183,6 +194,7 @@ function profileNavBar() {
     const likesLi = document.createElement("li");
     const likesBtn = document.createElement("button");
     likesBtn.setAttribute("class", "profile-nav-btn");
+    likesBtn.setAttribute("id", "profile-nav-likes-btn");
     likesBtn.innerText = "Likes";
     const likesBtnIcon = document.createElement("i");
     likesBtnIcon.setAttribute("class", "bx bx-heart");
@@ -191,5 +203,62 @@ function profileNavBar() {
     likesLi.append(likesBtn);
 
     unOrLi.append(postsLi, commentsLi, likesLi);
+
+    // Use buttons to toggle between views
+    postsBtn.addEventListener('click', () => {
+        loadActions("posts");
+        postsBtn.style.backgroundColor = "grey";
+        commentsBtn.style.backgroundColor = "";
+        likesBtn.style.backgroundColor = "";
+    });
+    commentsBtn.addEventListener('click', () => {
+        loadActions("comments");
+        postsBtn.style.backgroundColor = "";
+        commentsBtn.style.backgroundColor = "grey";
+        likesBtn.style.backgroundColor = "";
+    });
+    likesBtn.addEventListener('click', () => {
+        loadActions("likes");
+        postsBtn.style.backgroundColor = "";
+        commentsBtn.style.backgroundColor = "";
+        likesBtn.style.backgroundColor = "grey";
+    });
+
+}
+
+function loadActions(type) {
+
+    const actionsDiv = document.querySelector("#profile-actions");
+    actionsDiv.innerHTML = "";
+
+    fetch(`api/profile/21/${type}`)
+    .then(response => response.json())
+    .then(json => {
+
+        const data = JSON.parse(json)
+        if (data.length === 0) {
+
+            const notifyNone = document.createElement("p");
+            notifyNone.setAttribute("id", "profile-creations-none");
+            notifyNone.innerText = `This user has no ${type}.`;
+            actionsDiv.append(notifyNone);
+
+        } else {
+
+            data.forEach(item => {
+
+                const postCard = postElement(item.fields, item.pk)
+                const help = likePostButton(item.fields, item.pk, loggedInUser)
+                postCard.querySelector(".misc-div").append(help)
+                actionsDiv.append(postCard)
+                help.addEventListener("click", () => {
+                    like(help)
+                })
+
+            })
+
+        }
+
+    });
 
 }

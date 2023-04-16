@@ -12,6 +12,7 @@ def index(request):
 
 
 # API Routes
+
 def profile(request, id):
     user = User.objects.get(pk=id)
     if request.method == "GET":
@@ -19,4 +20,40 @@ def profile(request, id):
     else:
         return JsonResponse({
             "error": "GET required."
+        }, status=400)
+
+
+def posts(request, id):
+    user = User.objects.filter(pk=id)
+    posts = Post.objects.filter(creator__in=user).order_by("-creation_date").all()
+    if request.method == "GET":
+        data = serializers.serialize('json', posts)
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse({
+            "error": "GET required for posts."
+        }, status=400)
+
+
+def comments(request, id):
+    user = User.objects.filter(pk=id)
+    comments = Comment.objects.filter(user__in=user).order_by("-creation_date").all()
+    if request.method == "GET":
+        data = serializers.serialize('json', comments)
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse({
+            "error": "GET required for comments."
+        }, status=400)
+
+
+def likes(request, id):
+    user = User.objects.filter(pk=id)
+    likes = Post.objects.filter(likers__in=user).order_by("-creation_date").all()
+    if request.method == "GET":
+        data = serializers.serialize('json', likes)
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse({
+            "error": "GET required for likes."
         }, status=400)

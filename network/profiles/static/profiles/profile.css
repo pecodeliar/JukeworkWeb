@@ -1,6 +1,7 @@
 #banner-row {
     overflow: hidden;
     height: 200px;
+    margin-top: -20px;
 }
 
 #banner-row img{
@@ -111,4 +112,10 @@
 
 .profile-nav-btn i {
     margin-right: 10px;
+}
+
+/* ===== Profile Actions Section ===== */
+
+#profile-actions {
+    margin-top: 20px;
 }

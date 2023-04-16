@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const title = document.querySelector("#posts-title");
-    title.innerText = "Home"
-
-    loadPosts();
-    genreSideBarSelect();
+    if (title !== null) {
+        loadPosts();
+        genreSideBarSelect();
+    };
 
 });
 
@@ -252,8 +252,15 @@ function postElement(post, id) {
     userAndCreation.setAttribute("class", "post-user-create");
     topDeets.append(fullName, userAndCreation)
 
+    // Checking if this is the profiles page or index
+    let check = ""
+    const title = document.querySelector("#posts-title");
+    if (title !== null) {
+        check = "profiles/"
+    };
+
     // Get user information
-    fetch(`profiles/api/profile/${post.creator}`)
+    fetch(`${check}api/profile/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
