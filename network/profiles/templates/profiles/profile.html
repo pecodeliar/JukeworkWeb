@@ -15,6 +15,12 @@
     <div id="profile-view" {% if user.is_authenticated %}data-user="{{ user.id }}"{% endif %}>
     </div>
 
+    <nav aria-label="Profile" id="profile-nav">
+    </nav>
+
+    <div id="profile-actions">
+    </div>
+
 </div>
 
 {% endblock %}

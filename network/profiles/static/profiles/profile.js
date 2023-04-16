@@ -7,11 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
         loggedInProUser = parseInt(check)
     };
 
-    loadProfile();
+    loadProfileInfo();
+    profileNavBar()
 
 });
 
-function loadProfile() {
+function loadProfileInfo() {
 
     let fetchedUser = null;
 
@@ -142,5 +143,53 @@ function loadProfile() {
     .catch(error => {
         console.log(error);
     });*/
+
+}
+
+function profileNavBar() {
+
+    const nav = document.querySelector("#profile-nav");
+
+    const navBar = document.createElement("div");
+    navBar.setAttribute("id", "profile-nav-bar");
+    nav.append(navBar);
+
+    const unOrLi = document.createElement("ul");
+    navBar.append(unOrLi);
+
+    // Posts
+    const postsLi = document.createElement("li");
+    const postsBtn = document.createElement("button");
+    postsBtn.setAttribute("class", "profile-nav-btn");
+    postsBtn.innerText = "Posts";
+    const postsBtnIcon = document.createElement("i");
+    postsBtnIcon.setAttribute("class", "bx bx-grid");
+    postsBtnIcon.setAttribute("aria-hidden", "true");
+    postsBtn.prepend(postsBtnIcon);
+    postsLi.append(postsBtn);
+
+    // Comments
+    const commentsLi = document.createElement("li");
+    const commentsBtn = document.createElement("button");
+    commentsBtn.setAttribute("class", "profile-nav-btn");
+    commentsBtn.innerText = "Comments";
+    const commentsBtnIcon = document.createElement("i");
+    commentsBtnIcon.setAttribute("class", "bx bx-message-rounded");
+    commentsBtnIcon.setAttribute("aria-hidden", "true");
+    commentsBtn.prepend(commentsBtnIcon);
+    commentsLi.append(commentsBtn);
+
+    // Likes
+    const likesLi = document.createElement("li");
+    const likesBtn = document.createElement("button");
+    likesBtn.setAttribute("class", "profile-nav-btn");
+    likesBtn.innerText = "Likes";
+    const likesBtnIcon = document.createElement("i");
+    likesBtnIcon.setAttribute("class", "bx bx-heart");
+    likesBtnIcon.setAttribute("aria-hidden", "true");
+    likesBtn.prepend(likesBtnIcon);
+    likesLi.append(likesBtn);
+
+    unOrLi.append(postsLi, commentsLi, likesLi);
 
 }

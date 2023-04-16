@@ -83,7 +83,7 @@ a.skip-main:focus, a.skip-main:active {
 
 /* ===== Navigation Bar ===== */
 
-nav {
+#main-nav {
     background-color: var(--main);
     position: fixed;
     color: var(--on-primary);
@@ -92,12 +92,12 @@ nav {
     z-index: 5;
 }
 
-nav ul {
+#main-nav ul {
     display: flex;
     align-items: center;
 }
 
-nav li{
+#main-nav li{
     list-style: none;
 }
 
