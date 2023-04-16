@@ -1,0 +1,79 @@
+#banner-row {
+    overflow: hidden;
+    height: 200px;
+}
+
+#banner-row img{
+    width:100%;
+    position:relative;
+    top:-150%;
+}
+
+/* ===== Profile Info Section ===== */
+
+#profile-info-cont {
+    display: flex;
+    align-items: center;
+}
+
+#profile-info-pfp {
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-left: 250px;
+    margin-right: 50px;
+}
+
+#profile-info-pfp img{
+    height: 175px;
+    width: 175px;
+}
+
+.profile-info-text-cont {
+    color: white;
+}
+
+.profile-info {
+    margin: 0;
+    padding: 0;
+}
+
+#info-username {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+#profile-fllw-btn {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.profile-count {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.profile-count {
+    margin: 0;
+    padding: 0;
+    padding-top: 10px;
+    padding-right: 40px;
+}
+
+.profile-count p {
+    margin-right: 10px;
+}
+
+#third-info {
+    padding-top: 20px;
+}
+
+#profile-full {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+#profile-genre {
+    display: inline-block;
+}

@@ -7,7 +7,10 @@
 
 {% block body %}
 
-<div class="container">
+<div id="banner-row">
+</div>
+
+<div class="container" id="profile-cont">
 
     <div id="profile-view" {% if user.is_authenticated %}data-user="{{ user.id }}"{% endif %}>
     </div>
