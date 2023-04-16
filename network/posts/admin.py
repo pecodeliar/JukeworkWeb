@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Post, Comment
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("creator", "content", "post_image", "creation_date")
+    list_display = ("creator", "id", "content", "post_image", "creation_date")
     horizontal_display = ("likers",)
 
 

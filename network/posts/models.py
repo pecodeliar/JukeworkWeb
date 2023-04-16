@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-import django
+import datetime
 
 # Create your models here.
 
@@ -9,7 +9,7 @@ class Post(models.Model):
     content = models.CharField(max_length=500)
     post_image = models.URLField(blank=True, null=True)
     # Use auto_now_add so that it does not update timestamp for each save
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(default=datetime.datetime.now())
     likers = models.ManyToManyField(User, blank=True, related_name="post_likers")
 
     def __str__(self):

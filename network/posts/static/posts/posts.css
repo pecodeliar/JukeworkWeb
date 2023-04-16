@@ -4,11 +4,14 @@
 
 .posts-container {
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .posts-child {
     flex: 1; /* additionally, equal width */
-    margin: 10px;
+    margin-right: 10px;
+    margin-left: 0;
 }
 
 /* ===== Create Post Form ===== */
@@ -27,15 +30,17 @@
     border-radius: 10px;
 }
 
+#post-form {
+    order: -1;
+    flex: 1 0 100%;
+}
+
 .post-form-row {
     display: flex;
 }
 
 .create-post-pfp {
     width: 70px;
-    flex: 1;
-    margin: 10px;
-    margin-top: 20px;
 }
 
 .create-post-pfp img {
@@ -80,20 +85,24 @@
 
 /* ===== Post Element Cards ===== */
 
+#posts-cont {
+    margin-left: -10px;
+}
+
 .post-card {
-    margin-top: 20px;
+    margin-bottom: 20px;
     background-color: var(--main);
     border-radius: 10px;
     color: white;
+    display: flex;
 }
 
 .post-pfp {
-    width: 70px;
-    margin: 10px;
     margin-top: 20px;
-    margin-right: 0px;
-    display: inline-block;
+    margin-left: 20px;
+    margin-right: 0;
     vertical-align: top;
+    height: 100%;
 }
 
 .post-pfp img{
@@ -106,7 +115,8 @@
 
 .misc-div {
     margin-top: 10px;
-    display: inline-block;
+    margin-left: 25px;
+    margin-right: 25px;
 }
 
 .post-top-deets {
@@ -117,6 +127,10 @@
 
 .post-user-create {
     color: gray;
+}
+
+.post-content-cont {
+    padding-right: 5px;
 }
 
 .post-like-heart {
@@ -262,7 +276,7 @@
     width: 100%;
     outline: var(--primary) solid 1px;
     padding: 1rem;
-    margin-top: 20px;
+    margin-top: 23px;
 }
 
 .sb-genre-cont label{

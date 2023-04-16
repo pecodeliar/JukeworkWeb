@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -58,7 +59,7 @@ function composePost() {
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
-    pfpDiv.setAttribute("class", "create-post-pfp");
+    pfpDiv.setAttribute("class", "create-post-pfp round-pfp");
     const pfp = document.createElement("img");
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
@@ -132,9 +133,17 @@ async function loadPosts(genre="") {
     // Select posts div and empty it
     const parent = document.querySelector("#posts-view");
     parent.innerText = ""
+
+    // Add link for skipping to main content
+    const mainContentSkip = document.createElement("a");
+    mainContentSkip.setAttribute("id", "maincontent");
+    mainContentSkip.setAttribute("class", "main-skip");
+    mainContentSkip.innerHTML = "Hello!"
+    parent.append(mainContentSkip);
+
     const innerParent = document.createElement("div");
     innerParent.setAttribute("id", "posts-cont");
-    innerParent.setAttribute("class", "posts-child");
+    innerParent.setAttribute("class", "posts-child container");
     parent.append(innerParent);
 
     // https://webdesign.tutsplus.com/tutorials/how-to-implement-a-load-more-button-with-vanilla-javascript--cms-42080
@@ -148,7 +157,8 @@ async function loadPosts(genre="") {
         const response = await fetch('/posts')
         .then(response => response.json() )
         .then(json => {
-            allPosts = shuffleArray(JSON.parse(json))
+            // allPosts = shuffleArray(JSON.parse(json))
+            allPosts = JSON.parse(json)
             postLimit = allPosts.length
         })
         .catch(error => {
@@ -160,7 +170,8 @@ async function loadPosts(genre="") {
         const response = await fetch(`/posts/genre/${genre}`)
         .then(response => response.json() )
         .then(json => {
-            allPosts = shuffleArray(JSON.parse(json))
+            //allPosts = shuffleArray(JSON.parse(json))
+            allPosts = JSON.parse(json)
             postLimit = allPosts.length
         })
         .catch(error => {
@@ -188,6 +199,7 @@ async function loadPosts(genre="") {
             endRange = allPosts.length - 1;
             loadMore.classList.add("disabled");
             loadMore.setAttribute("disabled", true);
+            loadMore.innerText = "No More Posts"
         }
 
         for (let i = startRange + 1; i <= endRange; i++) {
@@ -245,10 +257,15 @@ function postElement(post, id) {
     .then(response => response.json() )
     .then(user => {
 
-       pfp.alt = "";
-       pfp.src = user.pfp_url;
-       fullName.innerText = `${user.first_name}`
-       userAndCreation.innerText = ` @${user.username} • ${post.creation_date}`;
+        pfp.alt = "";
+        pfp.src = user.pfp_url;
+        fullName.innerText = `${user.first_name}`
+        const dateObj = new Date(post.creation_date);
+        let dateConv = dateObj.toDateString();
+        // Subtracing 4 to get the year and replace space with a comma
+        const dateIndex = dateConv.length-5;
+        dateConv = dateConv.slice(3, dateIndex) + "," + dateConv.slice(dateIndex);
+        userAndCreation.innerText = ` @${user.username} • ${dateConv}`;
 
     })
     .catch(error => {
@@ -269,7 +286,7 @@ function postElement(post, id) {
     card.append(pfpDiv, miscDiv);
 
     // Card Click Even to Show Full Post View
-    card.addEventListener("click", () => {
+    postContentDiv.addEventListener("click", () => {
 
         const parent = document.querySelector('#post-view');
         const container = parent.parentElement
@@ -281,6 +298,8 @@ function postElement(post, id) {
         allPosts.style.display = "none";
         const sideBar = document.querySelector('#side-view');
         sideBar.style.display = "none";
+        const postForm = document.querySelector('#post-form');
+        postForm.style.display = "none";
 
         // Change title and store for Later
         const title = document.querySelector("#posts-title");
@@ -304,6 +323,7 @@ function postElement(post, id) {
             container.classList.add("posts-container");
             allPosts.style.display = "block";
             sideBar.style.display = "block";
+            postForm.style.display = "block";
             parent.style.display = "none";
             parent.innerText = "";
             title.innerText = titleText
@@ -317,7 +337,7 @@ function postElement(post, id) {
         buttonsDiv.append(likeBtn)
         parent.append(fullView);
         likeBtn.addEventListener("click", () => {
-            like(help)
+            like(likeBtn)
         })
 
     })
@@ -376,9 +396,18 @@ function like(button) {
     // Get id and like type (post or comment) from dataset
     const id = button.dataset.id;
     const type = button.dataset.type;
-    const elements = document.querySelectorAll(`[data-id='${id}']`)
-    const btn = elements.item(0)
-    const action = btn.innerText.split(" ")[0]
+    const elements = document.querySelectorAll(`[data-id='${id}']`);
+    const btnOne = elements.item(0);
+    let btnTwo = null
+    let action = "";
+    if (btnOne.innerText.includes("Unlike")) {
+        action = "Unlike";
+    } else {
+        action = "Like";
+    }
+    if (elements.item(3) !== undefined) {
+        btnTwo = elements.item(3)
+    }
 
         fetch(`${type}/${id}`)
         .then(response => {
@@ -396,15 +425,25 @@ function like(button) {
                     action: action
                 })
             })
-            .then(() =>{
-                if (btn.childNodes[0].nodeValue === `Like ${titleCase(type)}`) {
-                    btn.childNodes[0].nodeValue = `Unlike ${titleCase(type)}`
+            .then(() => {
+                if (btnOne.childNodes[2].nodeValue === `Like ${titleCase(type)}`) {
+                    btnOne.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
                     elements.item(1).style.color = "red";
-                    elements.item(2).textContent = count += 1
+                    elements.item(2).textContent = count += 1;
+                    if (btnTwo !== null) {
+                        btnTwo.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
+                        elements.item(4).style.color = "red";
+                        elements.item(5).textContent = count;
+                    }
                 } else {
-                    btn.childNodes[0].nodeValue = `Like ${titleCase(type)}`
-                    elements.item(1).style.color = "grey"
-                    elements.item(2).textContent = count -= 1
+                    btnOne.childNodes[2].nodeValue = `Like ${titleCase(type)}`;
+                    elements.item(1).style.color = "grey";
+                    elements.item(2).textContent = count -= 1;
+                    if (btnTwo !== null) {
+                        btnTwo.childNodes[2] = `Like ${titleCase(type)}`;
+                        elements.item(4).style.color = "grey";
+                        elements.item(5).textContent = count;
+                    }
                 }
             })
             .catch(error => {
@@ -479,7 +518,11 @@ function postView(post) {
     postTimestampDiv.setAttribute("class", "post-view-timestamp-cont");
     const postTimestamp = document.createElement("p");
     postTimestamp.setAttribute("class", "post-view-time");
-    postTimestamp.innerText = post.creation_date;
+    const dateObj = new Date(post.creation_date);
+    let dateConv = dateObj.toDateString();
+    // Subtracing 4 to get the year and replace space with a comma
+    const dateIndex = dateConv.length-5;
+    postTimestamp.innerText = dateConv.slice(0, 3) + " •" + dateConv.slice(3, dateIndex) + "," + dateConv.slice(dateIndex);;
     postTimestampDiv.append(postTimestamp);
 
     // Make Buttons Div

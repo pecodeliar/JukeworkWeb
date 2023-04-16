@@ -75,6 +75,10 @@ a.skip-main:focus, a.skip-main:active {
     z-index:999;
 }
 
+#maincontent {
+    color: var(--background);
+}
+
 /* ===== Navigation Bar ===== */
 
 nav {
