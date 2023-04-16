@@ -5,7 +5,7 @@ app_name = "profiles"
 
 urlpatterns = [
 
-    path("", views.index, name=""),
+    path("<int:id>", views.index, name=""),
 
     # API Routes
     path("api/profile/<int:id>", views.profile, name="profile"),

@@ -1,11 +1,6 @@
-let loggedInProUser = null
+const profileId = parseInt(document.getElementById("profile-cont").dataset.profile);
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    const check = document.getElementById("profile-view").dataset.user;
-    if (check !== undefined) {
-        loggedInProUser = parseInt(check)
-    };
 
     loadProfileInfo();
     profileNavBar();
@@ -96,7 +91,7 @@ function loadProfileInfo() {
 
 
     // Get user information
-    fetch(`api/profile/21`)
+    fetch(`api/profile/${profileId}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -110,7 +105,7 @@ function loadProfileInfo() {
         genre.innerText = user.genre;
 
         // Check if logged in user follows and is followed by user
-        if (loggedInProUser !== null && loggedInProUser in user.followers) {
+        if (loggedInUser !== null && loggedInUser in user.followers) {
             followBtn.innerHTML = "Unfollow";
         } else {
             followBtn.innerHTML = "Follow";
@@ -142,7 +137,7 @@ function loadProfileInfo() {
         console.log(error);
     });*/
 
-    fetch(`api/profile/21/posts`)
+    fetch(`api/profile/${profileId}/posts`)
     .then(response => response.json())
     .then(json => {
 
@@ -231,7 +226,7 @@ function loadActions(type) {
     const actionsDiv = document.querySelector("#profile-actions");
     actionsDiv.innerHTML = "";
 
-    fetch(`api/profile/21/${type}`)
+    fetch(`api/profile/${profileId}/${type}`)
     .then(response => response.json())
     .then(json => {
 

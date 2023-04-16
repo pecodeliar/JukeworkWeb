@@ -7,8 +7,11 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-def index(request):
-     return render(request, "profiles/profile.html")
+def index(request, id):
+     profile = User.objects.get(pk=id)
+     return render(request, "profiles/profile.html", {
+         "profile": profile
+     })
 
 
 # API Routes
