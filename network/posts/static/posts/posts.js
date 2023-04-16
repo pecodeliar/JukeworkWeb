@@ -114,7 +114,7 @@ function composePost() {
                 const postCard = postElement(post[0].fields, post[0].pk, fetchedUser)
                 const help = likePostButton(post[0].fields, post[0].pk, loggedInUser)
                 postCard.querySelector(".misc-div").append(help)
-                document.querySelector('#posts-view').prepend(postCard);
+                document.querySelector('#posts-cont').prepend(postCard);
                 help.addEventListener("click", () => {
                     like(help)
                 })
@@ -195,14 +195,14 @@ async function loadPosts(genre="") {
         const startRange = (pageIndex - 1) * postIncrease;
         let endRange = pageIndex * postIncrease;
 
-        if (allPosts.length < endRange) {
-            endRange = allPosts.length - 1;
+        if (allPosts.length - 1 < endRange) {
+            endRange = allPosts.length;
             loadMore.classList.add("disabled");
             loadMore.setAttribute("disabled", true);
             loadMore.innerText = "No More Posts"
         }
 
-        for (let i = startRange + 1; i <= endRange; i++) {
+        for (let i = startRange; i <= endRange - 1; i++) {
             const postCard = postElement(allPosts[i].fields, allPosts[i].pk)
             const help = likePostButton(allPosts[i].fields, allPosts[i].pk, loggedInUser)
             postCard.querySelector(".misc-div").append(help)
@@ -454,8 +454,6 @@ function like(button) {
         .catch(error => {
             console.log(error);
         });
-
-        //console.log(elements, "Like function done");
 
 }
 
