@@ -89,6 +89,7 @@ nav {
     color: var(--on-primary);
     top: 0;
     width: 100%;
+    z-index: 5;
 }
 
 nav ul {
@@ -232,6 +233,11 @@ nav li{
     order: 2;
 }
 
+#nav-right a{
+    display: inline-block;
+    margin-right: 5px;
+}
+
 .sign-in-link {
     display: flex;
     align-items: center;
@@ -259,4 +265,8 @@ nav li{
     display: inline-block;
     margin: 0;
     margin-left: 4px;
+}
+
+#reg-link {
+    margin-left: 10px;
 }

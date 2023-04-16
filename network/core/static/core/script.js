@@ -26,7 +26,8 @@ function baseNavbar() {
     const brand = document.createElement("div");
     brand.setAttribute("class", "nb-brand");
     const brandLink = document.createElement("a");
-    brandLink.setAttribute("href", "#");
+    brandLink.setAttribute("href", "/");
+    brandLink.setAttribute("aria-label", "Home Page");
     const brandIcon = document.createElement("i");
     brandIcon.setAttribute("class", "bx bxs-music brand-logo");
     brandIcon.setAttribute("aria-hidden", "true");
@@ -53,23 +54,37 @@ function baseNavbar() {
         pDdLi.append(profileDropdownDiv);
         unOrLi.append(pDdLi);
     } else {
-        // Make a sign in button
         const signLi = document.createElement("li");
-        //const signInDiv = document.createElement("div");
         signLi.setAttribute("id", "nav-right");
+
+        // Make a sign in button
         const signInLink = document.createElement("a");
         signInLink.setAttribute("href", `/users/login`);
         signInLink.setAttribute("class", "sign-in-link");
         signInLink.value = "Sign In"
         const signInIcon = document.createElement("i");
-        signInIcon.setAttribute("class", "bx bx-user-circle");
+        signInIcon.setAttribute("class", "bx bx-log-in-circle");
         signInIcon.setAttribute("aria-hidden", "true");
         const signInText = document.createElement("p");
         signInText.setAttribute("class", "sign-in-text");
         signInText.innerText = "Log In"
         signInLink.append(signInIcon, signInText);
-        //signInDiv.append(signInLink);
-        signLi.append(signInLink);
+
+        // Make register button
+        const registerLink = document.createElement("a");
+        registerLink.setAttribute("href", `/users/register`);
+        registerLink.setAttribute("class", "sign-in-link");
+        registerLink.setAttribute("id", "reg-link");
+        registerLink.value = "Sign In"
+        const registerIcon = document.createElement("i");
+        registerIcon.setAttribute("class", "bx bx-user-plus");
+        registerIcon.setAttribute("aria-hidden", "true");
+        const registerText = document.createElement("p");
+        registerText.setAttribute("class", "sign-in-text");
+        registerText.innerText = "Register"
+        registerLink.append(registerIcon, registerText);
+
+        signLi.append(signInLink, registerLink);
         unOrLi.append(signLi);
     }
 
