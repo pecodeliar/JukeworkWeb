@@ -1,0 +1,111 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+
+{% block title %}
+     Register
+{% endblock %}
+
+
+{% block styles %}
+    <!-- block.super will get the content of the block from the parent template -->
+    {{ block.super }}
+    <link href="{% static 'users/auth.css' %}?ver=1.2" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="container auth-container">
+
+    <h2 class="auth-title">Register</h2>
+
+    {% if message %}
+        {% for key, value in message.items %}
+        <p class="alert alert-danger" role="alert">{{ value.0 }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'users:register' %}" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col auth-item reg-item">
+                {{ form_fields.0.errors }}
+                {{ form_fields.0.label_tag }}
+                {{ form_fields.0 }}
+                {% if form_fields.0.help_text %}
+                <p class="help user-help">{{ form_fields.0.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.1.errors }}
+                {{ form_fields.1.label_tag }}
+                {{ form_fields.1 }}
+                {% if form_fields.1.help_text %}
+                <p class="help">{{ form_fields.1.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.2.errors }}
+                {{ form_fields.2.label_tag }}
+                {{ form_fields.2 }}
+                {% if form_fields.2.help_text %}
+                <p class="help">{{ form_fields.2.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.7.errors }}
+                {{ form_fields.7.label_tag }}
+                {{ form_fields.7 }}
+                {% if form_fields.7.help_text %}
+                <p class="help">{{ form_fields.7.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.5.errors }}
+                {{ form_fields.5.label_tag }}
+                {{ form_fields.5 }}
+                {% if form_fields.5.help_text %}
+                <p class="help">{{ form_fields.5.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.6.errors }}
+                {{ form_fields.6.label_tag }}
+                {{ form_fields.6 }}
+                {% if form_fields.6.help_text %}
+                <p class="help">{{ form_fields.6.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.3.errors }}
+                {{ form_fields.3.label_tag }}
+                {{ form_fields.3 }}
+                {% if form_fields.3.help_text %}
+                <p class="help">{{ form_fields.3.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            <div class="form-group col auth-item reg-item">
+                {{ form_fields.4.errors }}
+                {{ form_fields.4.label_tag }}
+                {{ form_fields.4 }}
+                {% if form_fields.4.help_text %}
+                <p class="help">{{ form_fields.4.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <input class="round-btn auth-btn float-right" type="submit" value="Register">
+    </form>
+
+    <p class="">Already have an account? <a class="" href="{% url 'users:login' %}">Log In here.</a></p>
+
+</div>
+
+
+
+{% endblock %}

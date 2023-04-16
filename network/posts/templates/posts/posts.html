@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'posts/posts.css' %}?ver=1.2" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<h2 id="posts-title" class="container"></h2>
+
+<div class="container posts-container">
+
+    {% if user.is_authenticated %}
+        <div id="post-form" data-user="{{ user.id }}">
+        </div>
+    {% endif %}
+
+    <div id="side-view">
+    </div>
+
+    <div id="posts-view">
+    </div>
+
+    <div id="post-view">
+        {% if user.is_authenticated %}
+            <div id="comment-form">
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% csrf_token %}
+{% block script %}
+    <script src="{% static 'posts/posts.js' %}"></script>
+{% endblock %}
