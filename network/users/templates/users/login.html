@@ -21,7 +21,7 @@
         <p class="alert alert-danger auth-alert" role="alert">{{ message }}</p>
     {% endif %}
 
-    <form action="{% url 'users:login' %}" method="post">
+    <form action="{% url 'auth:login' %}" method="post">
         {% csrf_token %}
         <div class="form-group auth-item">
             <label for="username">Username:</label>
@@ -33,7 +33,7 @@
         </div>
         <input class="round-btn auth-btn float-right" type="submit" value="Login">
     </form>
-    <p class="auth-rdrt-text">Don't have an account? <a class="auth-rdrt-link" href="{% url 'users:register' %}">Register here.</a></p>
+    <p class="auth-rdrt-text">Don't have an account? <a class="auth-rdrt-link" href="{% url 'auth:register' %}">Register here.</a></p>
 
 </div>
 

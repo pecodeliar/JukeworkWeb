@@ -93,14 +93,3 @@ def register(request):
         return render(request, "users/register.html", {
             "form_fields": list(NewUserForm())
         })
-
-
-# API route
-def user(request, id):
-    user = User.objects.get(pk=id)
-    if request.method == "GET":
-        return JsonResponse(user.serialize(), safe=False)
-    else:
-        return JsonResponse({
-            "error": "GET required."
-        }, status=400)

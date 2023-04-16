@@ -65,7 +65,7 @@ function composePost() {
     formRow.append(pfpDiv)
 
     // Get user information for PFP
-    fetch(`users/api/${loggedInUser}`)
+    fetch(`profiles/api/profile/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -253,7 +253,7 @@ function postElement(post, id) {
     topDeets.append(fullName, userAndCreation)
 
     // Get user information
-    fetch(`users/api/${post.creator}`)
+    fetch(`profiles/api/profile/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -489,7 +489,7 @@ function postView(post) {
     postUserDiv.append(pfpDiv, postUserInfo);
 
     // Get user information
-    fetch(`/users/api/${post.creator}`)
+    fetch(`/profiles/api/profile/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
