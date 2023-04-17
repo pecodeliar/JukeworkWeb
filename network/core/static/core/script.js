@@ -40,8 +40,9 @@ function baseNavbar() {
     unOrLi.append(brandLi);
 
 
-    //const unOrLi = document.createElement("ul");
-    //navBar.append(unOrLi);
+    // Search Bar
+    const searchLi = searchBar();
+    unOrLi.append(searchLi);
 
     // Dropdown
 
@@ -190,3 +191,42 @@ function profileDropdownMenu() {
     return dropdownDiv;
 
 }
+
+function searchBar() {
+
+    const searchLi = document.createElement("li");
+
+    const search = document.createElement("div");
+    search.setAttribute("class", "search-bar");
+
+    const searchForm = document.createElement("form");
+    searchForm.setAttribute("action", "search");
+    searchForm.setAttribute("method", "GET");
+    searchForm.setAttribute("id", "search-form");
+
+    const searchInput = document.createElement("input");
+    searchInput.setAttribute("type", "text");
+    searchInput.setAttribute("name", "q");
+    searchInput.setAttribute("id", "search-inp");
+    searchInput.setAttribute("placeholder", "Enter text to search");
+
+    const searchLabel = document.createElement("label");
+    searchLabel.setAttribute("for", "search-inp");
+    searchLabel.innerText = "Search for users or posts:";
+
+    const searchBtn = document.createElement("button");
+    searchBtn.setAttribute("type", "submit");
+    searchBtn.setAttribute("form", "search-form");
+    searchBtn.setAttribute("value", "submit");
+    searchBtn.innerText = "Search";
+
+    searchForm.append(searchLabel, searchInput, searchBtn);
+    search.append(searchForm);
+    searchLi.append(search);
+
+    searchForm.addEventListener("submit")
+
+    return searchLi;
+
+}
+
