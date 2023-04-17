@@ -216,18 +216,35 @@ function searchBar() {
     searchInput.setAttribute("id", "search-inp");
     searchInput.setAttribute("placeholder", "Enter keyword to search");
 
-    const searchLabel = document.createElement("label");
-    searchLabel.setAttribute("for", "search-inp");
-    searchLabel.innerText = "Search for users or posts:";
+    const searchFullLabel = document.createElement("label");
+    searchFullLabel.setAttribute("for", "search-inp");
+    searchFullLabel.setAttribute("id", "search-full-label");
+    searchFullLabel.innerText = "Search for users or posts:";
+
+    // Activated during media query
+    const searchShortLabel = document.createElement("label");
+    searchShortLabel.setAttribute("for", "search-inp");
+    searchShortLabel.setAttribute("id", "search-short-label");
+    searchShortLabel.innerText = "Search:";
+    searchShortLabel.display = "none";
 
     const searchBtn = document.createElement("button");
     searchBtn.setAttribute("type", "submit");
     searchBtn.setAttribute("form", "search-form");
     searchBtn.setAttribute("value", "submit");
     searchBtn.setAttribute("class", "round-btn");
-    searchBtn.innerText = "Search";
+    searchBtn.setAttribute("id", "search-btn");
 
-    searchForm.append(searchLabel, searchInput, searchBtn);
+    const searchBtnText = document.createElement("p");
+    searchBtnText.innerText = "Search";
+    searchBtn.append(searchBtnText);
+
+    const searchBtnIcon = document.createElement("i");
+    searchBtnIcon.setAttribute("class", "bx bx-search-alt");
+    searchBtnIcon.display = "none";
+    searchBtn.append(searchBtnIcon);
+
+    searchForm.append(searchFullLabel, searchShortLabel, searchInput, searchBtn);
     search.append(searchForm);
     searchLi.append(search);
 
