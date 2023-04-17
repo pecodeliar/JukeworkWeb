@@ -247,7 +247,7 @@ function searchResults() {
     const usersDiv = document.querySelector("#profiles-view");
     usersDiv.innerHTML = "";
 
-    const postsDiv = document.querySelector("#posts-view");
+    const postsDiv = document.querySelector("#search-posts-view");
     postsDiv.innerHTML = "";
 
     // Get user results
@@ -297,6 +297,8 @@ function searchResults() {
 
                 const postCard = postElement(post.fields, post.pk)
                 const help = likePostButton(post.fields, post.pk, loggedInUser)
+                postCard.classList.remove("post-card");
+                postCard.classList.add("search-post-card");
                 postCard.querySelector(".misc-div").append(help)
                 postsDiv.append(postCard)
                 help.addEventListener("click", () => {
