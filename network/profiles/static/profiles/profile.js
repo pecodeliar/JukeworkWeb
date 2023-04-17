@@ -2,6 +2,11 @@ const profileId = parseInt(document.getElementById("profile-cont").dataset.profi
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    const button = document.querySelector('#follow-btn')
+    if (button !== null) {
+        button.addEventListener('click', () => follow(button));
+    }
+
     loadProfileInfo();
     profileNavBar();
     loadActions("posts");
@@ -68,6 +73,7 @@ function loadProfileInfo() {
 
     const followerCount = document.createElement("p");
     followerCount.setAttribute("class", "profile-count");
+    followerCount.setAttribute("id", "followers-cnt");
 
     const followingCount = document.createElement("p");
     followingCount.setAttribute("class", "profile-count");
@@ -99,17 +105,21 @@ function loadProfileInfo() {
         bannerImg.src = user.banner_url;
         pfp.src = user.pfp_url;
         username.innerText = user.username;
-        followerCount.innerHTML = `${user.followers.length} followers`;
-        followingCount.innerHTML = `${user.following.length} following`;
+        followerCount.innerText = `${user.followers.length} followers`;
+        followingCount.innerText = `${user.following.length} following`;
         fullname.innerText = user.first_name;
         genre.innerText = user.genre;
 
+        console.log(user.followers)
+
         // Check if logged in user follows and is followed by user
-        if (loggedInUser !== null && loggedInUser in user.followers) {
-            followBtn.innerHTML = "Unfollow";
+        if (loggedInBarUser !== null && user.followers.includes(loggedInBarUser)) {
+            followBtn.innerText = "Unfollow";
         } else {
-            followBtn.innerHTML = "Follow";
+            followBtn.innerText = "Follow";
         }
+
+        followBtn.addEventListener('click', () => follow(followBtn));
 
     })
     .catch(error => {
@@ -142,7 +152,7 @@ function loadProfileInfo() {
     .then(json => {
 
         const data = JSON.parse(json)
-        postCount.innerHTML = `${data.length} posts`;
+        postCount.innerText = `${data.length} posts`;
 
 
     });
@@ -224,7 +234,7 @@ function profileNavBar() {
 function loadActions(type) {
 
     const actionsDiv = document.querySelector("#profile-actions");
-    actionsDiv.innerHTML = "";
+    actionsDiv.innerText = "";
 
     fetch(`api/profile/${profileId}/${type}`)
     .then(response => response.json())
@@ -243,7 +253,7 @@ function loadActions(type) {
             data.forEach(item => {
 
                 const postCard = postElement(item.fields, item.pk)
-                const help = likePostButton(item.fields, item.pk, loggedInUser)
+                const help = likePostButton(item.fields, item.pk, loggedInBarUser)
                 postCard.querySelector(".misc-div").append(help)
                 actionsDiv.append(postCard)
                 help.addEventListener("click", () => {
@@ -254,6 +264,37 @@ function loadActions(type) {
 
         }
 
+    });
+
+}
+
+function follow (button, id) {
+
+    const csrftoken = getCookie('csrftoken');
+    console.log(button.innerText)
+
+    fetch(`api/follow`, {
+        method: 'PUT',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify({
+            profile_id: profileId,
+            follower: loggedInBarUser,
+            action: button.innerText
+        })
+    }).then(() => {
+            console.log("In then statement")
+            const count = document.querySelector('#followers-cnt').innerText.split(" ");
+            var count_num = parseInt(count[0]);
+            console.log(count_num)
+
+
+            if (button.value == "Unfollow") {
+                button.innerText = "Follow";
+                document.querySelector('#followers-cnt').innerText = (count_num-=1) + " " + count[1]
+            } else {
+                button.innerText = "Unfollow";
+                document.querySelector('#followers-cnt').innerText = (count_num+=1) + " " + count[1]
+            };
     });
 
 }

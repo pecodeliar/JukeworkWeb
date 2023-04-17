@@ -12,4 +12,5 @@ urlpatterns = [
     path("api/profile/<int:id>/posts", views.posts, name="posts"),
     path("api/profile/<int:id>/comments", views.comments, name="comments"),
     path("api/profile/<int:id>/likes", views.likes, name="likes"),
+    path("api/follow", views.follow, name="follow"),
 ]

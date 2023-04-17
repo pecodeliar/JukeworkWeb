@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import json
 from django.http import HttpResponse
 from django.http import JsonResponse
 from users.models import User
@@ -59,4 +60,35 @@ def likes(request, id):
     else:
         return JsonResponse({
             "error": "GET required for likes."
+        }, status=400)
+
+
+@login_required
+def follow(request):
+
+    user = User.objects.get(pk=request.user.pk)
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("profile_id") is not None:
+            if data.get("action") == "Follow":
+                profile = User.objects.get(pk=int(data["profile_id"]))
+                user.following.add(profile)
+                profile.followers.add(user)
+                user.save()
+                profile.save()
+                return HttpResponse(status=204)
+            elif data.get("action") == "Unfollow":
+                profile = User.objects.get(pk=int(data["profile_id"]))
+                user.following.remove(profile)
+                profile.followers.remove(user)
+                user.save()
+                profile.save()
+                return HttpResponse(status=204)
+        else:
+            return JsonResponse({
+                "error": "Something went wrong."
+            }, status=400)
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
         }, status=400)
