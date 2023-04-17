@@ -5,6 +5,7 @@ from users.models import User
 from posts.models import Post
 from django.core import serializers
 from django.http import JsonResponse
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
@@ -20,8 +21,8 @@ def search(request):
 # API route
 
 def users(request, input):
-
-    users = User.objects.filter(username__contains=input)
+    users = User.objects.filter( Q(first_name__contains=input) | Q(username__contains=input))
+    print(users)
 
     if request.method == "GET":
         return JsonResponse([user.serialize() for user in users], safe=False)
@@ -32,7 +33,7 @@ def users(request, input):
 
 
 def posts(request, input):
-    
+
     posts = Post.objects.filter(content__contains=input).order_by("-creation_date").all()
 
     if request.method == "GET":
