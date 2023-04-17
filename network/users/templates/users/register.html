@@ -25,7 +25,7 @@
         {% endfor %}
     {% endif %}
 
-    <form action="{% url 'users:register' %}" method="post">
+    <form action="{% url 'auth:register' %}" method="post">
         {% csrf_token %}
         <div class="form-row">
             <div class="col auth-item reg-item">
@@ -102,7 +102,7 @@
         <input class="round-btn auth-btn float-right" type="submit" value="Register">
     </form>
 
-    <p class="">Already have an account? <a class="" href="{% url 'users:login' %}">Log In here.</a></p>
+    <p class="">Already have an account? <a class="" href="{% url 'auth:login' %}">Log In here.</a></p>
 
 </div>
 

@@ -124,6 +124,11 @@
 }
 
 .post-full-name {
+    color: white;
+}
+
+.post-full-name:hover {
+    color: white;
 }
 
 .post-user-create {
@@ -244,6 +249,14 @@
 
 .user-info-div p{
     margin: 0;
+}
+
+.user-info-full-name {
+    color: white;
+}
+
+.user-info-full-name:hover {
+    color: white;
 }
 
 .post-view-content-text {
