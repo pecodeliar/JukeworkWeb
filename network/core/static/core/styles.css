@@ -313,6 +313,10 @@ a.skip-main:focus, a.skip-main:active {
     height:100%;
 }
 
+#search-users-title {
+    padding-bottom: 2px;
+}
+
 #profiles-view {
     margin: 10px;
     flex: 1;
@@ -338,7 +342,19 @@ a.skip-main:focus, a.skip-main:active {
     color: white;
 }
 
-.user-card{
+.search-user-link:hover{
+    text-decoration: none;
+}
+
+.user-card:hover {
+    background-color: var(--main)
+}
+
+.search-user-link:focus{
+    outline: 5px solid  white;
+}
+
+.user-card {
     border-top: 0.2px solid white;
     padding: 20px;
     color: white;
@@ -377,4 +393,9 @@ a.skip-main:focus, a.skip-main:active {
     border-radius: 10px;
     color: white;
     display: flex;
+}
+
+#post-view {
+    display: none;
+    width: 100%;
 }

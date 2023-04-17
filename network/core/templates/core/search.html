@@ -15,6 +15,13 @@
     <div id="search-posts-view">
     </div>
 
+    <div id="post-view">
+        {% if user.is_authenticated %}
+            <div id="comment-form">
+            </div>
+        {% endif %}
+    </div>
+
 </div>
 
 {% endblock %}

@@ -352,28 +352,28 @@ function searchResults() {
 function userCard(user) {
 
     // Make parent
+    const userLink = document.createElement("a");
+    userLink.setAttribute("href", `profiles/${user.id}`);
+    userLink.setAttribute("class", "search-user-link");
     const card = document.createElement("div");
     card.setAttribute("class", "user-card");
+    userLink.append(card)
 
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "round-pfp search-user-pfp");
-    const pfpLink = document.createElement("a");
-    pfpLink.setAttribute("href", `profiles/${user.id}`);
     const pfp = document.createElement("img");
     pfp.src = user.pfp_url;
     pfp.alt = "";
-    pfpLink.append(pfp);
-    pfpDiv.append(pfpLink);
+    pfpDiv.append(pfp);
 
     // Top of the card with user's names and post creation date
     const infoDiv = document.createElement("div");
     infoDiv.setAttribute("class", "search-user-info");
-    const fullname = document.createElement("a");
+    const fullname = document.createElement("p");
     fullname.setAttribute("class", "post-full-name");
     fullname.innerText = user.first_name;
-    fullname.setAttribute("href", `profiles/${user.id}`);
     const username = document.createElement("p");
     username.setAttribute("class", "post-user-create");
     username.innerText = `@${user.username}`;
@@ -382,6 +382,6 @@ function userCard(user) {
 
     card.append(pfpDiv, infoDiv);
 
-    return card;
+    return userLink;
 
 }
