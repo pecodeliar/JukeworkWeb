@@ -11,32 +11,48 @@ def index(request):
      return render(request, "posts/posts.html")
 
 def search(request):
-    return render(request, "core/search.html")
+    query = request.GET.urlencode()[2:].replace("+", " ")
+    return render(request, "core/search.html", {
+        "query": query
+    })
 
 
 # API route
 
-def users(request):
-    # Getting based on URL but splitting of the 'q='
-    # Replace method for entries with more than one word
-    input = request.GET.urlencode()[2:].replace("+", " ")
+def users(request, input):
+
     users = User.objects.filter(username__contains=input)
 
     if request.method == "GET":
-        user_data = serializers.serialize('json', users)
-        return JsonResponse(user_data, safe=False)
+        return JsonResponse([user.serialize() for user in users], safe=False)
     else:
         return JsonResponse({
-            "error": "GET required for search."
+            "error": "GET required for user search."
         }, status=400)
 
 
-def posts(request):
+def posts(request, input):
+    
+    posts = Post.objects.filter(content__contains=input).order_by("-creation_date").all()
+
+    if request.method == "GET":
+        post_data = serializers.serialize('json', posts)
+        return JsonResponse(post_data, safe=False)
+    else:
+        return JsonResponse({
+            "error": "GET required for post search."
+        }, status=400)
+
+
+def test(request):
+    print(request)
     # Getting based on URL but splitting of the 'q='
     # Replace method for entries with more than one word
-    input = request.GET.urlencode()[2:].replace("+", " ")
-    print(users)
-    posts = Post.objects.filter(content__in=input).order_by("-creation_date").all()
+    return JsonResponse("No", safe=False)
+    """input = request.GET.urlencode()[2:].replace("+", " ")
+    print(input)"""
+    """print(input)
+    posts = Post.objects.filter(content__contains=input).order_by("-creation_date").all()
 
     if request.method == "GET":
         post_data = serializers.serialize('json', posts)
@@ -44,4 +60,4 @@ def posts(request):
     else:
         return JsonResponse({
             "error": "GET required for search."
-        }, status=400)
+        }, status=400)"""

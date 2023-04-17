@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const title = document.querySelector("#posts-title");
-    title.innerText = "Home"
-
-    loadPosts();
-    genreSideBarSelect();
+    if (title !== null) {
+        loadPosts();
+        genreSideBarSelect();
+    };
 
 });
 

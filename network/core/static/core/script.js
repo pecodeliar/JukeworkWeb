@@ -10,6 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const nav = document.querySelector('nav')
     nav.append(baseNavbar())
 
+    const searchCheck = document.getElementById("search-cont");
+    if (searchCheck !== null) {
+        searchResults()
+    };
+
 });
 
 function baseNavbar() {
@@ -200,7 +205,7 @@ function searchBar() {
     search.setAttribute("class", "search-bar");
 
     const searchForm = document.createElement("form");
-    searchForm.setAttribute("action", "search");
+    searchForm.setAttribute("action", "/search");
     searchForm.setAttribute("method", "GET");
     searchForm.setAttribute("id", "search-form");
 
@@ -224,9 +229,116 @@ function searchBar() {
     search.append(searchForm);
     searchLi.append(search);
 
-    searchForm.addEventListener("submit")
+    searchForm.addEventListener("submit", () => {
+        console.log("Hello")
+    })
+
 
     return searchLi;
 
 }
 
+function searchResults() {
+
+    const search = document.querySelector("#search-cont").dataset.query;
+
+    const usersDiv = document.querySelector("#profiles-view");
+    usersDiv.innerHTML = "";
+
+    const postsDiv = document.querySelector("#posts-view");
+    postsDiv.innerHTML = "";
+
+    // Get user results
+    fetch(`api/search/users/${search}`)
+    .then(response => response.json() )
+    .then(json => {
+
+        if (json.length === 0) {
+
+            const notifyNone = document.createElement("p");
+            notifyNone.setAttribute("id", "profile-creations-none");
+            notifyNone.innerText = `No users match this search.`;
+            postsDiv.append(notifyNone);
+
+        } else {
+
+            json.forEach(user => {
+
+                const card = userCard(user);
+                usersDiv.append(card);
+
+            })
+        }
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+
+    // Get post results
+    fetch(`api/search/posts/${search}`)
+    .then(response => response.json() )
+    .then(json => {
+
+        const data = JSON.parse(json)
+        if (data.length === 0) {
+
+            const notifyNone = document.createElement("p");
+            notifyNone.setAttribute("id", "profile-creations-none");
+            notifyNone.innerText = `No posts match this search.`;
+            postsDiv.append(notifyNone);
+
+        } else {
+
+            data.forEach(post => {
+
+                const postCard = postElement(post.fields, post.pk)
+                const help = likePostButton(post.fields, post.pk, loggedInUser)
+                postCard.querySelector(".misc-div").append(help)
+                postsDiv.append(postCard)
+                help.addEventListener("click", () => {
+                    like(help)
+                })
+
+            })
+        }
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+}
+
+function userCard(user) {
+
+    // Make parent
+    const card = document.createElement("div");
+    card.setAttribute("class", "post-card");
+
+
+    // Profile Picture
+    const pfpDiv = document.createElement("div");
+    pfpDiv.setAttribute("class", "round-pfp post-pfp");
+    const pfp = document.createElement("img");
+    pfp.src = user.pfp_url
+    pfp.alt = ""
+    pfpDiv.append(pfp)
+
+    // Top of the card with user's names and post creation date
+    const infoDiv = document.createElement("div");
+    infoDiv.setAttribute("class", "");
+    const fullname = document.createElement("p");
+    fullname.setAttribute("class", "post-full-name");
+    fullname.innerText = user.first_name;
+    const username = document.createElement("p");
+    username.setAttribute("class", "post-user-create");
+    username.innerText = `@${user.username}`;
+    infoDiv.append(fullname, username);
+
+    card.append(pfpDiv, infoDiv);
+
+    return card;
+
+}
