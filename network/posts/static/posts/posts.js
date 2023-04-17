@@ -254,11 +254,12 @@ function postElement(post, id) {
     userAndCreation.setAttribute("class", "post-user-create");
     topDeets.append(fullName, userAndCreation)
 
-    // Checking if this is the profiles page or index
+    // Checking if this is the profiles page, search page or index
     let check = ""
-    const title = document.querySelector("#posts-title");
-    if (title !== null) {
-        check = "profiles/"
+    const titleCheck = document.querySelector("#posts-title");
+    const searchCheck = document.querySelector("#search-cont");
+    if (titleCheck !== null || searchCheck !== null) {
+        check = "profiles/";
     };
 
     // Get user information

@@ -200,6 +200,7 @@ function profileDropdownMenu() {
 function searchBar() {
 
     const searchLi = document.createElement("li");
+    searchLi.setAttribute("id", "nav-middle");
 
     const search = document.createElement("div");
     search.setAttribute("class", "search-bar");
@@ -213,7 +214,7 @@ function searchBar() {
     searchInput.setAttribute("type", "text");
     searchInput.setAttribute("name", "q");
     searchInput.setAttribute("id", "search-inp");
-    searchInput.setAttribute("placeholder", "Enter text to search");
+    searchInput.setAttribute("placeholder", "Enter keyword to search");
 
     const searchLabel = document.createElement("label");
     searchLabel.setAttribute("for", "search-inp");
@@ -223,6 +224,7 @@ function searchBar() {
     searchBtn.setAttribute("type", "submit");
     searchBtn.setAttribute("form", "search-form");
     searchBtn.setAttribute("value", "submit");
+    searchBtn.setAttribute("class", "round-btn");
     searchBtn.innerText = "Search";
 
     searchForm.append(searchLabel, searchInput, searchBtn);

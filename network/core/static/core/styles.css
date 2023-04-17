@@ -94,7 +94,7 @@ a.skip-main:focus, a.skip-main:active {
 
 #main-nav ul {
     display: flex;
-    align-items: center;
+    justify-content: space-between;
 }
 
 #main-nav li{
@@ -166,7 +166,6 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 .pro-dropdown {
-    display: inline-block;
     margin-left: 35px;
     padding: 6px;
     border-top-left-radius: 15px;
@@ -228,7 +227,6 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 #nav-right {
-    margin-left: auto;
     margin-right: 10px;
     order: 2;
 }
@@ -268,5 +266,30 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 #reg-link {
+    margin-left: 10px;
+}
+
+/* ===== Search Bar ===== */
+
+#nav-middle {
+}
+
+#search-form label{
+    margin: 0;
+    padding: 0;
+    margin-right: 10px;
+}
+
+#search-inp {
+    background-color: var(--main);
+    border: none;
+    outline: white solid 1px;
+    border-radius: 30px;
+    height: 100%;
+    padding: 5px 20px;
+    color: white;
+}
+
+#search-form button {
     margin-left: 10px;
 }
