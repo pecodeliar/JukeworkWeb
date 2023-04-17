@@ -94,7 +94,7 @@ a.skip-main:focus, a.skip-main:active {
 
 #main-nav ul {
     display: flex;
-    align-items: center;
+    justify-content: space-between;
 }
 
 #main-nav li{
@@ -109,6 +109,10 @@ a.skip-main:focus, a.skip-main:active {
     padding-left: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.nb-brand {
+    margin-top: 3px;
 }
 
 .nb-brand a{
@@ -166,7 +170,6 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 .pro-dropdown {
-    display: inline-block;
     margin-left: 35px;
     padding: 6px;
     border-top-left-radius: 15px;
@@ -228,7 +231,6 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 #nav-right {
-    margin-left: auto;
     margin-right: 10px;
     order: 2;
 }
@@ -269,4 +271,131 @@ a.skip-main:focus, a.skip-main:active {
 
 #reg-link {
     margin-left: 10px;
+}
+
+/* ===== Search Bar ===== */
+
+#nav-middle {
+}
+
+#search-form label{
+    margin: 0;
+    padding: 0;
+    margin-right: 10px;
+}
+
+#search-inp {
+    background-color: var(--main);
+    border: none;
+    outline: white solid 1px;
+    border-radius: 30px;
+    height: 100%;
+    padding: 5px 20px;
+    color: white;
+}
+
+#search-form button {
+    margin-left: 10px;
+}
+
+#search-btn p {
+    margin: 0;
+    vertical-align: middle;
+}
+
+#search-title {
+    color: white;
+}
+
+#search-cont {
+    display: flex;
+    width:100%;
+    height:100%;
+}
+
+#search-users-title {
+    padding-bottom: 2px;
+}
+
+#profiles-view {
+    margin: 10px;
+    flex: 1;
+    width: 50%;
+    height: 100%;
+    vertical-align: middle;
+    border-bottom: 0.2px solid white;
+}
+
+.search-htwo-title {
+    color: white;
+}
+
+#search-posts-view {
+    margin: 10px;
+    flex: 1;
+    width: 50%;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#profile-creations-none {
+    color: white;
+}
+
+.search-user-link:hover{
+    text-decoration: none;
+}
+
+.user-card:hover {
+    background-color: var(--main)
+}
+
+.search-user-link:focus{
+    outline: 5px solid  white;
+}
+
+.user-card {
+    border-top: 0.2px solid white;
+    padding: 20px;
+    color: white;
+    display: flex;
+}
+
+.search-user-pfp {
+    margin-left: 20px;
+    margin-right: 0;
+    vertical-align: top;
+    height: 100%;
+}
+
+.search-user-pfp img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.search-user-info {
+    height: 100%;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+
+.search-user-info p{
+    margin: 0;
+    padding: 0;
+}
+
+.search-post-card {
+    background-color: var(--main);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+}
+
+#post-view {
+    display: none;
+    width: 100%;
 }

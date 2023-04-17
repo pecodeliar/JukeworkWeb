@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'posts/posts.css' %}?ver=1.2" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="container" id="search-cont" data-query="{{ query }}">
+
+    <div id="profiles-view">
+    </div>
+
+    <div id="search-posts-view">
+    </div>
+
+    <div id="post-view">
+        {% if user.is_authenticated %}
+            <div id="comment-form">
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'posts/posts.js' %}"></script>
+{% endblock %}

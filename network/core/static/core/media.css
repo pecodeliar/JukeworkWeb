@@ -1,0 +1,105 @@
+@media screen and (min-width: 921px) {
+
+  #search-full-label {
+    display: inline-block;;
+  }
+
+  #search-short-label {
+    display: none;
+  }
+
+
+  #search-btn p {
+    display: block;
+  }
+
+  #search-btn i {
+    display: none;
+  }
+
+}
+
+@media screen and (max-width: 920px) {
+  body {
+    background-color: purple;
+  }
+
+  #search-full-label {
+    display: none;
+  }
+
+  #search-short-label {
+    display: inline-block;
+  }
+
+  #search-inp {
+    padding: 5px 10px;
+    width: 200px;
+  }
+
+  #search-btn {
+    border-radius: 35px;
+    padding: 10px 10px;
+  }
+
+  #search-btn p {
+    display: none;
+  }
+
+  #search-btn i {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    background-color: pink;
+  }
+
+  #search-form{
+    position: relative;
+  }
+
+  #search-short-label{
+    position: absolute;
+    top: -0.4ex;
+    z-index: 1;
+    left: 2em;
+    background-color: var(--main);
+    padding: 0 5px;
+  }
+
+  #search-inp {
+    border: 1px solid gray;
+    position: relative;
+    margin: 10px;
+    width: 150px;
+  }
+
+  #search-btn {
+    margin: 0;
+  }
+
+  #nav-right {
+    margin-top: 10px;
+  }
+
+  .nb-brand {
+    margin-top: 13px;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+  #search-inp {
+    padding: 5px 10px;
+    width: 100px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    background-color: lightgreen;
+  }
+
+}

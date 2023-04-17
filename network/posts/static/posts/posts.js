@@ -254,11 +254,12 @@ function postElement(post, id) {
     userAndCreation.setAttribute("class", "post-user-create");
     topDeets.append(fullName, userAndCreation)
 
-    // Checking if this is the profiles page or index
+    // Checking if this is the profiles page, search page or index
     let check = ""
-    const title = document.querySelector("#posts-title");
-    if (title !== null) {
-        check = "profiles/"
+    const titleCheck = document.querySelector("#posts-title");
+    const searchCheck = document.querySelector("#search-cont");
+    if (titleCheck !== null || searchCheck !== null) {
+        check = "profiles/";
     };
 
     // Get user information
@@ -300,45 +301,15 @@ function postElement(post, id) {
     postContentDiv.addEventListener("click", () => {
 
         const parent = document.querySelector('#post-view');
-        const container = parent.parentElement
-        container.classList.remove("posts-container");
+        const container = parent.parentElement;
 
-        // Show the post full view and hide other posts
-        parent.style.display = "block";
-        const allPosts = document.querySelector('#posts-view');
-        allPosts.style.display = "none";
-        const sideBar = document.querySelector('#side-view');
-        sideBar.style.display = "none";
-        const postForm = document.querySelector('#post-form');
-        postForm.style.display = "none";
-
-        // Change title and store for Later
-        const title = document.querySelector("#posts-title");
-        const titleText = title.innerText;
-        title.innerText = `${titleText} - Post`
-
-        // Add a back button
-        const backButton = document.createElement("button");
-        backButton.setAttribute("class", "round-btn back-btn");
-        //backButton.innerText = "Back to All Posts";
-        const backBtnIcon = document.createElement("i");
-        backBtnIcon.setAttribute("class", "bx bx-left-arrow-alt");
-        backBtnIcon.setAttribute("aria-hidden", "true");
-        backButton.prepend(backBtnIcon);
-        const btnText = document.createElement("span");
-        btnText.innerText = "Back to All Posts";
-        backButton.append(btnText);
-        parent.append(backButton);
-
-        backButton.addEventListener("click", () => {
-            container.classList.add("posts-container");
-            allPosts.style.display = "block";
-            sideBar.style.display = "block";
-            postForm.style.display = "block";
-            parent.style.display = "none";
-            parent.innerText = "";
-            title.innerText = titleText
-        })
+        // Check what page is displayed
+        const titleCheck = document.querySelector("#posts-title");
+        if (document.querySelector("#posts-title") !== null) {
+            allPostsPostView();
+        } else if (document.querySelector("#search-cont") !== null) {
+            searchPostView();
+        };
 
         const fullView = postView(post)
         const buttonsDiv = fullView.querySelector(".full-buttons-div")
@@ -618,6 +589,95 @@ function genreSideBarSelect() {
         genreDiv.append(genreInput, genreInputLabel)
         sidebarFS.append(genreDiv)
 
+    })
+
+}
+
+function allPostsPostView () {
+
+    const parent = document.querySelector('#post-view');
+    const container = parent.parentElement
+    container.classList.remove("posts-container");
+
+    // Show the post full view and hide other posts
+    parent.style.display = "block";
+
+    const allPosts = document.querySelector('#posts-view');
+    allPosts.style.display = "none";
+    const sideBar = document.querySelector('#side-view');
+    sideBar.style.display = "none";
+    const postForm = document.querySelector('#post-form');
+    postForm.style.display = "none";
+
+    // Change title and store for Later
+    const title = document.querySelector("#posts-title");
+    const titleText = title.innerText;
+    title.innerText = `${titleText} - Post`;
+
+    // Add a back button
+    const backButton = document.createElement("button");
+    backButton.setAttribute("class", "round-btn back-btn");
+    //backButton.innerText = "Back to All Posts";
+    const backBtnIcon = document.createElement("i");
+    backBtnIcon.setAttribute("class", "bx bx-left-arrow-alt");
+    backBtnIcon.setAttribute("aria-hidden", "true");
+    backButton.prepend(backBtnIcon);
+    const btnText = document.createElement("span");
+    btnText.innerText = "Back to All Posts";
+    backButton.append(btnText);
+    parent.append(backButton);
+
+    backButton.addEventListener("click", () => {
+        container.classList.add("posts-container");
+        allPosts.style.display = "block";
+        sideBar.style.display = "block";
+        postForm.style.display = "block";
+        parent.style.display = "none";
+        parent.innerText = "";
+        title.innerText = titleText
+    })
+
+}
+
+function searchPostView() {
+
+    const parent = document.querySelector('#post-view');
+    const container = parent.parentElement
+    container.classList.remove("posts-container");
+
+    // Show the post full view and hide other posts
+    parent.style.display = "block";
+
+    const users = document.querySelector('#profiles-view');
+    users.style.display = "none";
+    const posts = document.querySelector('#search-posts-view');
+    posts.style.display = "none";
+
+    // Change title and store for Later
+    const title = document.querySelector("#search-title");
+    const titleText = title.innerText;
+    title.innerText = `${titleText} - Post`;
+
+    // Add a back button
+    const backButton = document.createElement("button");
+    backButton.setAttribute("class", "round-btn back-btn");
+    //backButton.innerText = "Back to All Posts";
+    const backBtnIcon = document.createElement("i");
+    backBtnIcon.setAttribute("class", "bx bx-left-arrow-alt");
+    backBtnIcon.setAttribute("aria-hidden", "true");
+    backButton.prepend(backBtnIcon);
+    const btnText = document.createElement("span");
+    btnText.innerText = "Back to All Posts";
+    backButton.append(btnText);
+    parent.append(backButton);
+
+    backButton.addEventListener("click", () => {
+        //container.classList.add("posts-container");
+        users.style.display = "block";
+        posts.style.display = "block";
+        parent.style.display = "none";
+        parent.innerText = "";
+        title.innerText = titleText
     })
 
 }
