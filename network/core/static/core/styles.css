@@ -301,7 +301,11 @@ a.skip-main:focus, a.skip-main:active {
 #search-btn p {
     margin: 0;
     vertical-align: middle;
-  }
+}
+
+#search-title {
+    color: white;
+}
 
 #search-cont {
     display: flex;
@@ -311,22 +315,66 @@ a.skip-main:focus, a.skip-main:active {
 
 #profiles-view {
     margin: 10px;
-    margin-top: 20px;
     flex: 1;
     width: 50%;
     height: 100%;
     vertical-align: middle;
+    border-bottom: 0.2px solid white;
+}
+
+.search-htwo-title {
+    color: white;
 }
 
 #search-posts-view {
     margin: 10px;
-    margin-top: 0;
     flex: 1;
     width: 50%;
     height: 100%;
     vertical-align: middle;
 }
 
+#profile-creations-none {
+    color: white;
+}
+
+.user-card{
+    border-top: 0.2px solid white;
+    padding: 20px;
+    color: white;
+    display: flex;
+}
+
+.search-user-pfp {
+    margin-left: 20px;
+    margin-right: 0;
+    vertical-align: top;
+    height: 100%;
+}
+
+.search-user-pfp img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.search-user-info {
+    height: 100%;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+
+.search-user-info p{
+    margin: 0;
+    padding: 0;
+}
+
 .search-post-card {
     background-color: var(--main);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
 }

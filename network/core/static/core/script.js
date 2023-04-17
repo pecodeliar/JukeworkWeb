@@ -261,11 +261,28 @@ function searchResults() {
 
     const search = document.querySelector("#search-cont").dataset.query;
 
+    const searchBody = document.querySelector("body");
+    const searchTitle = document.createElement("h1");
+    searchTitle.setAttribute("class", "container");
+    searchTitle.setAttribute("id", "search-title");
+    searchTitle.innerText = `Search results for "${search}"...`;
+    searchBody.prepend(searchTitle);
+
     const usersDiv = document.querySelector("#profiles-view");
     usersDiv.innerHTML = "";
+    const usersTitle = document.createElement("h2");
+    usersTitle.setAttribute("id", "search-users-title");
+    usersTitle.setAttribute("class", "search-htwo-title");
+    usersTitle.innerText = "Users";
+    usersDiv.append(usersTitle)
 
     const postsDiv = document.querySelector("#search-posts-view");
     postsDiv.innerHTML = "";
+    const postsTitle = document.createElement("h2");
+    postsTitle.setAttribute("id", "search-posts-title");
+    postsTitle.setAttribute("class", "search-htwo-title");
+    postsTitle.innerText = "Posts";
+    postsDiv.append(postsTitle)
 
     // Get user results
     fetch(`api/search/users/${search}`)
@@ -277,7 +294,7 @@ function searchResults() {
             const notifyNone = document.createElement("p");
             notifyNone.setAttribute("id", "profile-creations-none");
             notifyNone.innerText = `No users match this search.`;
-            postsDiv.append(notifyNone);
+            usersDiv.append(notifyNone);
 
         } else {
 
@@ -336,27 +353,32 @@ function userCard(user) {
 
     // Make parent
     const card = document.createElement("div");
-    card.setAttribute("class", "post-card");
+    card.setAttribute("class", "user-card");
 
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
-    pfpDiv.setAttribute("class", "round-pfp post-pfp");
+    pfpDiv.setAttribute("class", "round-pfp search-user-pfp");
+    const pfpLink = document.createElement("a");
+    pfpLink.setAttribute("href", `profiles/${user.id}`);
     const pfp = document.createElement("img");
-    pfp.src = user.pfp_url
-    pfp.alt = ""
-    pfpDiv.append(pfp)
+    pfp.src = user.pfp_url;
+    pfp.alt = "";
+    pfpLink.append(pfp);
+    pfpDiv.append(pfpLink);
 
     // Top of the card with user's names and post creation date
     const infoDiv = document.createElement("div");
-    infoDiv.setAttribute("class", "");
-    const fullname = document.createElement("p");
+    infoDiv.setAttribute("class", "search-user-info");
+    const fullname = document.createElement("a");
     fullname.setAttribute("class", "post-full-name");
     fullname.innerText = user.first_name;
+    fullname.setAttribute("href", `profiles/${user.id}`);
     const username = document.createElement("p");
     username.setAttribute("class", "post-user-create");
     username.innerText = `@${user.username}`;
     infoDiv.append(fullname, username);
+
 
     card.append(pfpDiv, infoDiv);
 
