@@ -271,8 +271,8 @@ function postElement(post, id) {
         pfp.alt = "";
         pfp.src = user.pfp_url;
         fullName.innerText = `${user.first_name}`
-        fullName.setAttribute("href", `profiles/${user.id}`);
-        pfpLink.setAttribute("href", `profiles/${user.id}`);
+        fullName.setAttribute("href", `/profiles/${user.id}`);
+        pfpLink.setAttribute("href", `/profiles/${user.id}`);
         const dateObj = new Date(post.creation_date);
         let dateConv = dateObj.toDateString();
         // Subtracing 4 to get the year and replace space with a comma
