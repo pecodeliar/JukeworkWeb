@@ -1,10 +1,10 @@
-let loggedInBarUser = null
+let loggedInUser = null
 
 document.addEventListener('DOMContentLoaded', function() {
 
     const check = document.getElementById("user-menu");
     if (check !== null) {
-        loggedInBarUser = parseInt(check.dataset.user)
+        loggedInUser = parseInt(check.dataset.user)
     };
 
     const nav = document.querySelector('nav')
@@ -114,7 +114,7 @@ function profileDropdownMenu() {
 
     const profileLink = document.createElement("a");
     profileLink.setAttribute("class", "nav-dropdown-item");
-    profileLink.setAttribute("href", `/profiles/${loggedInBarUser}`);
+    profileLink.setAttribute("href", `/profiles/${loggedInUser}`);
     profileLink.innerText = "Profile";
     const profileLinkIcon = document.createElement("i");
     profileLinkIcon.setAttribute("class", "bx bxs-user");
@@ -149,7 +149,7 @@ function profileDropdownMenu() {
     dropdownCnt.append(logoutLink);
 
     // Get user information
-    fetch(`/profiles/api/profile/${loggedInBarUser}`)
+    fetch(`/profiles/api/profile/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
