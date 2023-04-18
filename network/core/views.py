@@ -6,10 +6,13 @@ from posts.models import Post
 from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
-     return render(request, "posts/posts.html")
+     return render(request, "posts/posts.html", {
+         "page": "all"
+     })
 
 def search(request):
     query = request.GET.urlencode()[2:].replace("+", " ")
@@ -17,6 +20,11 @@ def search(request):
         "query": query
     })
 
+@login_required
+def following(request):
+     return render(request, "posts/posts.html", {
+        "page": "following"
+     })
 
 # API route
 

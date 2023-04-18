@@ -114,7 +114,7 @@ function profileDropdownMenu() {
 
     const profileLink = document.createElement("a");
     profileLink.setAttribute("class", "nav-dropdown-item");
-    profileLink.setAttribute("href", `#`);
+    profileLink.setAttribute("href", `/profiles/${loggedInBarUser}`);
     profileLink.innerText = "Profile";
     const profileLinkIcon = document.createElement("i");
     profileLinkIcon.setAttribute("class", "bx bxs-user");
@@ -123,7 +123,7 @@ function profileDropdownMenu() {
 
     const followingLink = document.createElement("a");
     followingLink.setAttribute("class", "nav-dropdown-item");
-    followingLink.setAttribute("href", `#`);
+    followingLink.setAttribute("href", `/following`);
     followingLink.innerText = "Following";
     const followingLinkIcon = document.createElement("i");
     followingLinkIcon.setAttribute("class", "bx bxs-group");

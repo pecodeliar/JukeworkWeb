@@ -44,7 +44,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             print("good")
-            return HttpResponseRedirect(reverse("core:index"))
+            return HttpResponseRedirect(reverse("core:following"))
         else:
             print("failed")
             return render(request, "users/login.html", {

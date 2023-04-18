@@ -10,10 +10,19 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const title = document.querySelector("#posts-title");
-    if (title !== null) {
+    if (title !== null && title.dataset.page === "all") {
         title.innerHTML = "Home"
         loadPosts();
         genreSideBarSelect();
+    } else if (title !== null && title.dataset.page === "following") {
+        title.innerHTML = "Following";
+        loadPosts("following");
+        const parent = document.querySelector(".posts-container");
+        const side = document.querySelector("#side-view");
+        parent.removeChild(side);
+        document.querySelector("#posts-view").style.width = "100%";
+        document.querySelector("#posts-cont").style.marginLeft = "0";
+        document.querySelector("#posts-cont").style.padding = "0";
     };
 
 });
@@ -129,7 +138,7 @@ function composePost() {
 
 }
 
-async function loadPosts(genre="") {
+async function loadPosts(request="") {
 
     // Select posts div and empty it
     const parent = document.querySelector("#posts-view");
@@ -142,6 +151,10 @@ async function loadPosts(genre="") {
     mainContentSkip.innerHTML = "Hello!"
     parent.append(mainContentSkip);
 
+    if (request !== "following") {
+
+    }
+
     const innerParent = document.createElement("div");
     innerParent.setAttribute("id", "posts-cont");
     innerParent.setAttribute("class", "posts-child container");
@@ -153,7 +166,7 @@ async function loadPosts(genre="") {
     const postIncrease = 15;
     let currentPage = 1;
 
-    if (genre === "") {
+    if (request === "") {
 
         const response = await fetch('/posts/api/all')
         .then(response => response.json() )
@@ -166,9 +179,22 @@ async function loadPosts(genre="") {
             console.log(error);
         });
 
+    } else if (request === "following") {
+
+        const response = await fetch(`/posts/api/following`)
+        .then(response => response.json() )
+        .then(json => {
+            //allPosts = shuffleArray(JSON.parse(json))
+            allPosts = JSON.parse(json)
+            postLimit = allPosts.length
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
     } else {
 
-        const response = await fetch(`/posts/api/genre/${genre}`)
+        const response = await fetch(`/posts/api/genre/${request}`)
         .then(response => response.json() )
         .then(json => {
             //allPosts = shuffleArray(JSON.parse(json))
@@ -605,8 +631,11 @@ function allPostsPostView () {
 
     const allPosts = document.querySelector('#posts-view');
     allPosts.style.display = "none";
+
     const sideBar = document.querySelector('#side-view');
-    sideBar.style.display = "none";
+    if (sideBar !== null) {
+        sideBar.style.display = "none";
+    };
 
     const postForm = document.querySelector('#post-form')
     if (postForm !== null) {
@@ -634,7 +663,9 @@ function allPostsPostView () {
     backButton.addEventListener("click", () => {
         container.classList.add("posts-container");
         allPosts.style.display = "block";
-        sideBar.style.display = "block";
+        if (sideBar !== null) {
+            sideBar.style.display = "block";
+        };
         if (postForm !== null) {
             postForm.style.display = "block";
         };

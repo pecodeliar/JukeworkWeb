@@ -7,6 +7,7 @@ urlpatterns = [
 
    path("", views.index, name="index"),
    path("search", views.search, name="search"),
+   path("following", views.following, name="following"),
 
    # API Routes
    path("api/search/posts/<str:input>", views.posts, name="posts"),
