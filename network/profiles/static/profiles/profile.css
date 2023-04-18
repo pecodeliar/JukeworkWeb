@@ -52,6 +52,17 @@
     vertical-align: middle;
 }
 
+#follows-tag {
+    display: inline-block;
+    vertical-align: middle;
+    background-color: var(--main);
+    margin: 0;
+    padding: 2px;
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .profile-count {
     display: inline-block;
     margin-right: 10px;

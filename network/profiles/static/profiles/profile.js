@@ -110,8 +110,6 @@ function loadProfileInfo() {
         fullname.innerText = user.first_name;
         genre.innerText = user.genre;
 
-        console.log(user.followers)
-
         // Check if logged in user follows and is followed by user
         if (loggedInBarUser !== null && user.followers.includes(loggedInBarUser)) {
             followBtn.innerText = "Unfollow";
@@ -120,6 +118,16 @@ function loadProfileInfo() {
         }
 
         followBtn.addEventListener('click', () => follow(followBtn));
+
+        // Check if profile user follows logged in user
+        if (user.following.includes(loggedInBarUser)) {
+            // Tag for if the profile visiting follows logged in user
+            const followsTag = document.createElement("p");
+            followsTag.setAttribute("id", "follows-tag");
+            followsTag.setAttribute("class", "tag");
+            followsTag.innerText = "Follows You";
+            firstTextDiv.append(followsTag);
+        }
 
     })
     .catch(error => {
