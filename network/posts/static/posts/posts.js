@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const title = document.querySelector("#posts-title");
     if (title !== null) {
+        title.innerHTML = "Home"
         loadPosts();
         genreSideBarSelect();
     };
@@ -606,8 +607,11 @@ function allPostsPostView () {
     allPosts.style.display = "none";
     const sideBar = document.querySelector('#side-view');
     sideBar.style.display = "none";
-    const postForm = document.querySelector('#post-form');
-    postForm.style.display = "none";
+
+    const postForm = document.querySelector('#post-form')
+    if (postForm !== null) {
+        postForm.style.display = "none";
+    };
 
     // Change title and store for Later
     const title = document.querySelector("#posts-title");
@@ -631,10 +635,12 @@ function allPostsPostView () {
         container.classList.add("posts-container");
         allPosts.style.display = "block";
         sideBar.style.display = "block";
-        postForm.style.display = "block";
+        if (postForm !== null) {
+            postForm.style.display = "block";
+        };
         parent.style.display = "none";
         parent.innerText = "";
-        title.innerText = titleText
+        title.innerText = titleText;
     })
 
 }
