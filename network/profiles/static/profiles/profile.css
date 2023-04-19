@@ -94,6 +94,10 @@
 
 /* ===== Profile Nav Bar ===== */
 
+#profile-nav {
+    width: 100%;
+}
+
 #profile-nav-bar {
     align-items: center;
     width: 100%;
@@ -129,4 +133,13 @@
 
 #profile-actions {
     margin-top: 20px;
+}
+
+.profile-post-form {
+    margin-bottom: 20px;
+}
+
+#post-view {
+    display: none;
+    width: 100%;
 }

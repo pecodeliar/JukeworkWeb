@@ -2,6 +2,11 @@ const profileId = parseInt(document.getElementById("profile-cont").dataset.profi
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    const check = document.getElementById("user-menu");
+    if (check !== null) {
+        loggedInUser = parseInt(check.dataset.user);
+    };
+
     const button = document.querySelector('#follow-btn')
     if (button !== null) {
         button.addEventListener('click', () => follow(button));
@@ -111,7 +116,7 @@ function loadProfileInfo() {
         genre.innerText = user.genre;
 
         // Check if logged in user follows and is followed by user
-        if (loggedInBarUser !== null && user.followers.includes(loggedInBarUser)) {
+        if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
             followBtn.innerText = "Unfollow";
         } else {
             followBtn.innerText = "Follow";
@@ -120,7 +125,7 @@ function loadProfileInfo() {
         followBtn.addEventListener('click', () => follow(followBtn));
 
         // Check if profile user follows logged in user
-        if (user.following.includes(loggedInBarUser)) {
+        if (user.following.includes(loggedInUser)) {
             // Tag for if the profile visiting follows logged in user
             const followsTag = document.createElement("p");
             followsTag.setAttribute("id", "follows-tag");
@@ -134,34 +139,12 @@ function loadProfileInfo() {
         console.log(error);
     });
 
-    // Check if profile follows logged in user
-    /*fetch(`api/profile/${loggedInProUser}`)
-    .then(response => response.json() )
-    .then(user => {
-
-        bannerImg.src = user.banner_url;
-        pfp.src = user.pfp_url;
-        username.innerText = user.username;
-
-        // Check if logged in user follows and is followed by user
-        if (loggedInProUser in user.followers) {
-            followBtn.innerHTML = "Unfollow";
-        } else {
-            followBtn.innerHTML = "Follow";
-        }
-
-    })
-    .catch(error => {
-        console.log(error);
-    });*/
-
     fetch(`api/profile/${profileId}/posts`)
     .then(response => response.json())
     .then(json => {
 
         const data = JSON.parse(json)
         postCount.innerText = `${data.length} posts`;
-
 
     });
 
@@ -244,6 +227,12 @@ function loadActions(type) {
     const actionsDiv = document.querySelector("#profile-actions");
     actionsDiv.innerText = "";
 
+    if (loggedInUser === profileId && type === "posts") {
+        const postForm = composePost();
+        postForm.classList.add("profile-post-form");
+        actionsDiv.append(postForm);
+    }
+
     fetch(`api/profile/${profileId}/${type}`)
     .then(response => response.json())
     .then(json => {
@@ -260,17 +249,12 @@ function loadActions(type) {
 
             data.forEach(item => {
 
-                const postCard = postElement(item.fields, item.pk)
-                const help = likePostButton(item.fields, item.pk, loggedInBarUser)
-                postCard.querySelector(".misc-div").append(help)
-                actionsDiv.append(postCard)
-                help.addEventListener("click", () => {
-                    like(help)
-                })
+                const postCard = completePostCard(item);
+                actionsDiv.append(postCard);
 
-            })
+            });
 
-        }
+        };
 
     });
 
@@ -286,7 +270,7 @@ function follow (button, id) {
         headers: {'X-CSRFToken': csrftoken},
         body: JSON.stringify({
             profile_id: profileId,
-            follower: loggedInBarUser,
+            follower: loggedInUser,
             action: button.innerText
         })
     }).then(() => {
@@ -304,5 +288,30 @@ function follow (button, id) {
                 document.querySelector('#followers-cnt').innerText = (count_num+=1) + " " + count[1]
             };
     });
+
+}
+
+function profilePostView() {
+
+    const parent = document.querySelector('#post-view');
+
+    // Show the post full view and hide other posts
+    parent.style.display = "block";
+
+    const info = document.querySelector('#profile-view');
+    info.style.display = "none";
+    const nav = document.querySelector('#profile-nav');
+    nav.style.display = "none";
+    const action = document.querySelector('#profile-actions');
+    action.style.display = "none";
+
+    // Change title and store for Later
+    const user = document.querySelector("#info-username");
+    //const titleText = title.innerText;
+    //title.innerText = `Profile - Post`;
+
+    // Add a back button
+    const backBtn = backButton("profile", user.innerText);
+    parent.append(backBtn);
 
 }

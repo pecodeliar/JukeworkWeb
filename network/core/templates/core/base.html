@@ -9,7 +9,6 @@
         <link href="{% static 'core/css/media.css' %}?ver=1.2" rel="stylesheet">
         {% block styles %}
         {% endblock %}
-        <script defer src="{% static 'core/javascript/script.js' %}"></script>
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     </head>
     <header>
@@ -25,7 +24,7 @@
         {% block body %}
         {% endblock %}
     </body>
-
+    <script defer src="{% static 'core/javascript/script.js' %}"></script>
 {% block script %}
 {% endblock %}
 </html>

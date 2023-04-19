@@ -18,8 +18,16 @@ function composePost() {
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
 
+    // Checking if this is the profiles page, search page or index
+    let check = ""
+    const titleCheck = document.querySelector("#posts-title");
+    const searchCheck = document.querySelector("#search-cont");
+    if (titleCheck !== null || searchCheck !== null) {
+        check = "profiles/";
+    };
+
     // Get user information for PFP
-    fetch(`profiles/api/profile/${loggedInUser}`)
+    fetch(`${check}api/profile/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -66,7 +74,15 @@ function composePost() {
                 formText.value = "";
 
                 const postCard = completePostCard(post[0])
-                document.querySelector('#posts-cont').prepend(postCard);
+
+                const allCont = document.querySelector('#posts-cont');
+                const profileCont = document.querySelector('.profile-post-form');
+                if (allCont !== null) {
+                    allCont.prepend(postCard);
+                } else if (profileCont !== null) {
+                    profileCont.after(postCard);
+                }
+
           })
 
     });

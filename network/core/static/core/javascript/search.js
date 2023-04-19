@@ -121,3 +121,28 @@ function userCard(user) {
     return userLink;
 
 }
+
+function searchPostView() {
+
+    const parent = document.querySelector('#post-view');
+    const container = parent.parentElement
+    container.classList.remove("posts-container");
+
+    // Show the post full view and hide other posts
+    parent.style.display = "block";
+
+    const users = document.querySelector('#profiles-view');
+    users.style.display = "none";
+    const posts = document.querySelector('#search-posts-view');
+    posts.style.display = "none";
+
+    // Change title and store for Later
+    const title = document.querySelector("#search-title");
+    const titleText = title.innerText;
+    title.innerText = `${titleText} - Post`;
+
+    // Add a back button
+    const backBtn = backButton("search", titleText);
+    parent.append(backBtn);
+
+}

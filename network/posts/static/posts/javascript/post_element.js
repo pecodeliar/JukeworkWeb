@@ -39,13 +39,18 @@ function backButton(page, pageTitle) {
             document.querySelector("#search-title").innerText = pageTitle;
         }
 
-        document.querySelector('#post-view').style.display = "none";
-        document.querySelector('#post-view').innerText = "";
-
         // For Profile Page
+
+        if (page === "profile") {
+            document.querySelector('#profile-view').style.display = "block";
+            document.querySelector('#profile-nav').style.display = "block";
+            document.querySelector("#profile-actions").style.display = "block";
+        }
 
         // For Following Page
 
+        document.querySelector('#post-view').style.display = "none";
+        document.querySelector('#post-view').innerText = "";
 
 
     });
@@ -149,6 +154,8 @@ function postElement(post, id) {
             allPostsPostView();
         } else if (document.querySelector("#search-cont") !== null) {
             searchPostView();
+        } else if (document.querySelector("#banner-row") !== null) {
+            profilePostView();
         };
 
         const fullView = fullPostView(post)
@@ -231,7 +238,7 @@ function likeAction(button) {
         btnTwo = elements.item(3)
     }
 
-    fetch(`posts/api/${type}/${id}`)
+    fetch(`/posts/api/${type}/${id}`)
     .then(response => {
         if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
     })
@@ -239,7 +246,7 @@ function likeAction(button) {
 
         var count = parseInt(elements.item(2).textContent)
 
-        return fetch(`posts/api/${type}/${id}`, {
+        return fetch(`/posts/api/${type}/${id}`, {
             method: 'PUT',
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
@@ -276,5 +283,81 @@ function likeAction(button) {
     .catch(error => {
             console.log(error);
     });
+
+}
+
+function fullPostView(post) {
+
+    // Make post parent
+    const postParent = document.createElement("article");
+    postParent.setAttribute("class", "post-view-card");
+
+    // Div to hold user information
+    const postUserDiv = document.createElement("div");
+    postUserDiv.setAttribute("class", "post-view-user-cont");
+
+    // Post User Profile Picture Div
+    const pfpDiv = document.createElement("div");
+    pfpDiv.setAttribute("class", "round-pfp post-view-pfp");
+    const pfpLink = document.createElement("a");
+    const pfp = document.createElement("img");
+    pfpLink.append(pfp);
+    pfpDiv.append(pfpLink);
+
+    // Post User Info Div
+    const postUserInfo = document.createElement("div");
+    postUserInfo.setAttribute("class", "user-info-div");
+    const fullName = document.createElement("a");
+    fullName.setAttribute("class", "user-info-full-name");
+    const username = document.createElement("p");
+    username.setAttribute("class", "user-info-username");
+    postUserInfo.append(fullName, username);
+
+    postUserDiv.append(pfpDiv, postUserInfo);
+
+    // Get user information
+    fetch(`/profiles/api/profile/${post.creator}`)
+    .then(response => response.json() )
+    .then(user => {
+
+       pfp.alt = "";
+       pfp.src = user.pfp_url;
+       fullName.innerText = `${user.first_name}`;
+       username.innerText = `@${user.username}`;
+       fullName.setAttribute("href", `profiles/${user.id}`);
+    pfpLink.setAttribute("href", `profiles/${user.id}`);
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+    // Post Content Div
+    const postContentDiv = document.createElement("div");
+    postContentDiv.setAttribute("class", "post-view-content-cont");
+    const postContent = document.createElement("p");
+    postContent.setAttribute("class", "post-view-content-text");
+    postContent.innerText = post.content;
+    postContentDiv.append(postContent);
+
+    // Post Timestamp
+    const postTimestampDiv = document.createElement("div");
+    postTimestampDiv.setAttribute("class", "post-view-timestamp-cont");
+    const postTimestamp = document.createElement("p");
+    postTimestamp.setAttribute("class", "post-view-time");
+    const dateObj = new Date(post.creation_date);
+    let dateConv = dateObj.toDateString();
+    // Subtracing 4 to get the year and replace space with a comma
+    const dateIndex = dateConv.length-5;
+    postTimestamp.innerText = dateConv.slice(0, 3) + " •" + dateConv.slice(3, dateIndex) + "," + dateConv.slice(dateIndex);;
+    postTimestampDiv.append(postTimestamp);
+
+    // Make Buttons Div
+    const buttonsDiv = document.createElement("div");
+    buttonsDiv.setAttribute("class", "full-buttons-div");
+
+    postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
+
+    return postParent;
 
 }
