@@ -1,0 +1,187 @@
+/* ===== Post Element Cards ===== */
+
+#posts-cont {
+    margin-left: -10px;
+}
+
+.post-card {
+    margin-bottom: 20px;
+    background-color: var(--main);
+    border-radius: 10px;
+    color: white;
+    display: flex;
+}
+
+.post-pfp {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 0;
+    vertical-align: top;
+    height: 100%;
+}
+
+.post-pfp img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.misc-div {
+    margin-top: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.post-top-deets {
+}
+
+.post-full-name {
+    color: white;
+}
+
+.post-full-name:hover {
+    color: white;
+}
+
+.post-user-create {
+    color: gray;
+}
+
+.post-content-cont {
+    padding-right: 5px;
+}
+
+.post-like-heart {
+    display: inline-block;
+    margin: 5px;
+    margin-left: 5px;
+}
+
+.like-cnt {
+    display: inline-block;
+    margin: 5px;
+}
+
+.post-like-btn {
+    display: inline-block;
+    margin: 5px;
+    border: none;
+    background-color: var(--main);
+    color: white;
+    outline: gray solid 1px;
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 17px;
+}
+
+.post-like-btn:focus {
+    outline: red solid 3px;
+}
+
+#load-btn-div {
+    text-align: center;
+}
+
+#load-btn {
+    width: 50%;
+    margin: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--variant-hover);
+    color: var(--on-primary);
+}
+
+#load-btn:focus {
+    outline: var(--on-primary) solid 3px;
+}
+
+#load-btn:hover {
+    background-color: var(--primary);
+}
+
+
+/* ===== Full Post View ===== */
+
+.back-btn {
+    outline: gray solid 1px;
+    background-color: var(--background);
+    margin-bottom: 20px;
+    color: var(--on-background);
+    vertical-align: middle;
+    display: inline-block;
+    height: 50px;
+    margin-top: 10px;
+}
+
+.back-btn i {
+    padding-right: 5px;
+    font-size: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.back-btn span {
+    vertical-align: middle;
+    padding-right: 5px;
+}
+
+.post-view-card {
+    background-color: var(--main);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.post-view-user-cont {
+    display: inline-block;
+    padding: 10px;
+}
+
+.post-view-pfp {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.post-view-pfp img {
+    height: 50px;
+    width: 50px;
+}
+
+.user-info-div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.user-info-div p{
+    margin: 0;
+}
+
+.user-info-full-name {
+    color: white;
+}
+
+.user-info-full-name:hover {
+    color: white;
+}
+
+.post-view-content-text {
+    padding: 15px;
+}
+
+.post-view-timestamp-cont {
+}
+
+.post-view-time {
+    padding: 10px;
+}
+
+.full-buttons-div {
+    text-align: center;
+}

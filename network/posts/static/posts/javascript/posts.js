@@ -144,13 +144,9 @@ async function loadPosts(request="") {
         }
 
         for (let i = startRange; i <= endRange - 1; i++) {
-            const postCard = postElement(allPosts[i].fields, allPosts[i].pk);
-            const likeBtn = likePostButton(allPosts[i].fields, allPosts[i].pk, loggedInUser);
-            postCard.querySelector(".misc-div").append(likeBtn);
+
+            const postCard = completePostCard(allPosts[i]);
             innerParent.append(postCard);
-            likeBtn.addEventListener("click", () => {
-                likeAction(likeBtn);
-            })
 
         }
     };

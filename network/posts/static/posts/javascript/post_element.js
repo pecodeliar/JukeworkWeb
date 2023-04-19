@@ -53,6 +53,19 @@ function backButton(page, pageTitle) {
     return button;
 }
 
+function completePostCard(post) {
+
+    const card = postElement(post.fields, post.pk);
+    const likeBtn = likePostButton(post.fields, post.pk, loggedInUser);
+    card.querySelector(".misc-div").append(likeBtn);
+    likeBtn.addEventListener("click", () => {
+        likeAction(likeBtn);
+    });
+
+    return card;
+
+}
+
 function postElement(post, id) {
 
     // Make parent

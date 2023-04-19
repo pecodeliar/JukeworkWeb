@@ -65,13 +65,8 @@ function composePost() {
                 post = JSON.parse(result)
                 formText.value = "";
 
-                const postCard = postElement(post[0].fields, post[0].pk, fetchedUser);
-                const likeBtn = likePostButton(post[0].fields, post[0].pk, loggedInUser);
-                postCard.querySelector(".misc-div").append(likeBtn);
+                const postCard = completePostCard(post[0])
                 document.querySelector('#posts-cont').prepend(postCard);
-                likeBtn.addEventListener("click", () => {
-                    likeAction(likeBtn);
-                })
           })
 
     });

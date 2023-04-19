@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block styles %}
-<link href="{% static 'posts/posts.css' %}?ver=1.2" rel="stylesheet">
+<link href="{% static 'posts/css/post_element.css' %}?ver=1.2" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -27,5 +27,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'posts/posts.js' %}"></script>
+    <script src="{% static 'posts/javascript/post_element.js' %}"></script>
+    <script src="{% static 'core/javascript/search.js' %}"></script>
 {% endblock %}
