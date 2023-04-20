@@ -15,7 +15,7 @@ function backButton(page, pageTitle) {
     button.addEventListener("click", () => {
 
         const parent = document.querySelector('#post-view');
-        const container = parent.parentElement
+        const container = parent.parentElement;
 
         container.classList.add("posts-container");
 
@@ -42,9 +42,10 @@ function backButton(page, pageTitle) {
         // For Profile Page
 
         if (page === "profile") {
-            document.querySelector('#profile-view').style.display = "block";
-            document.querySelector('#profile-nav').style.display = "block";
-            document.querySelector("#profile-actions").style.display = "block";
+            container.classList.remove("posts-container");
+            document.querySelector('#profile-view').removeAttribute("style");
+            document.querySelector('#profile-nav').removeAttribute("style");
+            document.querySelector("#profile-actions").removeAttribute("style");
         }
 
         // For Following Page
@@ -368,7 +369,7 @@ function fullPostView(post, id) {
     postContentDiv.setAttribute("class", "post-view-content-cont");
     const postContent = document.createElement("p");
     postContent.setAttribute("class", "post-view-content-text");
-    postContent.setAttribute("data-post", post.id);
+    postContent.setAttribute("data-post", id);
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
 

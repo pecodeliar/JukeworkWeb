@@ -116,33 +116,67 @@ function editPostAction(button, full=false) {
     const id = button.dataset.post;
 
     const editables = document.querySelectorAll(`[data-post='${id}']`)
-    console.log(editables)
+    //console.log(editables)
 
-    // Hiding the edit button and uneditable content text
-    const editBtn = editables.item(0);
-    editBtn.style.display = "none";
+    // Defining now so that depending on on full's boolean, variables to do not have be redeinfed
+    let editBtn = null;
+    let postText = null;
+    let likeBtn = null;
+    let editFormDiv = null;
+    let editForm = null;
+    let saveBtn = null;
 
-    const postSpanText = editables.item(3);
-    postSpanText.style.display = "none";
+    if (full === false) {
 
-    const likeBtn = editables.item(4);
-    likeBtn.style.display = "none";
+        // Hiding the edit button and uneditable content text
+        editBtn = editables.item(0);
+        editBtn.style.display = "none";
 
-    // Showing the edit form div and fill with post content and the save button
-    const editFormDiv = editables.item(1);
-    editFormDiv.style.display = "block";
-    const editForm = editables.item(2);
-    editForm.value = postSpanText.innerText;
-    const saveBtn = editables.item(5);
-    saveBtn.style.display = "block";
+        postText = editables.item(3);
+        postText.style.display = "none";
 
-    console.log("Save button made")
+        likeBtn = editables.item(4);
+        likeBtn.style.display = "none";
+
+        // Showing the edit form div and fill with post content and the save button
+        editFormDiv = editables.item(1);
+        editFormDiv.style.display = "block";
+        editForm = editables.item(2);
+        editForm.value = postText.innerText;
+        saveBtn = editables.item(5);
+        saveBtn.style.display = "block";
+
+    } else {
+
+        // Hiding the edit button and uneditable content text
+        editBtn = editables.item(6);
+        editBtn.style.display = "none";
+
+        postText = editables.item(9);
+        postText.style.display = "none";
+
+        likeBtn = editables.item(10);
+        likeBtn.style.display = "none"
+
+        // Showing the edit form div and fill with post content and the save button
+        editFormDiv = editables.item(7);
+        editFormDiv.style.display = "block";
+        editForm = editables.item(8);
+        editForm.value = postText.innerText;
+        saveBtn = editables.item(11);
+        saveBtn.style.display = "block";
+
+    }
 
     saveBtn.addEventListener("click", () => {
 
-        console.log("Save button pressed");
+        newContent = null
 
-        const new_content = editForm.value
+        if (full === false) {
+            newContent = editForm.value;
+        } else {
+            newContent = editables.item(8).value;
+        }
 
         const csrftoken = getCookie('csrftoken');
 
@@ -153,25 +187,29 @@ function editPostAction(button, full=false) {
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
             body: JSON.stringify({
-                content: new_content
+                content: newContent
             })
         })
         .then(response => {
             if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
         })
         .then(() => {
-            console.log("Executing then")
+
             // After changing content, hide the form field
             editFormDiv.style.display = "none";
             saveBtn.style.display = "none";
             // Show edit button
             editBtn.style.display = "block";
-            // Replace unedditable content with new value
-            postSpanText.innerHTML = new_content;
+            // Replace unedditable content with new value for both post elements and full view
+            editables.item(3).innerText = newContent;
+            if (full === true) {
+                editables.item(9).innerText = newContent;
+            }
             // Reshow unedditable content
-            postSpanText.style.display = "block";
+            postText.style.display = "block";
             // Show like button
             likeBtn.style.display = "block";
+
         })
         .catch(error => {
             console.log(error);
