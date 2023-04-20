@@ -49,7 +49,7 @@ function composePost() {
     formTextLabel.setAttribute("for", "form-text");
     formTextLabel.innerText = "Enter text for a new post:";
     formTextDiv.append(formTextLabel, formText)
-    formRow.append(formTextDiv)
+    formRow.append(formTextDiv);
 
     const csrftoken = getCookie('csrftoken');
 
@@ -90,5 +90,112 @@ function composePost() {
     form.append(formRow, postButton);
     formDiv.append(form);
     return formDiv;
+
+}
+
+function editPostButton(post, id) {
+
+    const editBtn = document.createElement("button");
+    editBtn.setAttribute("class", "post-edit-btn");
+    editBtn.innerText = "Edit Post";
+
+    const editIcon = document.createElement("i");
+    editIcon.setAttribute("class", "bx bxs-edit-alt");
+    editIcon.setAttribute("data-type", "post");
+    editIcon.setAttribute("aria-hidden", "true");
+
+    editBtn.setAttribute("data-post", id);
+    editBtn.prepend(editIcon);
+
+    return editBtn;
+
+}
+
+function editPostAction(button, full=false) {
+
+    const id = button.dataset.post;
+
+    const editables = document.querySelectorAll(`[data-post='${id}']`)
+    console.log(editables)
+
+    // Hiding the edit button and uneditable content text
+    const editBtn = editables.item(0);
+    editBtn.style.display = "none";
+
+    const postSpanText = editables.item(3);
+    postSpanText.style.display = "none";
+
+    const likeBtn = editables.item(4);
+    likeBtn.style.display = "none";
+
+    // Showing the edit form div and fill with post content and the save button
+    const editFormDiv = editables.item(1);
+    editFormDiv.style.display = "block";
+    const editForm = editables.item(2);
+    editForm.value = postSpanText.innerText;
+    const saveBtn = editables.item(5);
+    saveBtn.style.display = "block";
+
+    console.log("Save button made")
+
+    saveBtn.addEventListener("click", () => {
+
+        console.log("Save button pressed");
+
+        const new_content = editForm.value
+
+        const csrftoken = getCookie('csrftoken');
+
+        //https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
+
+        fetch(`/posts/api/post/${id}`, {
+            method: 'PUT',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin',
+            body: JSON.stringify({
+                content: new_content
+            })
+        })
+        .then(response => {
+            if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
+        })
+        .then(() => {
+            console.log("Executing then")
+            // After changing content, hide the form field
+            editFormDiv.style.display = "none";
+            saveBtn.style.display = "none";
+            // Show edit button
+            editBtn.style.display = "block";
+            // Replace unedditable content with new value
+            postSpanText.innerHTML = new_content;
+            // Reshow unedditable content
+            postSpanText.style.display = "block";
+            // Show like button
+            likeBtn.style.display = "block";
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    })
+
+}
+
+function editPostForm(id) {
+
+    const formTextDiv = document.createElement("div");
+    formTextDiv.setAttribute("class", "form-text-div");
+    formTextDiv.setAttribute("data-post", id);
+
+    const formText = document.createElement("textarea");
+    formText.setAttribute("id", "edit-form-text");
+    formText.setAttribute("data-post", id);
+
+    const formTextLabel = document.createElement("label");
+    formTextLabel.setAttribute("for", "edit-form-text");
+    formTextLabel.innerText = "Edit post:";
+
+    formTextDiv.append(formTextLabel, formText);
+
+    return formTextDiv;
 
 }

@@ -67,6 +67,17 @@ function completePostCard(post) {
         likeAction(likeBtn);
     });
 
+    if (loggedInUser === post.fields.creator) {
+
+        const saveBtn = document.createElement("button");
+        saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+        saveBtn.setAttribute("data-post", post.pk);
+        saveBtn.innerText = "Save Edit";
+        card.querySelector(".misc-div").append(saveBtn);
+        saveBtn.style.display = "none";
+
+    };
+
     return card;
 
 }
@@ -90,6 +101,10 @@ function postElement(post, id) {
     const miscDiv = document.createElement("div");
     miscDiv.setAttribute("class", "misc-div");
 
+    // Top of post div that will have details and edit button
+    const top = document.createElement("div");
+    top.setAttribute("class", "post-top");
+
     // Top of the card with user's names and post creation date
     const topDeets = document.createElement("div");
     topDeets.setAttribute("class", "post-top-deets");
@@ -98,9 +113,22 @@ function postElement(post, id) {
     const userAndCreation = document.createElement("span");
     userAndCreation.setAttribute("class", "post-user-create");
     topDeets.append(fullName, userAndCreation)
+    top.append(topDeets)
+
+    // Edit button
+    if (loggedInUser === post.creator) {
+
+        const editBtn = editPostButton(post, id);
+        editBtn.addEventListener("click", () => {
+            editPostAction(editBtn);
+        })
+        const editForm = editPostForm(id);
+        editForm.style.display = "none";
+        top.append(editBtn, editForm);
+    };
 
     // Checking if this is the profiles page, search page or index
-    let check = ""
+    let check = "";
     const titleCheck = document.querySelector("#posts-title");
     const searchCheck = document.querySelector("#search-cont");
     if (titleCheck !== null || searchCheck !== null) {
@@ -134,10 +162,11 @@ function postElement(post, id) {
     postContentDiv.setAttribute("class", "post-content-cont");
     const postContent = document.createElement("span");
     postContent.setAttribute("class", "post-content-text");
+    postContent.setAttribute("data-post", id);
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
 
-    miscDiv.append(topDeets, postContentDiv)
+    miscDiv.append(top, postContentDiv)
 
     // Appendings
     card.append(pfpDiv, miscDiv);
@@ -158,16 +187,18 @@ function postElement(post, id) {
             profilePostView();
         };
 
-        const fullView = fullPostView(post)
-        const buttonsDiv = fullView.querySelector(".full-buttons-div")
-
-        // Adding Like functionality
-        const likeBtn = likePostButton(post, id, loggedInUser)
-        buttonsDiv.append(likeBtn)
+        const fullView = fullPostView(post, id);
         parent.append(fullView);
-        likeBtn.addEventListener("click", () => {
-            likeAction(likeBtn)
-        })
+
+        /*if (loggedInUser === post.creator) {
+
+            const saveBtn = document.createElement("button");
+            saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+            saveBtn.setAttribute("data-post", id);
+            saveBtn.innerText = "Save Edit";
+            buttonsDiv.append(saveBtn);
+
+        };*/
 
     })
 
@@ -175,7 +206,7 @@ function postElement(post, id) {
 
 }
 
-function likePostButton(post, id, creator) {
+function likePostButton(post, id) {
 
     const likeBtn = document.createElement("button");
     likeBtn.setAttribute("class", "post-like-btn");
@@ -210,9 +241,9 @@ function likePostButton(post, id, creator) {
 
 
     likeBtn.setAttribute("data-id", id);
+    likeBtn.setAttribute("data-post", id);
     likeBtn.setAttribute("data-type", "post");
     likeBtn.prepend(likeIcon, likeCount);
-    //actions.append(likeBtn)
 
     return likeBtn;
 
@@ -286,7 +317,7 @@ function likeAction(button) {
 
 }
 
-function fullPostView(post) {
+function fullPostView(post, id) {
 
     // Make post parent
     const postParent = document.createElement("article");
@@ -337,6 +368,7 @@ function fullPostView(post) {
     postContentDiv.setAttribute("class", "post-view-content-cont");
     const postContent = document.createElement("p");
     postContent.setAttribute("class", "post-view-content-text");
+    postContent.setAttribute("data-post", post.id);
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
 
@@ -355,6 +387,34 @@ function fullPostView(post) {
     // Make Buttons Div
     const buttonsDiv = document.createElement("div");
     buttonsDiv.setAttribute("class", "full-buttons-div");
+    // Adding Like functionality
+    const likeBtn = likePostButton(post, id)
+    buttonsDiv.append(likeBtn);
+    likeBtn.addEventListener("click", () => {
+        likeAction(likeBtn);
+    })
+
+    if (loggedInUser === post.creator) {
+
+        const saveBtn = document.createElement("button");
+        saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+        saveBtn.setAttribute("data-post", id);
+        saveBtn.innerText = "Save Edit";
+        buttonsDiv.append(saveBtn);
+
+    };
+
+    // Edit button
+    if (loggedInUser === post.creator) {
+
+        const editBtn = editPostButton(post, id);
+        editBtn.addEventListener("click", () => {
+            editPostAction(editBtn, true);
+        })
+        const editForm = editPostForm(id);
+        editForm.style.display = "none";
+        postUserDiv.append(editBtn, editForm);
+    };
 
     postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
 
