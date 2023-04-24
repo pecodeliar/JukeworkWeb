@@ -14,16 +14,26 @@ def index(request):
          "page": "all"
      })
 
+
 def search(request):
     query = request.GET.urlencode()[2:].replace("+", " ")
     return render(request, "core/search.html", {
         "query": query
     })
 
+
 @login_required
 def following(request):
      return render(request, "posts/posts.html", {
         "page": "following"
+     })
+
+
+@login_required
+def settings(request):
+    profile = User.objects.get(pk=request.user.pk)
+    return render(request, "core/settings.html", {
+         "profile": profile
      })
 
 # API route
@@ -53,20 +63,6 @@ def posts(request, input):
         }, status=400)
 
 
-def test(request):
-    print(request)
-    # Getting based on URL but splitting of the 'q='
-    # Replace method for entries with more than one word
-    return JsonResponse("No", safe=False)
-    """input = request.GET.urlencode()[2:].replace("+", " ")
-    print(input)"""
-    """print(input)
-    posts = Post.objects.filter(content__contains=input).order_by("-creation_date").all()
-
-    if request.method == "GET":
-        post_data = serializers.serialize('json', posts)
-        return JsonResponse(post_data, safe=False)
-    else:
-        return JsonResponse({
-            "error": "GET required for search."
-        }, status=400)"""
+@login_required
+def edit(request):
+ ...

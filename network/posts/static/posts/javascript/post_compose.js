@@ -9,7 +9,7 @@ function composePost() {
     form.setAttribute("method", "post");
 
     var formRow = document.createElement("div");
-    formRow.setAttribute("class", "post-form-row")
+    formRow.setAttribute("class", "post-form-row");
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
