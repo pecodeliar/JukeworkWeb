@@ -164,3 +164,22 @@ def following(request):
         return JsonResponse({
             "error": "GET required for following view."
         }, status=400)
+
+
+@login_required
+def delete(request):
+    ...
+
+
+@login_required
+def purge(request):
+    user = User.objects.get(pk=request.user.pk)
+    posts = Post.objects.filter(creator=user).all()
+    print(posts)
+    if request.method == "DELETE":
+        posts.delete()
+        return HttpResponse(status=204)
+    else:
+        return JsonResponse({
+            "error": "DELETE request required."
+        }, status=400)

@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     editProfileForm();
-    console.log(loggedInUser)
 
 });
 
@@ -113,6 +112,7 @@ function editProfileForm() {
     deletePostsBtn.setAttribute("class", "set-btn");
     deletePostsBtn.setAttribute("id", "dlt-posts-btn");
     deletePostsBtn.innerText = "Delete All Posts";
+    deletePostsBtn.addEventListener('click', () => deleteAllPosts());
     deletePostsDiv.append(deletePostsBtn);
 
     const deleteAccountDiv = document.createElement("div");
@@ -212,6 +212,27 @@ function saveEdit() {
         document.querySelectorAll("img")[2].src = bannerURL;
 
         console.log("Things saved successfully");
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+}
+
+function deleteAllPosts() {
+
+    console.log("In Delete All Posts");
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/posts/api/purge`, {
+        method: 'DELETE',
+        headers: {'X-CSRFToken': csrftoken}
+    })
+    .then(() => {
+
+        console.log("All Posts Deleted Successfully");
 
     })
     .catch(error => {
