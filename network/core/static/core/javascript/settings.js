@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function editProfileForm() {
 
     const formDiv = document.getElementById("settings-form");
+    formDiv.setAttribute("onsubmit", "event.preventDefault();");
 
     const form = document.createElement("form");
     form.setAttribute("method", "post");
@@ -26,15 +27,21 @@ function editProfileForm() {
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "round-pfp");
     pfpDiv.setAttribute("id", "settings-pfp");
+    const pfpLabel = document.createElement("label");
+    pfpLabel.setAttribute("for", "settings-pfp");
+    pfpLabel.innerText = "Profile Picture:";
     const pfp = document.createElement("img");
     pfp.alt = "";
-    pfpDiv.append(pfp);
+    pfpDiv.append(pfpLabel, pfp);
 
     const bannerDiv = document.createElement("div");
     bannerDiv.setAttribute("id", "settings-banner");
+    const bannerLabel = document.createElement("label");
+    bannerLabel.setAttribute("for", "settings-banner");
+    bannerLabel.innerText = "Banner:";
     const banner = document.createElement("img");
     banner.alt = "";
-    bannerDiv.append(banner);
+    bannerDiv.append(bannerLabel, banner);
 
     picsDiv.append(pfpDiv, bannerDiv);
 
@@ -48,7 +55,7 @@ function editProfileForm() {
     pfpURLDiv.setAttribute("class", "col auth-item reg-item");
     const pfpURLLabel = document.createElement("label");
     pfpURLLabel.setAttribute("for", "pfp-url");
-    pfpURLLabel.innerText = "URL for Profile Picture";
+    pfpURLLabel.innerText = "URL for Profile Picture:";
     const pfpURLInput = document.createElement("input");
     pfpURLInput.setAttribute("id", "pfp-url");
     pfpURLDiv.append(pfpURLLabel, pfpURLInput);
@@ -57,7 +64,7 @@ function editProfileForm() {
     bannerURLDiv.setAttribute("class", "col auth-item reg-item");
     const bannerURLLabel = document.createElement("label");
     bannerURLLabel.setAttribute("for", "banner-url");
-    bannerURLLabel.innerText = "URL for Banner";
+    bannerURLLabel.innerText = "URL for Banner:";
     const bannerURLInput = document.createElement("input");
     bannerURLInput.setAttribute("id", "banner-url");
     bannerURLDiv.append(bannerURLLabel, bannerURLInput);
@@ -73,7 +80,7 @@ function editProfileForm() {
     nameDiv.setAttribute("class", "col auth-item reg-item");
     const nameLabel = document.createElement("label");
     nameLabel.setAttribute("for", "full-name");
-    nameLabel.innerText = "Displayed Name";
+    nameLabel.innerText = "Displayed Name:";
     const nameInput = document.createElement("input");
     nameInput.setAttribute("id", "full-name");
     nameDiv.append(nameLabel, nameInput);
@@ -82,7 +89,7 @@ function editProfileForm() {
     genreDiv.setAttribute("class", "col auth-item reg-item");
     const genreLabel = document.createElement("label");
     genreLabel.setAttribute("for", "genre");
-    genreLabel.innerText = "User Genre";
+    genreLabel.innerText = "User Genre:";
     genreDiv.append(genreLabel);
 
     secondFormRow.append(nameDiv, genreDiv);
@@ -91,6 +98,7 @@ function editProfileForm() {
     const saveBtn = document.createElement("button");
     saveBtn.setAttribute("class", "round-btn auth-btn float-right");
     saveBtn.innerText = "Save Profile Changes";
+    saveBtn.addEventListener('click', () => saveEdit());
     form.append(saveBtn);
 
 
@@ -177,6 +185,37 @@ function genreSelect(userGenre) {
 
 function saveEdit() {
 
+    // Getting input values
+    const pfpURL = document.getElementById("pfp-url").value;
+    const bannerURL = document.getElementById("banner-url").value;
+    const name = document.getElementById("full-name").value;
+    const genre = document.getElementById("genre").value;
 
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/api/settings/edit`, {
+        method: 'PUT',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify({
+            pfp_url: pfpURL,
+            banner_url: bannerURL,
+            first_name: name,
+            genre: genre,
+            action: "edit"
+        })
+    })
+    .then(() => {
+
+        //Changing the pfp and/or banner to reflect any changes that may have been made
+        document.querySelectorAll("img")[0].src = pfpURL;
+        document.querySelectorAll("img")[1].src = pfpURL;
+        document.querySelectorAll("img")[2].src = bannerURL;
+
+        console.log("Things saved successfully");
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
 
 }

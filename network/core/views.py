@@ -64,5 +64,22 @@ def posts(request, input):
 
 
 @login_required
-def edit(request):
- ...
+def edit_settings(request):
+    user = User.objects.get(pk=request.user.pk)
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("action") == "edit":
+            user.profile_picture = data["pfp_url"]
+            user.banner = data["banner_url"]
+            user.first_name = data["first_name"]
+            user.genre = data["genre"]
+            user.save()
+            return HttpResponse(status=204)
+        else:
+            return JsonResponse({
+                "error": "Action must be editing."
+            }, status=400)
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)

@@ -13,5 +13,6 @@ urlpatterns = [
    # API Routes
    path("api/search/posts/<str:input>", views.posts, name="posts"),
    path("api/search/users/<str:input>", views.users, name="users"),
+   path("api/settings/edit", views.edit_settings, name="edit"),
 
 ]

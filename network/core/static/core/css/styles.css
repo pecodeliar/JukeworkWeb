@@ -414,6 +414,12 @@ a.skip-main:focus, a.skip-main:active {
     display: inline-block;
 }
 
+#settings-pfp label {
+    display: block;
+    position: relative;
+    right: 20px;
+}
+
 #settings-pfp img {
     height: 150px;
     width: 150px;
@@ -424,10 +430,17 @@ a.skip-main:focus, a.skip-main:active {
     margin-left: 25px;
 }
 
+#settings-banner label {
+    display: block;
+    position: relative;
+    right: 225px;
+}
+
 #settings-banner img{
     height: 150px;
     width: 500px;
     border-radius: 10px;
+    object-fit: cover;
 }
 
 .btn-row {
