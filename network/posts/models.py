@@ -12,6 +12,7 @@ class Post(models.Model):
     creation_date = models.DateTimeField(default=datetime.datetime.now())
     likers = models.ManyToManyField(User, blank=True, related_name="post_likers")
 
+
     def __str__(self):
         return self.content
 
@@ -24,4 +25,4 @@ class Comment(models.Model):
     likers = models.ManyToManyField(User, blank=True, related_name="comment_likers")
 
     def __str__(self):
-        return self.text
+        return f"{self.text} by {self.user}"

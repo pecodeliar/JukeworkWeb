@@ -62,8 +62,9 @@ function backButton(page, pageTitle) {
 function completePostCard(post) {
 
     const card = postElement(post.fields, post.pk);
-    const likeBtn = likePostButton(post.fields, post.pk, loggedInUser);
-    card.querySelector(".misc-div").append(likeBtn);
+    const likeBtn = likePostButton(post.fields, post.pk);
+    const commentBtn = seeCommentsButton(post.fields, post.pk);
+    card.querySelector(".misc-div").append(likeBtn, commentBtn);
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
     });
@@ -175,33 +176,9 @@ function postElement(post, id) {
     // Card Click Even to Show Full Post View
     postContentDiv.addEventListener("click", () => {
 
-        const parent = document.querySelector('#post-view');
-        const container = parent.parentElement;
-
-        // Check what page is displayed
-        const titleCheck = document.querySelector("#posts-title");
-        if (document.querySelector("#posts-title") !== null) {
-            allPostsPostView();
-        } else if (document.querySelector("#search-cont") !== null) {
-            searchPostView();
-        } else if (document.querySelector("#banner-row") !== null) {
-            profilePostView();
-        };
-
         const fullView = fullPostView(post, id);
-        parent.append(fullView);
 
-        /*if (loggedInUser === post.creator) {
-
-            const saveBtn = document.createElement("button");
-            saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-            saveBtn.setAttribute("data-post", id);
-            saveBtn.innerText = "Save Edit";
-            buttonsDiv.append(saveBtn);
-
-        };*/
-
-    })
+    });
 
     return card;
 
@@ -318,7 +295,20 @@ function likeAction(button) {
 
 }
 
-function fullPostView(post, id) {
+function fullPostView(post, id, comments) {
+
+    const parent = document.querySelector('#post-view');
+    const container = parent.parentElement;
+
+    // Check what page is displayed
+    const titleCheck = document.querySelector("#posts-title");
+    if (document.querySelector("#posts-title") !== null) {
+        allPostsPostView();
+    } else if (document.querySelector("#search-cont") !== null) {
+        searchPostView();
+    } else if (document.querySelector("#banner-row") !== null) {
+        profilePostView();
+    };
 
     // Make post parent
     const postParent = document.createElement("article");
@@ -419,6 +409,53 @@ function fullPostView(post, id) {
 
     postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
 
-    return postParent;
+    parent.append(postParent);
+
+}
+
+function seeCommentsButton(post, post_id) {
+
+    const commentsBtn = document.createElement("button");
+    commentsBtn.setAttribute("class", "post-like-btn");
+    commentsBtn.setAttribute("data-type", "comment");
+    commentsBtn.innerText = "Comments";
+    const commentsIcon = document.createElement("i");
+    commentsIcon.setAttribute("class", "bx bxs-comment post-like-heart");
+    commentsIcon.setAttribute("aria-hidden", "true");
+    commentsIcon.style.color = "gray";
+    const commentsCount = document.createElement("p");
+    commentsCount.setAttribute("class", "like-cnt");
+
+    // Check if user has logged in
+    commentsBtn.setAttribute("data-type", "comment");
+    commentsBtn.prepend(commentsIcon, commentsCount);
+
+    fetch(`/posts/api/post/${post_id}/comments`)
+    .then(response => response.json() )
+    .then(comments => {
+
+        const json = JSON.parse(comments);
+        //console.log(json);
+        commentsCount.innerText = json["length"];
+
+        commentsBtn.addEventListener("click", () => {
+
+            console.log("Comments Button Pressed")
+            const fullView = fullPostView(post, post_id, comments);
+
+        });
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+    return commentsBtn;
+
+}
+
+function commentsElement() {
+
+
 
 }

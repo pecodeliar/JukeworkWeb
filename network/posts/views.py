@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from users.models import User
 from .models import Post, Comment
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
@@ -45,6 +46,7 @@ def create(request):
     data = json.loads(request.body)
     creator = User.objects.get(pk=request.user.pk)
     if data.get("type") is not None:
+        # For Posts
         if data.get("type") == "Post":
             content = data.get("content").strip()
             if content == "":
@@ -55,6 +57,23 @@ def create(request):
             post.save()
             data = serializers.serialize('json', [post, ])
             #return JsonResponse(data, safe=False)
+            return JsonResponse(data, safe=False, status=201)
+        # For Comments
+        elif data.get("type") == "Comment":
+            content = data.get("content").strip()
+            post_id = data.get("post_id").strip()
+            if content == "":
+                return JsonResponse({
+                    "error": "Comment cannot be empty."
+                }, status=400)
+            elif post_id == "":
+                return JsonResponse({
+                    "error": "Comment must have a post parent."
+                }, status=400)
+            post = Post.objects.get(pk=post_id)
+            comment = Comment(post=post, user=creator, content=content)
+            comment.save()
+            data = serializers.serialize('json', [comment, ])
             return JsonResponse(data, safe=False, status=201)
     else:
         return JsonResponse({
@@ -67,6 +86,7 @@ def create(request):
 @login_required
 def post(request, post_id):
     post = Post.objects.get(pk=post_id)
+    comments = Comment.objects.filter(post=post)
     if request.method == "GET":
         data = serializers.serialize('json', [post, ])
         return JsonResponse(data, safe=False)
@@ -103,8 +123,10 @@ def post(request, post_id):
 
 
 def comments(request, post_id):
+    print("In Comments View")
+
     post = Post.objects.get(pk=post_id)
-    comments = Comment.object.get(post=post)
+    comments = Comment.objects.filter(post=post)
     if request.method == "GET":
         data = serializers.serialize('json', comments)
         return JsonResponse(data, safe=False)
@@ -113,7 +135,7 @@ def comments(request, post_id):
 
 
 @login_required
-def comment(request, comment_id):
+def edit_comment(request, comment_id):
     comment = Comment.objects.get(pk=comment_id)
     if request.method == "GET":
         data = serializers.serialize('json', comment)
@@ -128,7 +150,7 @@ def comment(request, comment_id):
                 return HttpResponse(status=204)
             else:
                 return JsonResponse({
-                    "error": "You are not the user of this post."
+                    "error": "You are not the user of this comment."
                 }, status=400)
         # User is likeing the content
         elif data.get("action") is not None:

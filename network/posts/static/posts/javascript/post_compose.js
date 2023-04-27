@@ -237,3 +237,37 @@ function editPostForm(id) {
     return formTextDiv;
 
 }
+
+function composeComment(postId) {
+
+    const csrftoken = getCookie('csrftoken');
+
+    /*fetch('/posts/api/create', {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        mode: 'same-origin',
+        body: JSON.stringify({
+            type: 'Comment',
+            post_id: postId,
+            content: formText.value,
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+            // Print result
+            post = JSON.parse(result)
+            formText.value = "";
+
+            const postCard = completePostCard(post[0])
+
+            const allCont = document.querySelector('#posts-cont');
+            const profileCont = document.querySelector('.profile-post-form');
+            if (allCont !== null) {
+                allCont.prepend(postCard);
+            } else if (profileCont !== null) {
+                profileCont.after(postCard);
+            }
+
+      });*/
+
+}
