@@ -7,7 +7,7 @@ class PostAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("post", "user", "text", "creation_date")
+    list_display = ("post", "creator", "content", "creation_date")
     horizontal_display = ("likers",)
 
 # Register your models here.

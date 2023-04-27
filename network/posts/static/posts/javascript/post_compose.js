@@ -1,4 +1,4 @@
-function compose(type, post_id=null) {
+function compose(type, postId=null) {
 
     const upperType = titleCase(type);
 
@@ -65,8 +65,9 @@ function compose(type, post_id=null) {
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
             body: JSON.stringify({
-                type: type,
+                type: upperType,
                 content: formText.value,
+                post_id: postId
             })
           })
           .then(response => response.json())
@@ -75,15 +76,24 @@ function compose(type, post_id=null) {
                 post = JSON.parse(result)
                 formText.value = "";
 
-                const postCard = completeCard(type, post[0])
+                //const postCard = completeCard(type, post[0])
 
-                const allCont = document.querySelector('#posts-cont');
-                const profileCont = document.querySelector('.profile-post-form');
-                if (allCont !== null) {
+                /*if (type === "post") {
+
+                    const allCont = document.querySelector('#posts-cont');
+                    const profileCont = document.querySelector('.profile-post-form');
+                    if (allCont !== null) {
+                        allCont.prepend(postCard);
+                    } else if (profileCont !== null) {
+                        profileCont.after(postCard);
+                    }
+
+                } else if (type === "comment") {
+
+                    const allCont = document.querySelector('#posts-view');
                     allCont.prepend(postCard);
-                } else if (profileCont !== null) {
-                    profileCont.after(postCard);
-                }
+
+                }*/
 
           })
 

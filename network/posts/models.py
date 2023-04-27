@@ -19,8 +19,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_creator")
-    text = models.CharField(max_length=400)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_creator")
+    content = models.CharField(max_length=400)
     creation_date = models.DateTimeField(auto_now_add=True)
     likers = models.ManyToManyField(User, blank=True, related_name="comment_likers")
 

@@ -61,6 +61,8 @@ function backButton(page, pageTitle) {
 
 function completeCard(type, json) {
 
+    console.log(json);
+
     const card = postElement(type, json.fields, json.pk);
     const likeBtn = likeButton(type, json.fields, json.pk);
     card.querySelector(".misc-div").append(likeBtn);
@@ -88,6 +90,8 @@ function completeCard(type, json) {
 }
 
 function postElement(type, fields, id) {
+
+    console.log(type, fields, id)
 
     // Make parent
     const card = document.createElement("article");
@@ -308,6 +312,7 @@ function fullPostView(post, id, comments) {
 
     const parent = document.querySelector('#post-view');
     const container = parent.parentElement;
+    parent.innerText = "";
 
     // Check what page is displayed
     const titleCheck = document.querySelector("#posts-title");
@@ -421,6 +426,31 @@ function fullPostView(post, id, comments) {
 
     parent.append(postParent);
 
+    // Comments Display
+    const commentsSection = document.createElement("div");
+    parent.append(commentsSection);
+
+    const cmntCompose = compose("comment", id);
+    commentsSection.append(cmntCompose);
+    //const cmntJson = JSON.parse(comments);
+
+    console.log(comments)
+
+    if (comments["length"] === 0) {
+
+        const noComments = document.createElement("p");
+        noComments.innerText = "No one has commented under this post.";
+        commentsSection.append(noComments);
+
+    } else {
+
+        comments.forEach(comment => {
+            const cmntCard = completeCard("comment", comment);
+            commentsSection.append(cmntCard);
+        })
+
+    }
+
 }
 
 function seeCommentsButton(post, post_id) {
@@ -446,12 +476,11 @@ function seeCommentsButton(post, post_id) {
     .then(comments => {
 
         const json = JSON.parse(comments);
-        //console.log(json);
         commentsCount.innerText = json["length"];
 
         commentsBtn.addEventListener("click", () => {
 
-            const fullView = fullPostView(post, post_id, comments);
+            const fullView = fullPostView(post, post_id, json);
 
         });
 

@@ -61,7 +61,7 @@ def create(request):
         # For Comments
         elif data.get("type") == "Comment":
             content = data.get("content").strip()
-            post_id = data.get("post_id").strip()
+            post_id = data.get("post_id")
             if content == "":
                 return JsonResponse({
                     "error": "Comment cannot be empty."
@@ -71,7 +71,7 @@ def create(request):
                     "error": "Comment must have a post parent."
                 }, status=400)
             post = Post.objects.get(pk=post_id)
-            comment = Comment(post=post, user=creator, content=content)
+            comment = Comment(post=post, creator=creator, content=content)
             comment.save()
             data = serializers.serialize('json', [comment, ])
             return JsonResponse(data, safe=False, status=201)
@@ -123,7 +123,6 @@ def post(request, post_id):
 
 
 def comments(request, post_id):
-    print("In Comments View")
 
     post = Post.objects.get(pk=post_id)
     comments = Comment.objects.filter(post=post)
