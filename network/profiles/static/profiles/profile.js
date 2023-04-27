@@ -233,7 +233,7 @@ function loadActions(type) {
     actionsDiv.innerText = "";
 
     if (loggedInUser === profileId && type === "posts") {
-        const postForm = composePost();
+        const postForm = compose("post");
         postForm.classList.add("profile-post-form");
         actionsDiv.append(postForm);
     }
@@ -254,7 +254,7 @@ function loadActions(type) {
 
             data.forEach(item => {
 
-                const postCard = completePostCard(item);
+                const postCard = completeCard("post", item);
                 actionsDiv.append(postCard);
 
             });

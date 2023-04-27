@@ -59,21 +59,24 @@ function backButton(page, pageTitle) {
     return button;
 }
 
-function completePostCard(post) {
+function completeCard(type, json) {
 
-    const card = postElement(post.fields, post.pk);
-    const likeBtn = likePostButton(post.fields, post.pk);
-    const commentBtn = seeCommentsButton(post.fields, post.pk);
-    card.querySelector(".misc-div").append(likeBtn, commentBtn);
+    const card = postElement(type, json.fields, json.pk);
+    const likeBtn = likeButton(type, json.fields, json.pk);
+    card.querySelector(".misc-div").append(likeBtn);
+    if (type === "post") {
+        const commentBtn = seeCommentsButton(json.fields, json.pk);
+        card.querySelector(".misc-div").append(commentBtn);
+    };
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
     });
 
-    if (loggedInUser === post.fields.creator) {
+    if (loggedInUser === json.fields.creator) {
 
         const saveBtn = document.createElement("button");
         saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        saveBtn.setAttribute("data-post", post.pk);
+        saveBtn.setAttribute("data-post", json.pk);
         saveBtn.innerText = "Save Edit";
         card.querySelector(".misc-div").append(saveBtn);
         saveBtn.style.display = "none";
@@ -84,7 +87,7 @@ function completePostCard(post) {
 
 }
 
-function postElement(post, id) {
+function postElement(type, fields, id) {
 
     // Make parent
     const card = document.createElement("article");
@@ -118,15 +121,15 @@ function postElement(post, id) {
     top.append(topDeets)
 
     // Edit button
-    if (loggedInUser === post.creator) {
+    if (loggedInUser === fields.creator) {
 
-        const editBtn = editPostButton(post, id);
+        const editBtn = editButton(type, fields, id);
         editBtn.addEventListener("click", () => {
-            editPostAction(editBtn);
+            editAction(type, editBtn);
         })
-        const editForm = editPostForm(id);
-        editForm.style.display = "none";
-        top.append(editBtn, editForm);
+        const edittingForm = editForm("post", id);
+        edittingForm.style.display = "none";
+        top.append(editBtn, edittingForm);
     };
 
     // Checking if this is the profiles page, search page or index
@@ -138,7 +141,7 @@ function postElement(post, id) {
     };
 
     // Get user information
-    fetch(`${check}api/profile/${post.creator}`)
+    fetch(`${check}api/profile/${fields.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -147,7 +150,7 @@ function postElement(post, id) {
         fullName.innerText = `${user.first_name}`
         fullName.setAttribute("href", `/profiles/${user.id}`);
         pfpLink.setAttribute("href", `/profiles/${user.id}`);
-        const dateObj = new Date(post.creation_date);
+        const dateObj = new Date(fields.creation_date);
         let dateConv = dateObj.toDateString();
         // Subtracing 4 to get the year and replace space with a comma
         const dateIndex = dateConv.length-5;
@@ -165,7 +168,7 @@ function postElement(post, id) {
     const postContent = document.createElement("span");
     postContent.setAttribute("class", "post-content-text");
     postContent.setAttribute("data-post", id);
-    postContent.innerText = post.content;
+    postContent.innerText = fields.content;
     postContentDiv.append(postContent);
 
     miscDiv.append(top, postContentDiv)
@@ -174,33 +177,39 @@ function postElement(post, id) {
     card.append(pfpDiv, miscDiv);
 
     // Card Click Even to Show Full Post View
-    postContentDiv.addEventListener("click", () => {
+    if (type === "Post") {
 
-        const fullView = fullPostView(post, id);
+        postContentDiv.addEventListener("click", () => {
 
-    });
+            const fullView = fullPostView(fields, id);
+
+        });
+
+    }
 
     return card;
 
 }
 
-function likePostButton(post, id) {
+function likeButton(type, fields, id) {
+
+    const upperType = titleCase(type);
 
     const likeBtn = document.createElement("button");
     likeBtn.setAttribute("class", "post-like-btn");
     likeBtn.setAttribute("data-id", id);
-    likeBtn.setAttribute("data-type", "post");
+    likeBtn.setAttribute("data-type", `${type}`);
     const likeIcon = document.createElement("i");
     likeIcon.setAttribute("class", "bx bxs-heart post-like-heart");
     likeIcon.setAttribute("data-id", id);
-    likeIcon.setAttribute("data-type", "post");
+    likeIcon.setAttribute("data-type", `${type}`);
     likeIcon.setAttribute("aria-hidden", "true");
     const likeCount = document.createElement("p");
     likeCount.setAttribute("class", "like-cnt");
-    likeCount.innerText = post.likers["length"]
+    likeCount.innerText = fields.likers["length"]
     likeCount.setAttribute("data-id", id);
-    likeCount.setAttribute("data-type", "post");
-    const liked = post.likers.includes(loggedInUser);
+    likeCount.setAttribute("data-type", `${type}`);
+    const liked = fields.likers.includes(loggedInUser);
 
     // Check if user has logged in
     if (loggedInUser === null) {
@@ -209,18 +218,18 @@ function likePostButton(post, id) {
         likeBtn.innerText = `Like(s)`;
     } else {
         if (liked === false) {
-            likeBtn.innerText = `Like Post`;
+            likeBtn.innerText = `Like ${upperType}`;
             likeIcon.style.color = "grey";
         } else {
-            likeBtn.innerText = `Unlike Post`;
+            likeBtn.innerText = `Unlike ${upperType}`;
             likeIcon.style.color = "red";
         }
     }
 
 
     likeBtn.setAttribute("data-id", id);
-    likeBtn.setAttribute("data-post", id);
-    likeBtn.setAttribute("data-type", "post");
+    likeBtn.setAttribute(`data-${type}`, id);
+    likeBtn.setAttribute("data-type", `${type}`);
     likeBtn.prepend(likeIcon, likeCount);
 
     return likeBtn;
@@ -379,7 +388,7 @@ function fullPostView(post, id, comments) {
     const buttonsDiv = document.createElement("div");
     buttonsDiv.setAttribute("class", "full-buttons-div");
     // Adding Like functionality
-    const likeBtn = likePostButton(post, id)
+    const likeBtn = likeButton("post", post, id)
     buttonsDiv.append(likeBtn);
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
@@ -391,6 +400,7 @@ function fullPostView(post, id, comments) {
         saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
         saveBtn.setAttribute("data-post", id);
         saveBtn.innerText = "Save Edit";
+        saveBtn.style.display = "None";
         buttonsDiv.append(saveBtn);
 
     };
@@ -398,13 +408,13 @@ function fullPostView(post, id, comments) {
     // Edit button
     if (loggedInUser === post.creator) {
 
-        const editBtn = editPostButton(post, id);
+        const editBtn = editButton("post", post, id);
         editBtn.addEventListener("click", () => {
-            editPostAction(editBtn, true);
+            editAction("post", editBtn, true);
         })
-        const editForm = editPostForm(id);
-        editForm.style.display = "none";
-        postUserDiv.append(editBtn, editForm);
+        const edittingForm = editForm("post", id);
+        edittingForm.style.display = "none";
+        postUserDiv.append(editBtn, edittingForm);
     };
 
     postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
@@ -418,6 +428,7 @@ function seeCommentsButton(post, post_id) {
     const commentsBtn = document.createElement("button");
     commentsBtn.setAttribute("class", "post-like-btn");
     commentsBtn.setAttribute("data-type", "comment");
+    commentsBtn.setAttribute("data-post", post_id);
     commentsBtn.innerText = "Comments";
     const commentsIcon = document.createElement("i");
     commentsIcon.setAttribute("class", "bx bxs-comment post-like-heart");
@@ -440,7 +451,6 @@ function seeCommentsButton(post, post_id) {
 
         commentsBtn.addEventListener("click", () => {
 
-            console.log("Comments Button Pressed")
             const fullView = fullPostView(post, post_id, comments);
 
         });
@@ -451,11 +461,5 @@ function seeCommentsButton(post, post_id) {
     });
 
     return commentsBtn;
-
-}
-
-function commentsElement() {
-
-
 
 }

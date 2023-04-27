@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const postForm = document.querySelector('#post-form')
     if (postForm !== null) {
-        loggedInUser = parseInt(postForm.dataset.user)
-        const form = composePost();
+        loggedInUser = parseInt(postForm.dataset.user);
+        const form = compose("post");
         document.querySelector('#post-form').append(form);
     };
 
@@ -118,7 +118,7 @@ async function loadPosts(request="") {
 
         for (let i = startRange; i <= endRange - 1; i++) {
 
-            const postCard = completePostCard(allPosts[i]);
+            const postCard = completeCard("post", allPosts[i]);
             innerParent.append(postCard);
 
         }

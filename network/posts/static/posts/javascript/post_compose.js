@@ -1,4 +1,6 @@
-function composePost() {
+function compose(type, post_id=null) {
+
+    const upperType = titleCase(type);
 
     // Make div
     const formDiv = document.createElement("div");
@@ -55,7 +57,7 @@ function composePost() {
 
     const postButton = document.createElement("button");
     postButton.setAttribute("class", "float-right round-btn post-crt-btn");
-    postButton.innerText = "Create Post";
+    postButton.innerText = `Create ${type}`;
     postButton.addEventListener("click", () => {
 
         fetch('/posts/api/create', {
@@ -63,7 +65,7 @@ function composePost() {
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
             body: JSON.stringify({
-                type: 'Post',
+                type: type,
                 content: formText.value,
             })
           })
@@ -73,7 +75,7 @@ function composePost() {
                 post = JSON.parse(result)
                 formText.value = "";
 
-                const postCard = completePostCard(post[0])
+                const postCard = completeCard(type, post[0])
 
                 const allCont = document.querySelector('#posts-cont');
                 const profileCont = document.querySelector('.profile-post-form');
@@ -93,30 +95,39 @@ function composePost() {
 
 }
 
-function editPostButton(post, id) {
+function editButton(type, post, id) {
+
+    const upperType = titleCase(type);
 
     const editBtn = document.createElement("button");
     editBtn.setAttribute("class", "post-edit-btn");
-    editBtn.innerText = "Edit Post";
+    editBtn.innerText = `Edit ${upperType}`;
 
     const editIcon = document.createElement("i");
     editIcon.setAttribute("class", "bx bxs-edit-alt");
-    editIcon.setAttribute("data-type", "post");
+    editIcon.setAttribute("data-type", type);
     editIcon.setAttribute("aria-hidden", "true");
 
-    editBtn.setAttribute("data-post", id);
+    editBtn.setAttribute(`data-${type}`, id);
     editBtn.prepend(editIcon);
 
     return editBtn;
 
 }
 
-function editPostAction(button, full=false) {
+function editAction(type, button, full=false) {
 
-    const id = button.dataset.post;
+    const upperType = titleCase(type);
 
-    const editables = document.querySelectorAll(`[data-post='${id}']`)
-    //console.log(editables)
+    let id = null;
+    if (type === "post") {
+        id = button.dataset.post;
+    } else if (type === "comment") {
+        id = button.dataset.comment;
+    }
+
+    const editables = document.querySelectorAll(`[data-${type}='${id}']`)
+    console.log(editables)
 
     // Defining now so that depending on on full's boolean, variables to do not have be redeinfed
     let editBtn = null;
@@ -125,6 +136,7 @@ function editPostAction(button, full=false) {
     let editFormDiv = null;
     let editForm = null;
     let saveBtn = null;
+    let commentBtn = null;
 
     if (full === false) {
 
@@ -138,32 +150,35 @@ function editPostAction(button, full=false) {
         likeBtn = editables.item(4);
         likeBtn.style.display = "none";
 
+        commentBtn = editables.item(5);
+        commentBtn.style.display = "none";
+
         // Showing the edit form div and fill with post content and the save button
         editFormDiv = editables.item(1);
         editFormDiv.style.display = "block";
         editForm = editables.item(2);
         editForm.value = postText.innerText;
-        saveBtn = editables.item(5);
+        saveBtn = editables.item(6);
         saveBtn.style.display = "block";
 
     } else {
 
         // Hiding the edit button and uneditable content text
-        editBtn = editables.item(6);
+        editBtn = editables.item(7);
         editBtn.style.display = "none";
 
-        postText = editables.item(9);
+        postText = editables.item(10);
         postText.style.display = "none";
 
-        likeBtn = editables.item(10);
+        likeBtn = editables.item(11);
         likeBtn.style.display = "none"
 
         // Showing the edit form div and fill with post content and the save button
-        editFormDiv = editables.item(7);
+        editFormDiv = editables.item(8);
         editFormDiv.style.display = "block";
-        editForm = editables.item(8);
+        editForm = editables.item(9);
         editForm.value = postText.innerText;
-        saveBtn = editables.item(11);
+        saveBtn = editables.item(12);
         saveBtn.style.display = "block";
 
     }
@@ -182,7 +197,7 @@ function editPostAction(button, full=false) {
 
         //https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 
-        fetch(`/posts/api/post/${id}`, {
+        fetch(`/posts/api/${type}/${id}`, {
             method: 'PUT',
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
@@ -218,56 +233,22 @@ function editPostAction(button, full=false) {
 
 }
 
-function editPostForm(id) {
+function editForm(type, id) {
 
     const formTextDiv = document.createElement("div");
     formTextDiv.setAttribute("class", "form-text-div");
-    formTextDiv.setAttribute("data-post", id);
+    formTextDiv.setAttribute(`data-${type}`, id);
 
     const formText = document.createElement("textarea");
     formText.setAttribute("id", "edit-form-text");
-    formText.setAttribute("data-post", id);
+    formText.setAttribute(`data-${type}`, id);
 
     const formTextLabel = document.createElement("label");
     formTextLabel.setAttribute("for", "edit-form-text");
-    formTextLabel.innerText = "Edit post:";
+    formTextLabel.innerText = `Edit ${type}:`;
 
     formTextDiv.append(formTextLabel, formText);
 
     return formTextDiv;
-
-}
-
-function composeComment(postId) {
-
-    const csrftoken = getCookie('csrftoken');
-
-    /*fetch('/posts/api/create', {
-        method: 'POST',
-        headers: {'X-CSRFToken': csrftoken},
-        mode: 'same-origin',
-        body: JSON.stringify({
-            type: 'Comment',
-            post_id: postId,
-            content: formText.value,
-        })
-      })
-      .then(response => response.json())
-      .then(result => {
-            // Print result
-            post = JSON.parse(result)
-            formText.value = "";
-
-            const postCard = completePostCard(post[0])
-
-            const allCont = document.querySelector('#posts-cont');
-            const profileCont = document.querySelector('.profile-post-form');
-            if (allCont !== null) {
-                allCont.prepend(postCard);
-            } else if (profileCont !== null) {
-                profileCont.after(postCard);
-            }
-
-      });*/
 
 }
