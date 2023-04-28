@@ -12,16 +12,17 @@ class Post(models.Model):
     creation_date = models.DateTimeField(default=datetime.datetime.now())
     likers = models.ManyToManyField(User, blank=True, related_name="post_likers")
 
+
     def __str__(self):
         return self.content
 
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_creator")
-    text = models.CharField(max_length=400)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_creator")
+    content = models.CharField(max_length=400)
     creation_date = models.DateTimeField(auto_now_add=True)
     likers = models.ManyToManyField(User, blank=True, related_name="comment_likers")
 
     def __str__(self):
-        return self.text
+        return f"{self.text} by {self.user}"

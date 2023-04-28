@@ -14,16 +14,26 @@ def index(request):
          "page": "all"
      })
 
+
 def search(request):
     query = request.GET.urlencode()[2:].replace("+", " ")
     return render(request, "core/search.html", {
         "query": query
     })
 
+
 @login_required
 def following(request):
      return render(request, "posts/posts.html", {
         "page": "following"
+     })
+
+
+@login_required
+def settings(request):
+    profile = User.objects.get(pk=request.user.pk)
+    return render(request, "core/settings.html", {
+         "profile": profile
      })
 
 # API route
@@ -53,20 +63,23 @@ def posts(request, input):
         }, status=400)
 
 
-def test(request):
-    print(request)
-    # Getting based on URL but splitting of the 'q='
-    # Replace method for entries with more than one word
-    return JsonResponse("No", safe=False)
-    """input = request.GET.urlencode()[2:].replace("+", " ")
-    print(input)"""
-    """print(input)
-    posts = Post.objects.filter(content__contains=input).order_by("-creation_date").all()
-
-    if request.method == "GET":
-        post_data = serializers.serialize('json', posts)
-        return JsonResponse(post_data, safe=False)
+@login_required
+def edit_settings(request):
+    user = User.objects.get(pk=request.user.pk)
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("action") == "edit":
+            user.profile_picture = data["pfp_url"]
+            user.banner = data["banner_url"]
+            user.first_name = data["first_name"]
+            user.genre = data["genre"]
+            user.save()
+            return HttpResponse(status=204)
+        else:
+            return JsonResponse({
+                "error": "Action must be editing."
+            }, status=400)
     else:
         return JsonResponse({
-            "error": "GET required for search."
-        }, status=400)"""
+            "error": "PUT request required."
+        }, status=400)

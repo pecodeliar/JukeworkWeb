@@ -30,9 +30,7 @@
 
 /* ===== Register Page ===== */
 
-.reg-item  label, input {
-    display: block;
-}
+
 
 .reg-item {
     margin: 10px;

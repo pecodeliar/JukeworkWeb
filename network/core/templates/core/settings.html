@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link href="{% static 'users/auth.css' %}?ver=1.2" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container auth-container" style="margin-top: 100px;" data-profile="{{ profile.id }}">
+
+    {% if message %}
+        <p class="alert alert-danger auth-alert" role="alert">{{ message }}</p>
+    {% endif %}
+
+
+    <div id="settings-form" data-user="{{ profile.id }}">
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+{% csrf_token %}
+{% block script %}
+    <script src="{% static 'core/javascript/settings.js' %}"></script>
+{% endblock %}

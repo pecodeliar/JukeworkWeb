@@ -165,7 +165,7 @@ function profileDropdownMenu() {
 
     const settingsLink = document.createElement("a");
     settingsLink.setAttribute("class", "nav-dropdown-item");
-    settingsLink.setAttribute("href", `#`);
+    settingsLink.setAttribute("href", `/settings`);
     settingsLink.innerText = "Settings";
     const settingsLinkIcon = document.createElement("i");
     settingsLinkIcon.setAttribute("class", "bx bxs-cog");

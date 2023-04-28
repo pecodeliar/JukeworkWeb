@@ -7,11 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
         loggedInUser = parseInt(check.dataset.user);
     };
 
-    const button = document.querySelector('#follow-btn')
-    if (button !== null) {
-        button.addEventListener('click', () => follow(button));
-    }
-
     loadProfileInfo();
     profileNavBar();
     loadActions("posts");
@@ -60,11 +55,11 @@ function loadProfileInfo() {
     username.setAttribute("id", "info-username");
 
     // Have to check if user is on their own profile. If so, add edit button, not follow
-    const followBtn = document.createElement("button");
-    followBtn.setAttribute("id", "profile-fllw-btn");
-    followBtn.setAttribute("class", "round-btn");
+    const followEditBtn = document.createElement("button");
+    followEditBtn.setAttribute("id", "profile-fllw-btn");
+    followEditBtn.setAttribute("class", "round-btn");
 
-    firstTextDiv.append(username, followBtn);
+    firstTextDiv.append(username, followEditBtn);
 
     // 2nd text div that should have post, follower and following count
 
@@ -115,14 +110,24 @@ function loadProfileInfo() {
         fullname.innerText = user.first_name;
         genre.innerText = user.genre;
 
-        // Check if logged in user follows and is followed by user
-        if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
-            followBtn.innerText = "Unfollow";
+        // Check if logged in user is profile or follows and is followed by user
+        if (loggedInUser === user.id) {
+
+            followEditBtn.innerText = "Edit Profile";
+            followEditBtn.addEventListener('click', () => editProfile());
+
+        } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
+
+            followEditBtn.innerText = "Unfollow";
+            followEditBtn.addEventListener('click', () => follow(followEditBtn));
+
         } else {
-            followBtn.innerText = "Follow";
+
+            followEditBtn.innerText = "Follow";
+            followEditBtn.addEventListener('click', () => follow(followEditBtn));
+
         }
 
-        followBtn.addEventListener('click', () => follow(followBtn));
 
         // Check if profile user follows logged in user
         if (user.following.includes(loggedInUser)) {
@@ -228,7 +233,7 @@ function loadActions(type) {
     actionsDiv.innerText = "";
 
     if (loggedInUser === profileId && type === "posts") {
-        const postForm = composePost();
+        const postForm = compose("post");
         postForm.classList.add("profile-post-form");
         actionsDiv.append(postForm);
     }
@@ -249,7 +254,7 @@ function loadActions(type) {
 
             data.forEach(item => {
 
-                const postCard = completePostCard(item);
+                const postCard = completeCard("post", item);
                 actionsDiv.append(postCard);
 
             });
@@ -311,7 +316,7 @@ function profilePostView() {
     //title.innerText = `Profile - Post`;
 
     // Add a back button
-    const backBtn = backButton("profile", user.innerText);
+    const backBtn = backButton("profile", window.location.pathname, user.innerText);
     parent.append(backBtn);
 
 }

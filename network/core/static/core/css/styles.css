@@ -399,3 +399,68 @@ a.skip-main:focus, a.skip-main:active {
     display: none;
     width: 100%;
 }
+
+
+/* ===== Settings Page ===== */
+
+.settings-pics-div {
+    display: inline-block;
+    margin-bottom: 40px;
+    width: 100%;
+    text-align: center;
+}
+
+#settings-pfp {
+    display: inline-block;
+}
+
+#settings-pfp label {
+    display: block;
+    position: relative;
+    right: 20px;
+}
+
+#settings-pfp img {
+    height: 150px;
+    width: 150px;
+}
+
+#settings-banner {
+    display: inline-block;
+    margin-left: 25px;
+}
+
+#settings-banner label {
+    display: block;
+    position: relative;
+    right: 225px;
+}
+
+#settings-banner img{
+    height: 150px;
+    width: 500px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.btn-row {
+    margin-top: 75px;
+}
+
+.set-btn-col button{
+    width: 100%;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#dlt-posts-btn {
+    background-color: var(--on-error);
+    color: var(--error);
+}
+
+#dlt-accnt-btn {
+    background-color: var(--error);
+    color: var(--on-error);
+}

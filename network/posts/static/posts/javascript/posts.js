@@ -1,18 +1,26 @@
+// When back arrow is clicked, show previous section
+window.onpopstate = function() {
+    console.log("Pop state initiated");
+ }
+
 document.addEventListener('DOMContentLoaded', function() {
 
     const postForm = document.querySelector('#post-form')
     if (postForm !== null) {
-        loggedInUser = parseInt(postForm.dataset.user)
-        const form = composePost();
+        loggedInUser = parseInt(postForm.dataset.user);
+        const form = compose("post");
         document.querySelector('#post-form').append(form);
     };
 
     const title = document.querySelector("#posts-title");
     if (title !== null && title.dataset.page === "all") {
+
         title.innerHTML = "Home"
         loadPosts();
         genreSideBarSelect();
+
     } else if (title !== null && title.dataset.page === "following") {
+
         title.innerHTML = "Following";
         loadPosts("following");
         const parent = document.querySelector(".posts-container");
@@ -21,6 +29,41 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector("#posts-view").style.width = "100%";
         document.querySelector("#posts-cont").style.marginLeft = "0";
         document.querySelector("#posts-cont").style.padding = "0";
+
+    } else if (title !== null && title.dataset.page === "post") {
+
+        title.innerHTML = "";
+        // Slicing 'posts/post/' which is 12 characters out of pathname and converting to int
+        const post_id = window.location.pathname.slice(12);
+
+        fetch(`/posts/api/post/${post_id}`)
+        .then(response => response.json() )
+        .then(json => {
+
+            const post = JSON.parse(json);
+
+            fetch(`/posts/api/post/${post_id}/comments`)
+            .then(response => response.json() )
+            .then(json => {
+
+                const comments = JSON.parse(json);
+
+                fullPostView(post[0].fields, post_id, comments);
+
+
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+        //fullPostView(post, id, comments);
+
     };
 
 });
@@ -118,7 +161,7 @@ async function loadPosts(request="") {
 
         for (let i = startRange; i <= endRange - 1; i++) {
 
-            const postCard = completePostCard(allPosts[i]);
+            const postCard = completeCard("post", allPosts[i]);
             innerParent.append(postCard);
 
         }
@@ -210,7 +253,7 @@ function genreSideBarSelect() {
 
 }
 
-function allPostsPostView () {
+function allPostsPostView (singlePage=true) {
 
     const parent = document.querySelector('#post-view');
     const container = parent.parentElement
@@ -235,10 +278,18 @@ function allPostsPostView () {
     // Change title and store for Later
     const title = document.querySelector("#posts-title");
     const titleText = title.innerText;
-    title.innerText = `${titleText} - Post`;
-
+    if (singlePage === true) {
+        title.innerText = `${titleText} - Post`;
+    } else {
+        title.innerText = `Post`;
+    }
     // Add a back button
-    const backBtn = backButton("all", titleText);
+    let backBtn = null
+    if (singlePage === true) {
+        backBtn = backButton("all", window.location.pathname, titleText);
+    } else {
+        backBtn = backButton("render", window.location.pathname, "All Posts");
+    }
     parent.append(backBtn);
 
 }
