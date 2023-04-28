@@ -1,4 +1,4 @@
-function backButton(page, pageTitle) {
+function backButton(page, path, pageTitle="") {
 
     /* Back Button for Full Post Views */
 
@@ -20,7 +20,9 @@ function backButton(page, pageTitle) {
         container.classList.add("posts-container");
 
         // For All Posts Page
-        if (page === "all") {
+        if (page === "all" || page === "render") {
+            window.history.pushState('', '', '/');
+
             document.querySelector('#posts-view').style.display = "block";
             document.querySelector('#side-view').style.display = "block";
             const postForm = document.querySelector('#post-form');
@@ -30,10 +32,18 @@ function backButton(page, pageTitle) {
             document.querySelector('#post-view').style.display = "none";
             document.querySelector('#post-view').innerText = "";
             document.querySelector("#posts-title").innerText = pageTitle;
+
+            // For when the post is rendered via a direct link
+            if (page === "render") {
+                document.querySelector("#posts-title").innerText = "Home";
+                loadPosts();
+                genreSideBarSelect();
+            };
         }
 
         // For Search Page
         if (page === "search") {
+            window.history.pushState('', '', path);
             document.querySelector('#profiles-view').style.display = "block";
             document.querySelector('#search-posts-view').style.display = "block";
             document.querySelector("#search-title").innerText = pageTitle;
@@ -42,6 +52,7 @@ function backButton(page, pageTitle) {
         // For Profile Page
 
         if (page === "profile") {
+            window.history.pushState('', '', path);
             container.classList.remove("posts-container");
             document.querySelector('#profile-view').removeAttribute("style");
             document.querySelector('#profile-nav').removeAttribute("style");
@@ -61,7 +72,7 @@ function backButton(page, pageTitle) {
 
 function completeCard(type, json) {
 
-    console.log(json);
+    //console.log(json);
 
     const card = postElement(type, json.fields, json.pk);
     const likeBtn = likeButton(type, json.fields, json.pk);
@@ -91,7 +102,7 @@ function completeCard(type, json) {
 
 function postElement(type, fields, id) {
 
-    console.log(type, fields, id)
+    //console.log(type, fields, id)
 
     // Make parent
     const card = document.createElement("article");
@@ -136,16 +147,8 @@ function postElement(type, fields, id) {
         top.append(editBtn, edittingForm);
     };
 
-    // Checking if this is the profiles page, search page or index
-    let check = "";
-    const titleCheck = document.querySelector("#posts-title");
-    const searchCheck = document.querySelector("#search-cont");
-    if (titleCheck !== null || searchCheck !== null) {
-        check = "profiles/";
-    };
-
     // Get user information
-    fetch(`${check}api/profile/${fields.creator}`)
+    fetch(`/profiles/api/profile/${fields.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -242,6 +245,8 @@ function likeButton(type, fields, id) {
 
 function likeAction(button) {
 
+    const post_id = window.location.pathname.slice(12);
+
     const csrftoken = getCookie('csrftoken');
 
     // Get id and like type (post or comment) from dataset
@@ -260,7 +265,7 @@ function likeAction(button) {
         btnTwo = elements.item(3)
     }
 
-    fetch(`/posts/api/${type}/${id}`)
+    fetch(`/posts/api/post/${post_id}`)
     .then(response => {
         if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
     })
@@ -268,12 +273,14 @@ function likeAction(button) {
 
         var count = parseInt(elements.item(2).textContent)
 
-        return fetch(`/posts/api/${type}/${id}`, {
+        return fetch(`/posts/api/post/${post_id}/action`, {
             method: 'PUT',
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
             body: JSON.stringify({
-                action: action
+                action: action,
+                type: type,
+                id: id
             })
         })
         .then(() => {
@@ -317,11 +324,18 @@ function fullPostView(post, id, comments) {
     // Check what page is displayed
     const titleCheck = document.querySelector("#posts-title");
     if (document.querySelector("#posts-title") !== null) {
-        allPostsPostView();
+        // Check if it is and empty string which would indicate is being rendered by Django
+        if (document.querySelector("#posts-title").innerText === "") {
+            allPostsPostView(singlePage=false);
+        } else {
+            allPostsPostView();
+        }
     } else if (document.querySelector("#search-cont") !== null) {
         searchPostView();
+        window.history.pushState('', '', '/');
     } else if (document.querySelector("#banner-row") !== null) {
         profilePostView();
+        window.history.pushState('', '', '/');
     };
 
     // Make post parent
@@ -430,11 +444,13 @@ function fullPostView(post, id, comments) {
     const commentsSection = document.createElement("div");
     parent.append(commentsSection);
 
-    const cmntCompose = compose("comment", id);
-    commentsSection.append(cmntCompose);
+    if (loggedInUser !== null) {
+        const cmntCompose = compose("comment", id);
+        commentsSection.append(cmntCompose);
+    }
     //const cmntJson = JSON.parse(comments);
 
-    console.log(comments)
+    //console.log(comments)
 
     if (comments["length"] === 0) {
 
@@ -481,6 +497,8 @@ function seeCommentsButton(post, post_id) {
         commentsBtn.addEventListener("click", () => {
 
             const fullView = fullPostView(post, post_id, json);
+            // Add the current state to the history
+            history.pushState({foo: "bar"}, "", `posts/post/${post_id}`);
 
         });
 

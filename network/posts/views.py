@@ -14,7 +14,27 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
+# Create your views here.
+def view_post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    return render(request, "posts/posts.html", {
+        "page": "post",
+        "post": post_id
+     })
+
 # API routes
+
+def post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    if request.method == "GET":
+        data = serializers.serialize('json', [post, ])
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse({
+            "error": "GET request required."
+        }, status=400)
+
+
 def posts(request):
     posts = Post.objects.order_by("-creation_date")
     if request.method == "GET":
@@ -81,16 +101,10 @@ def create(request):
         }, status=400)
 
 
-
-
 @login_required
-def post(request, post_id):
+def action(request, post_id):
     post = Post.objects.get(pk=post_id)
-    comments = Comment.objects.filter(post=post)
-    if request.method == "GET":
-        data = serializers.serialize('json', [post, ])
-        return JsonResponse(data, safe=False)
-    elif request.method == "PUT":
+    if request.method == "PUT":
         data = json.loads(request.body)
         # If they are trying to edit the content, make sure they are the owner of that post
         if data.get("content") is not None:
@@ -104,14 +118,29 @@ def post(request, post_id):
                 }, status=400)
         # User is likeing the content
         elif data.get("action") is not None:
-            if data.get("action") == "Like":
-                post.likers.add(request.user.id)
-                post.save()
-                return HttpResponse(status=204)
-            elif data.get("action") == "Unlike":
-                post.likers.remove(request.user.id)
-                post.save()
-                return HttpResponse(status=204)
+            if data.get("type") == "post":
+                if data.get("action") == "Like":
+                    post.likers.add(request.user.id)
+                    post.save()
+                    return HttpResponse(status=204)
+                elif data.get("action") == "Unlike":
+                    post.likers.remove(request.user.id)
+                    post.save()
+                    return HttpResponse(status=204)
+            elif data.get("type") == "comment":
+                comment = Comment.objects.get(pk=data.get("id"))
+                if data.get("action") == "Like":
+                    comment.likers.add(request.user.id)
+                    comment.save()
+                    return HttpResponse(status=204)
+                elif data.get("action") == "Unlike":
+                    comment.likers.remove(request.user.id)
+                    comment.save()
+                    return HttpResponse(status=204)
+            else:
+                return JsonResponse({
+                    "error": "Has to be a post or comment."
+                }, status=400)
         else:
                 return JsonResponse({
                     "error": "Something went wrong."

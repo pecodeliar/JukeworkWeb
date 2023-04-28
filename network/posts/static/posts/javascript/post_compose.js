@@ -20,16 +20,8 @@ function compose(type, postId=null) {
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
 
-    // Checking if this is the profiles page, search page or index
-    let check = ""
-    const titleCheck = document.querySelector("#posts-title");
-    const searchCheck = document.querySelector("#search-cont");
-    if (titleCheck !== null || searchCheck !== null) {
-        check = "profiles/";
-    };
-
     // Get user information for PFP
-    fetch(`${check}api/profile/${loggedInUser}`)
+    fetch(`/profiles/api/profile/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -137,7 +129,7 @@ function editAction(type, button, full=false) {
     }
 
     const editables = document.querySelectorAll(`[data-${type}='${id}']`)
-    console.log(editables)
+    //console.log(editables)
 
     // Defining now so that depending on on full's boolean, variables to do not have be redeinfed
     let editBtn = null;
@@ -207,7 +199,7 @@ function editAction(type, button, full=false) {
 
         //https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 
-        fetch(`/posts/api/${type}/${id}`, {
+        fetch(`/posts/api/${type}/${id}/action`, {
             method: 'PUT',
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',

@@ -316,7 +316,7 @@ function profilePostView() {
     //title.innerText = `Profile - Post`;
 
     // Add a back button
-    const backBtn = backButton("profile", user.innerText);
+    const backBtn = backButton("profile", window.location.pathname, user.innerText);
     parent.append(backBtn);
 
 }
