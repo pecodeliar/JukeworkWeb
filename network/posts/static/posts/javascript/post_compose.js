@@ -4,14 +4,14 @@ function compose(type, postId=null) {
 
     // Make div
     const formDiv = document.createElement("div");
-    formDiv.setAttribute("class", "form-div");
+    formDiv.setAttribute("class", `${type}-form-div`);
     formDiv.setAttribute("onsubmit", "event.preventDefault();");
 
     var form = document.createElement("form");
     form.setAttribute("method", "post");
 
     var formRow = document.createElement("div");
-    formRow.setAttribute("class", "post-form-row");
+    formRow.setAttribute("class", `${type}-form-row`);
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
@@ -36,12 +36,17 @@ function compose(type, postId=null) {
 
     const formTextDiv = document.createElement("div");
     formTextDiv.setAttribute("class", "form-text-div");
-    const formText = document.createElement("textarea");
-    formText.setAttribute("id", "form-text");
-    formText.placeholder = "Enter post content..."
+    let formText = null;
+    if (type === "post") {
+        formText = document.createElement("textarea");
+    } else {
+        formText = document.createElement("input");
+    }
+    formText.setAttribute("id", `${type}-form-text`);
+    formText.placeholder = `Enter ${type} content...`;
     const formTextLabel = document.createElement("label");
-    formTextLabel.setAttribute("for", "form-text");
-    formTextLabel.innerText = "Enter text for a new post:";
+    formTextLabel.setAttribute("for", `${type}-form-text`);
+    formTextLabel.innerText = `Enter text for a new ${type}:`;
     formTextDiv.append(formTextLabel, formText)
     formRow.append(formTextDiv);
 
@@ -68,9 +73,9 @@ function compose(type, postId=null) {
                 post = JSON.parse(result)
                 formText.value = "";
 
-                //const postCard = completeCard(type, post[0])
+                const postCard = completeCard(type, post[0])
 
-                /*if (type === "post") {
+                if (type === "post") {
 
                     const allCont = document.querySelector('#posts-cont');
                     const profileCont = document.querySelector('.profile-post-form');
@@ -82,10 +87,10 @@ function compose(type, postId=null) {
 
                 } else if (type === "comment") {
 
-                    const allCont = document.querySelector('#posts-view');
-                    allCont.prepend(postCard);
+                    const allCont = document.querySelector('.comment-form-div');
+                    allCont.after(postCard);
 
-                }*/
+                }
 
           })
 
@@ -102,7 +107,7 @@ function editButton(type, post, id) {
     const upperType = titleCase(type);
 
     const editBtn = document.createElement("button");
-    editBtn.setAttribute("class", "post-edit-btn");
+    editBtn.setAttribute("class", `post-like-btn ${type}-edit-btn`);
     editBtn.innerText = `Edit ${upperType}`;
 
     const editIcon = document.createElement("i");
@@ -129,7 +134,7 @@ function editAction(type, button, full=false) {
     }
 
     const editables = document.querySelectorAll(`[data-${type}='${id}']`)
-    //console.log(editables)
+    console.log(editables)
 
     // Defining now so that depending on on full's boolean, variables to do not have be redeinfed
     let editBtn = null;
@@ -137,31 +142,45 @@ function editAction(type, button, full=false) {
     let likeBtn = null;
     let editFormDiv = null;
     let editForm = null;
+    let cancelBtn = null;
     let saveBtn = null;
     let commentBtn = null;
 
     if (full === false) {
 
         // Hiding the edit button and uneditable content text
-        editBtn = editables.item(0);
-        editBtn.style.display = "none";
 
-        postText = editables.item(3);
+        postText = editables.item(2);
         postText.style.display = "none";
 
-        likeBtn = editables.item(4);
+        likeBtn = editables.item(3);
         likeBtn.style.display = "none";
 
-        commentBtn = editables.item(5);
-        commentBtn.style.display = "none";
+        if (type === "post") {
+            //commentBtn = editables.item(5);
+            //commentBtn.style.display = "none";
+
+            saveBtn = editables.item(4);
+            saveBtn.style.display = "block";
+        }
 
         // Showing the edit form div and fill with post content and the save button
-        editFormDiv = editables.item(1);
+        editFormDiv = editables.item(0);
         editFormDiv.style.display = "block";
-        editForm = editables.item(2);
+        editForm = editables.item(1);
         editForm.value = postText.innerText;
-        saveBtn = editables.item(6);
-        saveBtn.style.display = "block";
+
+        if (type === "comment") {
+
+            editBtn = editables.item(4);
+            editBtn.style.display = "none";
+
+            cancelBtn = editables.item(5);
+            cancelBtn.style.display = "block";
+
+            saveBtn = editables.item(6);
+            saveBtn.style.display = "block";
+        }
 
     } else {
 
@@ -185,6 +204,19 @@ function editAction(type, button, full=false) {
 
     }
 
+    cancelBtn.addEventListener("click", () => {
+        // After changing content, hide the form field
+        editFormDiv.style.display = "none";
+        saveBtn.style.display = "none";
+        cancelBtn.style.display = "none";
+        // Show edit button
+        editBtn.removeAttribute("style");
+        // Reshow unedditable content
+        postText.style.display = "block";
+        // Show like button
+        likeBtn.removeAttribute("style");
+    })
+
     saveBtn.addEventListener("click", () => {
 
         newContent = null
@@ -197,14 +229,18 @@ function editAction(type, button, full=false) {
 
         const csrftoken = getCookie('csrftoken');
 
+        const post_id = window.location.pathname.slice(12);
+
         //https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 
-        fetch(`/posts/api/${type}/${id}/action`, {
+        fetch(`/posts/api/post/${post_id}/action`, {
             method: 'PUT',
             headers: {'X-CSRFToken': csrftoken},
             mode: 'same-origin',
             body: JSON.stringify({
-                content: newContent
+                type: type,
+                content: newContent,
+                id: id
             })
         })
         .then(response => {
@@ -215,17 +251,18 @@ function editAction(type, button, full=false) {
             // After changing content, hide the form field
             editFormDiv.style.display = "none";
             saveBtn.style.display = "none";
+            cancelBtn.style.display = "none";
             // Show edit button
-            editBtn.style.display = "block";
+            editBtn.removeAttribute("style");
             // Replace unedditable content with new value for both post elements and full view
-            editables.item(3).innerText = newContent;
+            postText.innerText = newContent;
             if (full === true) {
                 editables.item(9).innerText = newContent;
             }
             // Reshow unedditable content
             postText.style.display = "block";
             // Show like button
-            likeBtn.style.display = "block";
+            likeBtn.removeAttribute("style");
 
         })
         .catch(error => {

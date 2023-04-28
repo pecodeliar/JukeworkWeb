@@ -76,10 +76,10 @@ function completeCard(type, json) {
 
     const card = postElement(type, json.fields, json.pk);
     const likeBtn = likeButton(type, json.fields, json.pk);
-    card.querySelector(".misc-div").append(likeBtn);
+    card.querySelector(`.${type}-misc-div`).append(likeBtn);
     if (type === "post") {
         const commentBtn = seeCommentsButton(json.fields, json.pk);
-        card.querySelector(".misc-div").append(commentBtn);
+        card.querySelector(`.${type}-misc-div`).append(commentBtn);
     };
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
@@ -87,11 +87,24 @@ function completeCard(type, json) {
 
     if (loggedInUser === json.fields.creator) {
 
+        const editBtn = editButton(type, json.fields, json.pk);
+        editBtn.addEventListener("click", () => {
+            editAction(type, editBtn);
+        })
+        card.querySelector(`.${type}-misc-div`).append(editBtn);
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+        cancelBtn.setAttribute(`data-${type}`, json.pk);
+        cancelBtn.innerText = "Cancel Edit";
+        card.querySelector(`.${type}-misc-div`).append(cancelBtn);
+        cancelBtn.style.display = "none";
+
         const saveBtn = document.createElement("button");
         saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        saveBtn.setAttribute("data-post", json.pk);
+        saveBtn.setAttribute(`data-${type}`, json.pk);
         saveBtn.innerText = "Save Edit";
-        card.querySelector(".misc-div").append(saveBtn);
+        card.querySelector(`.${type}-misc-div`).append(saveBtn);
         saveBtn.style.display = "none";
 
     };
@@ -106,12 +119,12 @@ function postElement(type, fields, id) {
 
     // Make parent
     const card = document.createElement("article");
-    card.setAttribute("class", "post-card");
+    card.setAttribute("class", `${type}-card`);
 
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
-    pfpDiv.setAttribute("class", "round-pfp post-pfp");
+    pfpDiv.setAttribute("class", `round-pfp ${type}-pfp`);
     const pfpLink = document.createElement("a");
     const pfp = document.createElement("img");
     pfpLink.append(pfp);
@@ -119,32 +132,28 @@ function postElement(type, fields, id) {
 
     // Everything else div
     const miscDiv = document.createElement("div");
-    miscDiv.setAttribute("class", "misc-div");
+    miscDiv.setAttribute("class", `${type}-misc-div`);
 
     // Top of post div that will have details and edit button
     const top = document.createElement("div");
-    top.setAttribute("class", "post-top");
+    top.setAttribute("class", `${type}-top`);
 
     // Top of the card with user's names and post creation date
     const topDeets = document.createElement("div");
-    topDeets.setAttribute("class", "post-top-deets");
+    topDeets.setAttribute("class", `${type}-top-deets`);
     const fullName = document.createElement("a");
-    fullName.setAttribute("class", "post-full-name");
+    fullName.setAttribute("class", `${type}-full-name`);
     const userAndCreation = document.createElement("span");
-    userAndCreation.setAttribute("class", "post-user-create");
+    userAndCreation.setAttribute("class", `${type}-user-create`);
     topDeets.append(fullName, userAndCreation)
     top.append(topDeets)
 
-    // Edit button
+    // Edit form
     if (loggedInUser === fields.creator) {
 
-        const editBtn = editButton(type, fields, id);
-        editBtn.addEventListener("click", () => {
-            editAction(type, editBtn);
-        })
-        const edittingForm = editForm("post", id);
+        const edittingForm = editForm(type, id);
         edittingForm.style.display = "none";
-        top.append(editBtn, edittingForm);
+        top.append(edittingForm);
     };
 
     // Get user information
@@ -171,10 +180,10 @@ function postElement(type, fields, id) {
 
     // Post Content
     const postContentDiv = document.createElement("div");
-    postContentDiv.setAttribute("class", "post-content-cont");
+    postContentDiv.setAttribute("class", `${type}-content-cont`);
     const postContent = document.createElement("span");
-    postContent.setAttribute("class", "post-content-text");
-    postContent.setAttribute("data-post", id);
+    postContent.setAttribute("class", `${type}-content-text`);
+    postContent.setAttribute(`data-${type}`, id);
     postContent.innerText = fields.content;
     postContentDiv.append(postContent);
 
@@ -203,11 +212,11 @@ function likeButton(type, fields, id) {
     const upperType = titleCase(type);
 
     const likeBtn = document.createElement("button");
-    likeBtn.setAttribute("class", "post-like-btn");
+    likeBtn.setAttribute("class", `${type}-like-btn`);
     likeBtn.setAttribute("data-id", id);
     likeBtn.setAttribute("data-type", `${type}`);
     const likeIcon = document.createElement("i");
-    likeIcon.setAttribute("class", "bx bxs-heart post-like-heart");
+    likeIcon.setAttribute("class", "bx bxs-heart ${type}-like-heart");
     likeIcon.setAttribute("data-id", id);
     likeIcon.setAttribute("data-type", `${type}`);
     likeIcon.setAttribute("aria-hidden", "true");
@@ -433,7 +442,8 @@ function fullPostView(post, id, comments) {
         })
         const edittingForm = editForm("post", id);
         edittingForm.style.display = "none";
-        postUserDiv.append(editBtn, edittingForm);
+        postUserDiv.append(edittingForm);
+        buttonsDiv.append(editBtn);
     };
 
     postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);

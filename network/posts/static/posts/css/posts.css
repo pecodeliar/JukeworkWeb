@@ -21,7 +21,7 @@
     margin-top: 0;
 }
 
-.form-div {
+.post-form-div {
     margin-top: 10px;
     background-color: var(--main);
     padding-right: 10px;
@@ -30,12 +30,31 @@
     border-radius: 10px;
 }
 
+.comment-form-div {
+    margin-top: 20px;
+}
+
+#comment-form-text {
+    background-color: var(--background);
+    outline: none;
+    border: none;
+    border-bottom: 1px solid var(--on-background);
+    margin-bottom: 10px;
+    font-size: medium;
+    color: var(--on-background);
+    width: 100%;
+}
+
 #post-form {
     order: -1;
     flex: 1 0 100%;
 }
 
 .post-form-row {
+    display: flex;
+}
+
+.comment-form-row {
     display: flex;
 }
 
@@ -57,7 +76,7 @@
     color: white;
 }
 
-#form-text {
+#post-form-text {
     background-color: #383636;
     color: white;
     border: 0.5px solid #5e5d5c;

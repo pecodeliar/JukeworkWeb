@@ -28,7 +28,7 @@
     object-position: center;
 }
 
-.misc-div {
+.post-misc-div {
     margin-top: 10px;
     margin-left: 25px;
     margin-right: 25px;
@@ -68,15 +68,19 @@
     display: inline-block;
     margin: 5px;
     border: none;
-    background-color: var(--main);
+    background-color: var(--background);
     color: white;
     outline: gray solid 1px;
     border-radius: 30px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     padding: 5px;
     padding-left: 10px;
     padding-right: 17px;
+}
+
+.post-edit-btn {
+    padding: 10px;
 }
 
 .post-like-btn:focus {
@@ -132,7 +136,8 @@
 }
 
 .post-view-card {
-    background-color: var(--main);
+    background-color: var(--background);
+    border: 1px solid white;
     color: white;
     padding: 10px;
     border-radius: 10px;
@@ -176,12 +181,138 @@
 }
 
 .post-view-timestamp-cont {
+    margin: 0;
+    padding: 0;
 }
 
 .post-view-time {
-    padding: 10px;
+    padding-left: 15px;
 }
 
 .full-buttons-div {
     text-align: center;
+}
+
+/* --- Edit Button --- */
+.post-edit-btn {
+
+}
+
+.post-edit-btn i{
+    margin-right: 5px;
+}
+
+.comment-edit-btn {
+    background-color: var(--background);
+}
+
+.comment-edit-btn i{
+    margin-right: 5px;
+}
+
+/* --- Comment Section --- */
+
+
+.comments-section label {
+    color: var(--on-background);
+}
+
+.make-comment-cont {
+    width: 100%;
+    display: flex;
+}
+
+.cmnt-card-img-w-text-box {
+    width: 100%;
+    display: flex;
+}
+
+.comment-submit {
+    width: 100%;
+}
+
+.logged-comment-pfp {
+    display:inline-block;
+    text-align: center;
+}
+
+
+
+.comment-form-box {
+    background-color: var(--background);
+    outline: none;
+    border: none;
+    border-bottom: 1px solid var(--on-background);
+    margin-bottom: 10px;
+    font-size: medium;
+    color: var(--on-background);
+    width: 100%;
+}
+
+#add-cmnt-btn {
+    float: right;
+}
+
+.comment-card {
+    width: 100%;
+    display: flex;
+    color: var(--on-background);
+    margin: 10px;
+}
+
+.comment-pfp img{
+    display:inline-block;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+    margin-right: 5px;
+    margin-top: 15px;
+}
+
+.comment-details {
+    margin: 10px;
+}
+
+.comment-content-text {
+    margin: 0;
+}
+
+.comment-full-name {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+ }
+
+.comment-user-create {
+    color: var(--on-accent-container);
+    font-size: 0.80em;
+    margin-left: 5px;
+    font-weight: lighter;
+}
+
+.comment-like-btn {
+    display: inline-block;
+    margin: 5px;
+    border: none;
+    background-color: var(--background);
+    color: white;
+    outline: gray solid 1px;
+    border-radius: 30px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 17px;
+}
+
+.comment-like-btn i {
+    margin-right: 5px;
+}
+
+.comment-like-btn p {
+    padding: 0;
+    margin: 0;
+    margin-right: 5px;
+}
+
+.comment-misc-div {
+    margin-left: 7px;
 }

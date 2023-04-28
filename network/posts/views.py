@@ -108,14 +108,25 @@ def action(request, post_id):
         data = json.loads(request.body)
         # If they are trying to edit the content, make sure they are the owner of that post
         if data.get("content") is not None:
-            if request.user.id == post.creator.id:
-                post.content = data["content"]
-                post.save()
-                return HttpResponse(status=204)
-            else:
-                return JsonResponse({
-                    "error": "You are not the user of this post."
-                }, status=400)
+            if data.get("type") == "post":
+                if request.user.id == post.creator.id:
+                    post.content = data["content"]
+                    post.save()
+                    return HttpResponse(status=204)
+                else:
+                    return JsonResponse({
+                        "error": "You are not the user of this post."
+                    }, status=400)
+            elif data.get("type") == "comment":
+                comment = Comment.objects.get(pk=data.get("id"))
+                if request.user.id == comment.creator.id:
+                    comment.content = data["content"]
+                    comment.save()
+                    return HttpResponse(status=204)
+                else:
+                    return JsonResponse({
+                        "error": "You are not the user of this post."
+                    }, status=400)
         # User is likeing the content
         elif data.get("action") is not None:
             if data.get("type") == "post":
