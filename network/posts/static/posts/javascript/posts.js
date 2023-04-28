@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const comments = JSON.parse(json);
 
-                fullPostView(post[0].fields, post[0].id, comments);
+                fullPostView(post[0].fields, post_id, comments);
 
 
 
