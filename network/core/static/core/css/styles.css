@@ -403,6 +403,8 @@ a.skip-main:focus, a.skip-main:active {
 
 /* ===== Settings Page ===== */
 
+/*https://stackoverflow.com/questions/22196587/how-to-vertically-center-a-container-in-bootstrap*/
+
 .settings-pics-div {
     display: inline-block;
     margin-bottom: 40px;

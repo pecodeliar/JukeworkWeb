@@ -121,6 +121,7 @@ function editProfileForm() {
     deleteAccountBtn.setAttribute("class", "set-btn");
     deleteAccountBtn.setAttribute("id", "dlt-accnt-btn");
     deleteAccountBtn.innerText = "Delete User Account";
+    deleteAccountBtn.addEventListener('click', () => deleteAccount());
     deleteAccountDiv.append(deleteAccountBtn)
 
     thirdFormRow.append(deletePostsDiv, deleteAccountDiv);
@@ -222,21 +223,42 @@ function saveEdit() {
 
 function deleteAllPosts() {
 
-    console.log("In Delete All Posts");
-
     const csrftoken = getCookie('csrftoken');
 
-    fetch(`/posts/api/purge`, {
-        method: 'DELETE',
-        headers: {'X-CSRFToken': csrftoken}
-    })
-    .then(() => {
+    if (confirm("Are you sure you would like to delete all of your posts? This cannot be undone.")) {
 
-        console.log("All Posts Deleted Successfully");
+        fetch(`/posts/api/purge`, {
+            method: 'DELETE',
+            headers: {'X-CSRFToken': csrftoken}
+        })
+        .then(() => {
 
-    })
-    .catch(error => {
-        console.log(error);
-    });
+            const message = document.getElementById("settings-alert");
+            message.style.display = "block";
+            message.classList.add("alert-success");
+            message.innerText = "All posts have been deleted successfully.";
+
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    } else {
+
+        console.log("They cancelled");
+
+    }
+
+}
+
+function deleteAccount() {
+
+    console.log("Danger! In Delete Account");
+
+    if (confirm("Are you sure you would like to delete your account? This cannot be undone.")) {
+        console.log("They said yes");
+    } else {
+        console.log("They cancelled");
+    }
 
 }
