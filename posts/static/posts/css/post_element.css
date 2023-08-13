@@ -1,0 +1,357 @@
+/* ===== Post Element Cards ===== */
+
+#posts-cont {
+    padding: 0;
+    padding-right: 16px;
+}
+
+.post-card {
+    margin-bottom: 16px;
+    border-radius: 16px;
+    color: white;
+    display: flex;
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-02);
+}
+
+.post-pfp {
+    margin-top: 24px;
+    margin-left: 24px;
+    margin-right: 0;
+    vertical-align: top;
+    height: 100%;
+}
+
+.post-pfp img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.post-misc-div {
+    margin: 8px 24px;
+}
+
+.post-misc-div div {
+    margin: 8px 0;
+}
+
+.post-top-deets {
+}
+
+.post-full-name {
+    color: white;
+}
+
+.post-full-name:hover {
+    color: white;
+}
+
+.post-user-create {
+    color: var(--on-variant);
+}
+
+.post-content-cont {
+    padding-right: 5px;
+}
+
+.post-like-heart {
+    display: inline-block;
+    margin: 5px;
+    margin-left: 5px;
+}
+
+.like-cnt {
+    display: inline-block;
+    margin: 5px;
+}
+
+.post-btn-cont {
+    display: flex;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.post-like-btn,
+.comment-like-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 24px;
+    padding: 4px 16px;
+    box-shadow: var(--shad-01);
+}
+
+#post-view .post-like-btn {
+    background-color: var(--accent);
+}
+
+.post-edit-btn {
+    padding: 10px;
+}
+
+.post-like-btn:hover {
+    box-shadow: var(--shad-02);
+}
+
+.post-like-btn:focus {
+    outline: white solid 3px;
+}
+
+#load-btn-div {
+    text-align: center;
+}
+
+#load-btn {
+    width: 50%;
+    margin: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--accent);
+    color: white;
+}
+
+#load-btn:focus {
+    outline: var(--on-accent-container) solid 3px;
+}
+
+#load-btn:hover {
+    background-color: var(--accent-container);
+}
+
+
+/* ===== Full Post View ===== */
+
+.back-btn {
+    color: white;
+    margin-bottom: 20px;
+    vertical-align: middle;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.back-btn i {
+    padding-right: 5px;
+    font-size: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.back-btn span {
+    vertical-align: middle;
+    padding-right: 5px;
+}
+
+.post-view-card {
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-02);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 48px;
+}
+
+.post-view-user-cont {
+    display: inline-block;
+    margin-left: 16px;
+    padding: 16px;
+}
+
+.post-view-pfp {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.post-view-pfp img {
+    height: 80px;
+    width: 80px;
+}
+
+.user-info-div {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 16px;
+    font-size: 1.25rem;
+}
+
+.user-info-div p{
+    margin: 0;
+}
+
+.user-info-full-name {
+    color: white;
+}
+
+.user-info-full-name:hover {
+    color: white;
+}
+
+.post-view-content-text {
+    padding: 16px 32px;
+    font-size: 1.75rem;
+}
+
+.post-view-timestamp-cont {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.post-view-time {
+    margin-left: -20px;
+}
+
+.full-buttons-div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Edit Button --- */
+
+.comment-btn-cont {
+    display: flex;
+}
+.post-edit-btn {
+
+}
+
+.post-edit-btn i{
+    margin-right: 5px;
+}
+
+.comment-edit-btn {
+    background-color: var(--background);
+}
+
+.comment-edit-btn i{
+    margin-right: 5px;
+}
+
+/* --- Comment Section --- */
+
+#comment-cont h2 {
+    margin: 0 32px;
+    font-size: 1.75rem;
+    font-weight: 400;
+}
+
+
+.comments-section label {
+    color: var(--on-background);
+}
+
+.make-comment-cont {
+    width: 100%;
+    display: flex;
+}
+
+.cmnt-card-img-w-text-box {
+    width: 100%;
+    display: flex;
+}
+
+.comment-submit {
+    width: 100%;
+}
+
+.logged-comment-pfp {
+    display:inline-block;
+    text-align: center;
+}
+
+
+
+.comment-form-box {
+    background-color: var(--background);
+    outline: none;
+    border: none;
+    border-bottom: 1px solid var(--on-background);
+    margin-bottom: 10px;
+    font-size: medium;
+    color: var(--on-background);
+    width: 100%;
+}
+
+#add-cmnt-btn {
+    float: right;
+}
+
+.comment-card {
+    display: flex;
+    color: white;
+    margin: 24px;
+}
+
+.comment-pfp img{
+    display:inline-block;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+    margin-right: 5px;
+    margin-top: 15px;
+}
+
+.comment-details {
+    margin: 10px;
+}
+
+.comment-content-text {
+    margin: 0;
+}
+
+.comment-full-name {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+ }
+
+.comment-user-create {
+    color: var(--on-variant);
+    font-size: 0.80em;
+    margin-left: 5px;
+    font-weight: lighter;
+}
+
+.comment-like-btn i {
+    margin-right: 5px;
+}
+
+.comment-like-btn p {
+    padding: 0;
+    margin: 0;
+    margin-right: 5px;
+}
+
+.comment-misc-div {
+    margin-left: 16px;
+    width: 100%;
+}
+
+.comment-top-div {
+    margin: 8px;
+}
+
+.comment-top-deets {
+    margin-bottom: 5px;
+}
+.comment-content-cont {
+    margin-bottom: 8px;
+}

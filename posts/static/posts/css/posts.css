@@ -1,0 +1,156 @@
+#posts-title {
+    color: var(--on-background);
+}
+
+.posts-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.posts-child {
+    flex: 1; /* additionally, equal width */
+    margin-right: 10px;
+    margin-left: 0;
+}
+
+/* ===== Create Post Form ===== */
+
+#posts-view {
+    width: 75%;
+    margin-top: 0;
+}
+
+.post-form-div {
+    margin: 16px 0;
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-02);
+    padding-right: 10px;
+    padding-bottom: 60px;
+    padding-top: 10px;
+    border-radius: 10px;
+}
+
+.comment-form-div {
+    margin-top: 20px;
+}
+
+#comment-form-text,
+#edit-form-text {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid white;
+    margin-bottom: 10px;
+    font-size: medium;
+    color: white;
+    width: 100%;
+}
+
+#comment-cont .comment-edit-btn {
+    background: var(--primary);
+}
+
+#post-form {
+    order: -1;
+    flex: 1 0 100%;
+}
+
+.post-form-row {
+    display: flex;
+}
+
+.comment-form-row {
+    display: flex;
+    padding-left: 16px;
+    padding-right: 32px;
+}
+
+.create-post-pfp {
+    width: 84px;
+}
+
+.create-post-pfp img {
+    height: 50px;
+    width: 50px;
+    margin: 8px;
+}
+
+.posts-container .create-post-pfp {
+    width: 104px;
+}
+
+.posts-container .create-post-pfp img {
+    margin: 24px;
+}
+
+
+.form-text-div {
+    width: 100%;
+    margin-right: 8px;
+}
+
+.form-text-div label{
+    color: white;
+}
+
+#post-form-text {
+    background-color: rgba(255,255,255,0.5);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-01);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+}
+
+.post-crt-btn {
+    margin-top: 8px;
+    margin-right: 32px;
+    background-color: var(--on-primary);
+    color: var(--primary);
+}
+
+.comment-btn-cont .post-crt-btn {
+    margin-right: 8px;
+}
+
+.post-crt-btn:focus {
+    color: var(--on-primary);
+    background-color: var(--primary);
+    outline: var(--on-primary) solid 3px;
+}
+
+.post-crt-btn:hover {
+    color: var(--on-primary);
+    background-color: var(--primary);
+    outline: var(--on-primary) solid 1px;
+}
+
+/* ===== Genre Sidebar ===== */
+
+#side-view {
+    width: 25%;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+    order: 2;
+}
+
+#genre-sidebar {
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    border-radius: 16px;
+    width: 100%;
+    padding: 32px;
+}
+
+#genre-sidebar legend {
+    color: white;
+}
+
+.sb-genre-cont label{
+    margin-left: 12px;
+    color: white;
+}

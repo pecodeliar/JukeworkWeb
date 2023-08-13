@@ -1,0 +1,73 @@
+.auth-rdrt-link {
+    color: var(--accent-container-hover);
+    font-weight: 600;
+}
+
+.auth-rdrt-link:hover {
+    color: var(--accent-container-hover);
+}
+
+.auth-btn {
+    background-color: var(--accent);
+    color: white;
+}
+
+/* ===== Login Page ===== */
+
+.auth-container {
+    padding: 30px;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-02);
+    margin-bottom: 25px;
+    color: white;
+}
+
+.auth-item {
+    padding: 1px;
+}
+
+.auth-item input{
+    background-color: rgba(255,255,255,0.4);
+    color: white;
+}
+
+.auth-item input:focus{
+    background-color: rgba(255,255,255,0.5);
+    color: white;
+    outline: var(--focus-outline) solid 3px;
+}
+
+/* ===== Register Page ===== */
+
+
+
+.reg-item {
+    margin: 10px;
+}
+
+.reg-item input {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+    border: none;
+    outline: var(--primary-container) solid 1px;
+}
+
+.reg-item select {
+    width: 100%;
+    padding: 5px;
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    color: white;
+    border: none;
+    outline: var(--primary-container) solid 1px;
+    border-radius: 5px;
+}
+
+.reg-item select:focus {
+    background-color: var(--on-variant);
+    color: var(--variant);
+    outline: var(--focus-outline) solid 3px;
+}
