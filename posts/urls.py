@@ -7,6 +7,8 @@ app_name = "posts"
 urlpatterns = [
 
     path("post/<int:post_id>", views.view_post, name="view_post"),
+    path("", views.index, name="all_posts"),
+    path("<str:genre_code>", views.index_genres, name="genre_posts"),
 
     # API routes
     path("api/all", views.posts, name="posts"),

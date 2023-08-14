@@ -17,6 +17,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+// When back arrow is clicked, show previous section
+window.onpopstate = function(event) {
+
+    if (event.state.profile !== undefined) {
+        console.log(event.state.profile)
+        loadActions(event.state.view, event.state.profile);
+    } else if (event.state.genre !== null) {
+        loadPosts(event.state.genre);
+    } else if (event.state.post !== null) {
+        loadPosts(event.state.post);
+    }
+
+
+    /*if (event.state.profile !== null) {
+        loadView(event.state.view, event.state.profile);
+    } else if (event.state.genre !== null) {
+        loadView(event.state.view, event.state.profile);
+    } else if (event.state.post !== null) {
+        loadView(event.state.view, event.state.post);
+    } else {
+        loadView(event.state.view);
+    }*/
+}
+
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {

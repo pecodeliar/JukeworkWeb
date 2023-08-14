@@ -10,9 +10,8 @@ from users.models import User
 from .models import Post, Comment
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 
-
-# Create your views here.
 
 # Create your views here.
 def view_post(request, post_id):
@@ -21,6 +20,15 @@ def view_post(request, post_id):
         "page": "post",
         "post": post_id
      })
+
+def index(request):
+    return HttpResponseRedirect(reverse("core:index"))
+
+def index_genres(request, genre_code):
+    return render(request, "posts/posts.html", {
+        "page": genre_code,
+     })
+
 
 # API routes
 

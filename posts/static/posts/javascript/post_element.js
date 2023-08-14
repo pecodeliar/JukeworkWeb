@@ -22,7 +22,7 @@ function backButton(page, path, pageTitle="") {
 
         // For All Posts Page
         if (page === "all" || page === "render") {
-            window.history.pushState('', '', '/');
+            //window.history.pushState('', '', '/');
 
             document.querySelector('#posts-view').style.display = "block";
             document.querySelector('#side-view').style.display = "block";
@@ -44,7 +44,7 @@ function backButton(page, path, pageTitle="") {
 
         // For Search Page
         if (page === "search") {
-            window.history.pushState('', '', path);
+            //window.history.pushState('', '', path);
             document.querySelector('#profiles-view').style.display = "block";
             document.querySelector('#search-posts-view').style.display = "block";
             document.querySelector("#search-title").innerText = pageTitle;
@@ -53,7 +53,12 @@ function backButton(page, path, pageTitle="") {
         // For Profile Page
 
         if (page === "profile") {
-            window.history.pushState('', '', path);
+            //window.history.pushState('', '', path);
+            if (!history.state || window.location.pathname !== `/posts/${request}`) {
+                //window.history.pushState({profile: profile}, '', `/profiles/${request}`);
+            }
+
+
             container.classList.remove("posts-container");
             document.querySelector('#profile-view').removeAttribute("style");
             document.querySelector('#profile-nav').removeAttribute("style");
@@ -345,10 +350,13 @@ function fullPostView(post, id, comments) {
         }
     } else if (document.querySelector("#search-cont") !== null) {
         searchPostView();
-        window.history.pushState('', '', '/');
+        //window.history.pushState('', '', '/');
     } else if (document.querySelector("#banner-row") !== null) {
         profilePostView();
-        window.history.pushState('', '', '/');
+        console.log(id)
+        if (!history.state || window.location.pathname !== `/profiles/post/${id}`) {
+            //window.history.pushState({post: id}, '', `/profiles/post/${id}`);
+        }
     };
 
     // Make post parent
@@ -387,8 +395,8 @@ function fullPostView(post, id, comments) {
        pfp.src = user.pfp_url;
        fullName.innerText = `${user.first_name}`;
        username.innerText = `@${user.username}`;
-       fullName.setAttribute("href", `profiles/${user.id}`);
-        pfpLink.setAttribute("href", `profiles/${user.id}`);
+       fullName.setAttribute("href", `/profiles/${user.id}`);
+        pfpLink.setAttribute("href", `/profiles/${user.id}`);
 
     })
     .catch(error => {
@@ -488,12 +496,12 @@ function fullPostView(post, id, comments) {
 
 }
 
-function seeCommentsButton(post, post_id) {
+function seeCommentsButton(post, postId) {
 
     const commentsBtn = document.createElement("button");
     commentsBtn.setAttribute("class", "round-btn post-like-btn");
     commentsBtn.setAttribute("data-type", "comment");
-    commentsBtn.setAttribute("data-post", post_id);
+    commentsBtn.setAttribute("data-post", postId);
     commentsBtn.innerText = "Comment(s)";
     const commentsIcon = document.createElement("i");
     commentsIcon.setAttribute("class", "bx bxs-comment post-like-heart");
@@ -506,7 +514,7 @@ function seeCommentsButton(post, post_id) {
     commentsBtn.setAttribute("data-type", "comment");
     commentsBtn.prepend(commentsIcon, commentsCount);
 
-    fetch(`/posts/api/post/${post_id}/comments`)
+    fetch(`/posts/api/post/${postId}/comments`)
     .then(response => response.json() )
     .then(comments => {
 
@@ -515,9 +523,9 @@ function seeCommentsButton(post, post_id) {
 
         commentsBtn.addEventListener("click", () => {
 
-            const fullView = fullPostView(post, post_id, json);
+            const fullView = fullPostView(post, postId, json);
             // Add the current state to the history
-            history.pushState({foo: "bar"}, "", `posts/post/${post_id}`);
+            history.pushState({post: postId}, "", `${postId}`);
 
         });
 

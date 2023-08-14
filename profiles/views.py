@@ -40,8 +40,8 @@ def posts(request, id):
 
 
 def comments(request, id):
-    user = User.objects.filter(pk=id)
-    comments = Comment.objects.filter(user__in=user).order_by("-creation_date").all()
+    user = User.objects.get(pk=id)
+    comments = Comment.objects.filter(creator=user).order_by("-creation_date")
     if request.method == "GET":
         data = serializers.serialize('json', comments)
         return JsonResponse(data, safe=False)

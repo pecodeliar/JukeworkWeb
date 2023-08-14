@@ -1,8 +1,3 @@
-// When back arrow is clicked, show previous section
-window.onpopstate = function() {
-    console.log("Pop state initiated");
- }
-
 document.addEventListener('DOMContentLoaded', function() {
 
     const postForm = document.querySelector('#post-form')
@@ -17,6 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         title.innerHTML = "Home"
         loadPosts();
+        genreSideBarSelect();
+
+    } else if (title !== null && title.dataset.page !== "all" && title.dataset.page !== "following" && title.dataset.page !== "post") {
+
+        title.innerHTML = "Home"
+        loadPosts(title.dataset.page);
         genreSideBarSelect();
 
     } else if (title !== null && title.dataset.page === "following") {
@@ -50,8 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 fullPostView(post[0].fields, post_id, comments);
 
-
-
             })
             .catch(error => {
                 console.log(error);
@@ -69,6 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function loadPosts(request="") {
+
+    console.log(request)
+
+    if (!history.state || window.location.pathname !== `/posts/${request}`) {
+        window.history.pushState({genre: request}, '', `/posts/${request}`);
+    }
 
     // Select posts div and empty it
     const parent = document.querySelector("#posts-view");

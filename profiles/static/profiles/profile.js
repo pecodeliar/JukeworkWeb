@@ -1,5 +1,3 @@
-const profileId = parseInt(document.getElementById("profile-cont").dataset.profile);
-
 document.addEventListener('DOMContentLoaded', function() {
 
     const check = document.getElementById("user-menu");
@@ -7,13 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
         loggedInUser = parseInt(check.dataset.user);
     };
 
-    loadProfileInfo();
-    profileNavBar();
-    loadActions("posts");
+    const profileId = parseInt(document.getElementById("profile-cont").dataset.profile);
+
+    loadProfileInfo(profileId);
+    profileNavBar(profileId);
+    loadActions("posts", profileId);
 
 });
 
-function loadProfileInfo() {
+function loadProfileInfo(profileId) {
 
     let fetchedUser = null;
 
@@ -97,7 +97,7 @@ function loadProfileInfo() {
 
 
     // Get user information
-    fetch(`api/profile/${profileId}`)
+    fetch(`/profiles/api/profile/${profileId}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -144,7 +144,7 @@ function loadProfileInfo() {
         console.log(error);
     });
 
-    fetch(`api/profile/${profileId}/posts`)
+    fetch(`/profiles/api/profile/${profileId}/posts`)
     .then(response => response.json())
     .then(json => {
 
@@ -155,7 +155,7 @@ function loadProfileInfo() {
 
 }
 
-function profileNavBar() {
+function profileNavBar(profileId) {
 
     const nav = document.querySelector("#profile-nav");
 
@@ -207,19 +207,19 @@ function profileNavBar() {
 
     // Use buttons to toggle between views
     postsBtn.addEventListener('click', () => {
-        loadActions("posts");
+        loadActions("posts", profileId);
         postsBtn.style.borderBottom = "solid white 1px";
         likesBtn.style.borderBottom = "";
-        commentssBtn.style.borderBottom = "";
+        commentsBtn.style.borderBottom = "";
     });
     commentsBtn.addEventListener('click', () => {
-        loadActions("comments");
+        loadActions("comments", profileId);
         postsBtn.style.borderBottom = "";
         likesBtn.style.borderBottom = "";
         commentsBtn.style.borderBottom = "solid white 1px";
     });
     likesBtn.addEventListener('click', () => {
-        loadActions("likes");
+        loadActions("likes", profileId);
         postsBtn.style.borderBottom = "";
         likesBtn.style.borderBottom = "solid white 1px";
         commentsBtn.style.borderBottom = "";
@@ -227,10 +227,22 @@ function profileNavBar() {
 
 }
 
-function loadActions(type) {
+function loadActions(type, profileId) {
+    console.log(profileId)
 
     const actionsDiv = document.getElementById("profile-actions");
     actionsDiv.innerText = "";
+
+    if (!history.state || window.location.pathname !== `/profiles/${profileId}/${type}`) {
+        window.history.pushState({view: type, profile: profileId}, '', `/profiles/${profileId}/${type}`);
+    };
+
+    const oldIndicator = document.querySelector('a[style*="border-bottom: 1px solid white;"]');
+    if (oldIndicator !== null) {
+        oldIndicator.style.borderBottom = "";
+    }
+    const newIndicator = document.getElementById(`profile-nav-${type}-btn`);
+    newIndicator.style.borderBottom = "solid white 1px";
 
     if (loggedInUser === profileId && type === "posts") {
         const postForm = compose("post");
@@ -238,7 +250,7 @@ function loadActions(type) {
         actionsDiv.append(postForm);
     }
 
-    fetch(`api/profile/${profileId}/${type}`)
+    fetch(`/profiles/api/profile/${profileId}/${type}`)
     .then(response => response.json())
     .then(json => {
 
@@ -270,7 +282,7 @@ function follow (button, id) {
     const csrftoken = getCookie('csrftoken');
     console.log(button.innerText)
 
-    fetch(`api/follow`, {
+    fetch(`/profiles/api/follow`, {
         method: 'PUT',
         headers: {'X-CSRFToken': csrftoken},
         body: JSON.stringify({
