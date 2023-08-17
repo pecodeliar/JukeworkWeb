@@ -2,6 +2,13 @@ function compose(type, postId=null) {
 
     const upperType = titleCase(type);
 
+    let loggedInUser = null;
+    const check = document.getElementById("user-menu");
+    if (check !== null) {
+        loggedInUser = parseInt(check.dataset.user);
+        //console.log(loggedInUser)
+    };
+
     // Make div
     const formDiv = document.createElement("div");
     formDiv.setAttribute("class", `${type}-form-div`);
@@ -55,25 +62,35 @@ function compose(type, postId=null) {
     const postButton = document.createElement("button");
     postButton.setAttribute("class", "float-right round-btn post-crt-btn");
     postButton.innerText = `Create ${type}`;
+
+    let url = null;
+    if (type === "post") {
+        url = '/posts/api/posts/';
+    } else {
+        url = `/posts/api/posts/${postId}/comments/`;
+    }
+
     postButton.addEventListener("click", () => {
 
-        fetch('/posts/api/create', {
+        fetch(url, {
             method: 'POST',
-            headers: {'X-CSRFToken': csrftoken},
+            headers: {
+                'X-CSRFToken': csrftoken,
+                "Content-Type": "application/json",
+            },
             mode: 'same-origin',
             body: JSON.stringify({
-                type: upperType,
-                content: formText.value,
-                post_id: postId
+                post: postId,
+                content: formText.value
             })
           })
           .then(response => response.json())
           .then(result => {
                 // Print result
-                post = JSON.parse(result)
+                console.log(result);
                 formText.value = "";
 
-                const postCard = completeCard(type, post[0])
+                const postCard = completeCard(type, result);
 
                 if (type === "post") {
 
@@ -93,6 +110,9 @@ function compose(type, postId=null) {
                 }
 
           })
+          .catch(error => {
+            console.log(error);
+        });
 
     });
 
@@ -102,7 +122,9 @@ function compose(type, postId=null) {
 
 }
 
-function editButton(type, post, id) {
+function editButton(type, data, postId) {
+
+    console.log(data.id)
 
     const upperType = titleCase(type);
 
@@ -115,7 +137,11 @@ function editButton(type, post, id) {
     editIcon.setAttribute("data-type", type);
     editIcon.setAttribute("aria-hidden", "true");
 
-    editBtn.setAttribute(`data-${type}`, id);
+    editBtn.setAttribute(`data-${type}`, data.id);
+    // For comments where a postId is needed to properly make request
+    if (postId !== null) {
+        editBtn.setAttribute(`data-parent`, postId);
+    }
     editBtn.prepend(editIcon);
 
     return editBtn;
@@ -146,63 +172,29 @@ function editAction(type, button, full=false) {
     let saveBtn = null;
     let commentBtn = null;
 
-    if (full === false) {
+    // Hiding the edit button and uneditable content text
 
-        // Hiding the edit button and uneditable content text
+    postText = editables.item(2);
+    postText.style.display = "none";
 
-        postText = editables.item(2);
-        postText.style.display = "none";
+    likeBtn = editables.item(3);
+    likeBtn.style.display = "none";
 
-        likeBtn = editables.item(3);
-        likeBtn.style.display = "none";
+    editFormDiv = editables.item(0);
+    editFormDiv.style.display = "block";
+    editForm = editables.item(1);
+    editForm.value = postText.innerText;
 
-        if (type === "post") {
-            //commentBtn = editables.item(5);
-            //commentBtn.style.display = "none";
+    editBtn = editables.item(4);
+    editBtn.style.display = "none";
 
-            saveBtn = editables.item(4);
-            saveBtn.style.display = "block";
-        }
+    cancelBtn = editables.item(5);
+    cancelBtn.style.display = "block";
 
-        // Showing the edit form div and fill with post content and the save button
-        editFormDiv = editables.item(0);
-        editFormDiv.style.display = "block";
-        editForm = editables.item(1);
-        editForm.value = postText.innerText;
+    saveBtn = editables.item(6);
+    saveBtn.style.display = "block";
 
-        if (type === "comment") {
-
-            editBtn = editables.item(4);
-            editBtn.style.display = "none";
-
-            cancelBtn = editables.item(5);
-            cancelBtn.style.display = "block";
-
-            saveBtn = editables.item(6);
-            saveBtn.style.display = "block";
-        }
-
-    } else {
-
-        // Hiding the edit button and uneditable content text
-        editBtn = editables.item(7);
-        editBtn.style.display = "none";
-
-        postText = editables.item(10);
-        postText.style.display = "none";
-
-        likeBtn = editables.item(11);
-        likeBtn.style.display = "none"
-
-        // Showing the edit form div and fill with post content and the save button
-        editFormDiv = editables.item(8);
-        editFormDiv.style.display = "block";
-        editForm = editables.item(9);
-        editForm.value = postText.innerText;
-        saveBtn = editables.item(12);
-        saveBtn.style.display = "block";
-
-    }
+    
 
     cancelBtn.addEventListener("click", () => {
         // After changing content, hide the form field
@@ -229,18 +221,25 @@ function editAction(type, button, full=false) {
 
         const csrftoken = getCookie('csrftoken');
 
-        const post_id = window.location.pathname.slice(12);
+        let url = null;
+        if (type === "post") {
+            url = `/posts/api/posts/${id}/`;
+        } else if (type === "comment") {
+            url = `/posts/api/posts/${editBtn.dataset.parent}/comments/${id}/`;
+        }
 
         //https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 
-        fetch(`/posts/api/post/${post_id}/action`, {
+        fetch(url, {
             method: 'PUT',
-            headers: {'X-CSRFToken': csrftoken},
+            headers: {
+                'X-CSRFToken': csrftoken,
+                "Content-Type": "application/json",
+            },
             mode: 'same-origin',
             body: JSON.stringify({
-                type: type,
-                content: newContent,
-                id: id
+                post: editBtn.dataset.parent,
+                content: newContent
             })
         })
         .then(response => {

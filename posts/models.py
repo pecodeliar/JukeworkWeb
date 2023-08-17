@@ -8,8 +8,7 @@ class Post(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post_creator")
     content = models.CharField(max_length=500)
     post_image = models.URLField(blank=True, null=True)
-    # Use auto_now_add so that it does not update timestamp for each save
-    creation_date = models.DateTimeField(default=datetime.datetime.now())
+    creation_date = models.DateTimeField(auto_now_add=True)
     likers = models.ManyToManyField(User, blank=True, related_name="post_likers")
 
 
@@ -25,4 +24,4 @@ class Comment(models.Model):
     likers = models.ManyToManyField(User, blank=True, related_name="comment_likers")
 
     def __str__(self):
-        return f"{self.text} by {self.user}"
+        return f"{self.content} by {self.creator}"

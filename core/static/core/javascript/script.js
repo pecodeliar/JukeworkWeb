@@ -1,10 +1,8 @@
-let loggedInUser = null
-
 document.addEventListener('DOMContentLoaded', function() {
 
     const check = document.getElementById("user-menu");
     if (check !== null) {
-        loggedInUser = parseInt(check.dataset.user)
+        loggedInUser = parseInt(check.dataset.user);
     };
 
     const nav = document.querySelector('nav')
@@ -23,22 +21,12 @@ window.onpopstate = function(event) {
     if (event.state.profile !== undefined) {
         console.log(event.state.profile)
         loadActions(event.state.view, event.state.profile);
-    } else if (event.state.genre !== null) {
-        loadPosts(event.state.genre);
+    } else if (event.state.page !== null) {
+        loadPosts(event.state.page);
     } else if (event.state.post !== null) {
         loadPosts(event.state.post);
     }
-
-
-    /*if (event.state.profile !== null) {
-        loadView(event.state.view, event.state.profile);
-    } else if (event.state.genre !== null) {
-        loadView(event.state.view, event.state.profile);
-    } else if (event.state.post !== null) {
-        loadView(event.state.view, event.state.post);
-    } else {
-        loadView(event.state.view);
-    }*/
+    
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array

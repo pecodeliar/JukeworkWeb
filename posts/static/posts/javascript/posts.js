@@ -8,15 +8,26 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const title = document.querySelector("#posts-title");
+
     if (title !== null && title.dataset.page === "all") {
 
-        title.innerHTML = "Home"
+        title.innerHTML = "Home";
         loadPosts();
         genreSideBarSelect();
 
     } else if (title !== null && title.dataset.page !== "all" && title.dataset.page !== "following" && title.dataset.page !== "post") {
 
-        title.innerHTML = "Home"
+        const genres = {
+            "JZ": "Jazz",
+            "RB": "R&B / Soul",
+            "HH": "Hip-Hop",
+            "IN": "Classical",
+            "FK": "Folk / Acoustic",
+            "IE": "Indie / Alternative",
+            "PP": "Pop"
+        };
+
+        title.innerHTML = genres[title.dataset.page];
         loadPosts(title.dataset.page);
         genreSideBarSelect();
 
@@ -35,21 +46,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         title.innerHTML = "";
         // Slicing 'posts/post/' which is 12 characters out of pathname and converting to int
-        const post_id = window.location.pathname.slice(12);
+        const postId = document.getElementById("post-view").dataset.postReq;
 
-        fetch(`/posts/api/post/${post_id}`)
+        fetch(`/posts/api/posts/${postId}`)
         .then(response => response.json() )
-        .then(json => {
+        .then(post => {
 
-            const post = JSON.parse(json);
-
-            fetch(`/posts/api/post/${post_id}/comments`)
+            fetch(`/posts/api/posts/${post.id}/comments`)
             .then(response => response.json() )
-            .then(json => {
+            .then(comments => {
 
-                const comments = JSON.parse(json);
-
-                fullPostView(post[0].fields, post_id, comments);
+                fullPostView(post, comments.results);
 
             })
             .catch(error => {
@@ -69,18 +76,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function loadPosts(request="") {
 
-    console.log(request)
+    //console.log(request)
 
     if (!history.state || window.location.pathname !== `/posts/${request}`) {
-        window.history.pushState({genre: request}, '', `/posts/${request}`);
+        window.history.pushState({page: request}, '', `/posts/${request}`);
     }
 
+    document.getElementById("post-view").style.display = "none";
+    const pageTitle = document.getElementById("posts-title");
+    if (pageTitle.innerText.includes("Post")) {
+        // Removing the world post inluding the dash and spaces
+        document.getElementById("posts-title").innerText = pageTitle.innerText.slice(0,-7);
+    };
     // Select posts div and empty it
-    const parent = document.querySelector("#posts-view");
+    const parent = document.getElementById("posts-view");
+    parent.style.display = "";
     parent.innerText = "";
+    // Need to make sure this is here since the class if removed for post detail views
+    const parentCont = parent.parentElement;
+    parentCont.classList.add("posts-container");
 
-    if (request !== "following") {
+    const postForm = document.querySelector('#post-form');
+    if (postForm !== null) {
+        postForm.style.display = "block";
+    };
 
+    const sidebar = document.getElementById("side-view");
+    if (sidebar !== null) {
+        sidebar.style.display = "block";
     }
 
     const innerParent = document.createElement("div");
@@ -89,19 +112,21 @@ async function loadPosts(request="") {
     parent.append(innerParent);
 
     // https://webdesign.tutsplus.com/tutorials/how-to-implement-a-load-more-button-with-vanilla-javascript--cms-42080
-    let allPosts = null
+    let allPosts = null;
 
     const postIncrease = 15;
     let currentPage = 1;
 
     if (request === "") {
 
-        const response = await fetch('/posts/api/all')
+        const response = await fetch('/posts/api/posts')
         .then(response => response.json() )
-        .then(json => {
-            // allPosts = shuffleArray(JSON.parse(json))
-            allPosts = JSON.parse(json)
-            postLimit = allPosts.length
+        .then(posts => {
+            //console.log(posts)
+            if (posts.results.length > 0) {
+                allPosts = posts.results;
+            }
+            postLimit = allPosts.length;
         })
         .catch(error => {
             console.log(error);
@@ -109,12 +134,13 @@ async function loadPosts(request="") {
 
     } else if (request === "following") {
 
-        const response = await fetch(`/posts/api/following`)
+        const response = await fetch(`/posts/api/posts/following`)
         .then(response => response.json() )
-        .then(json => {
-            //allPosts = shuffleArray(JSON.parse(json))
-            allPosts = JSON.parse(json)
-            postLimit = allPosts.length
+        .then(posts => {
+            if (posts.length > 0) {
+                allPosts = posts;
+            }
+            postLimit = posts.length
         })
         .catch(error => {
             console.log(error);
@@ -122,11 +148,14 @@ async function loadPosts(request="") {
 
     } else {
 
-        const response = await fetch(`/posts/api/genre/${request}`)
+        /** For Genres */
+
+        const response = await fetch(`/posts/api/posts/${request}`)
         .then(response => response.json() )
-        .then(json => {
-            //allPosts = shuffleArray(JSON.parse(json))
-            allPosts = JSON.parse(json)
+        .then(posts => {
+            if (posts.length > 0) {
+                allPosts = posts;
+            }
             postLimit = allPosts.length
         })
         .catch(error => {
@@ -134,6 +163,8 @@ async function loadPosts(request="") {
         });
 
     }
+
+    //console.log(allPosts)
 
     // Load More Button
     const loadMoreDiv = document.createElement("div");
@@ -143,37 +174,42 @@ async function loadPosts(request="") {
     loadMore.setAttribute("class", "")
     loadMore.innerText = "Load More Posts";
 
-    const addPosts = (pageIndex) => {
+    if (allPosts.length > 0) {
 
-        currentPage = pageIndex;
+        const addPosts = (pageIndex) => {
 
-        const startRange = (pageIndex - 1) * postIncrease;
-        let endRange = pageIndex * postIncrease;
+            currentPage = pageIndex;
 
-        if (allPosts.length - 1 < endRange) {
-            endRange = allPosts.length;
-            loadMore.classList.add("disabled");
-            loadMore.setAttribute("disabled", true);
-            loadMore.innerText = "No More Posts"
-        }
+            const startRange = (pageIndex - 1) * postIncrease;
+            let endRange = pageIndex * postIncrease;
 
-        for (let i = startRange; i <= endRange - 1; i++) {
+            if (allPosts.length - 1 < endRange) {
+                endRange = allPosts.length;
+                loadMore.classList.add("disabled");
+                loadMore.setAttribute("disabled", true);
+                loadMore.innerText = "No More Posts"
+            }
 
-            const postCard = completeCard("post", allPosts[i]);
-            innerParent.append(postCard);
+            for (let i = startRange; i <= endRange - 1; i++) {
 
-        }
-    };
+                //console.log(allPosts[i])
+                const postCard = completeCard("post", allPosts[i]);
+                innerParent.append(postCard);
 
-    addPosts(currentPage);
+            }
+        };
 
-    loadMoreDiv.append(loadMore);
-    parent.append(loadMoreDiv);
-    loadMore.addEventListener("click", () => {
+        addPosts(currentPage);
 
-        addPosts(currentPage + 1);
+        loadMoreDiv.append(loadMore);
+        parent.append(loadMoreDiv);
+        loadMore.addEventListener("click", () => {
 
-    });
+            addPosts(currentPage + 1);
+
+        });
+
+    }
 
 }
 
@@ -242,6 +278,7 @@ function genreSideBarSelect() {
 
             const title = document.querySelector("#posts-title");
             title.innerText = `${genre[0]}`;
+            title.dataset.page = `${genre[1]}`;
             loadPosts(genre[1]);
 
         });
@@ -284,9 +321,9 @@ function allPostsPostView (singlePage=true) {
         title.innerText = `Post`;
     }
     // Add a back button
-    let backBtn = null
+    let backBtn = null;
     if (singlePage === true) {
-        backBtn = backButton("all", window.location.pathname, titleText);
+        backBtn = backButton(title.dataset.page, window.location.pathname, titleText);
     } else {
         backBtn = backButton("render", window.location.pathname, "All Posts");
     }

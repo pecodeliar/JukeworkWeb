@@ -1,10 +1,12 @@
 function backButton(page, path, pageTitle="") {
 
+    //console.log(page, path)
+
     /* Back Button for Full Post Views */
 
     const button = document.createElement("a");
     button.setAttribute("class", "back-btn");
-    button.setAttribute("href", "#");
+    button.setAttribute("href", "javascript:void(0);");
     const icon = document.createElement("i");
     icon.setAttribute("class", "bx bx-left-arrow-alt");
     icon.setAttribute("aria-hidden", "true");
@@ -21,11 +23,16 @@ function backButton(page, path, pageTitle="") {
         container.classList.add("posts-container");
 
         // For All Posts Page
-        if (page === "all" || page === "render") {
-            //window.history.pushState('', '', '/');
+        if (page === "all" || page === "render" || page === "following") {
+            if (!history.state || window.location.pathname !== path) {
+                window.history.pushState({page: page}, '', path);
+            }
 
             document.querySelector('#posts-view').style.display = "block";
-            document.querySelector('#side-view').style.display = "block";
+            const genreBar = document.querySelector('#side-view');
+            if (genreBar !== null) {
+                genreBar.style.display = "block";
+            }
             const postForm = document.querySelector('#post-form');
             if (postForm !== null) {
                 postForm.style.display = "block";
@@ -44,7 +51,9 @@ function backButton(page, path, pageTitle="") {
 
         // For Search Page
         if (page === "search") {
-            //window.history.pushState('', '', path);
+            if (!history.state || window.location.pathname !== path) {
+                //window.history.pushState({page: page}, '', path);
+            }
             document.querySelector('#profiles-view').style.display = "block";
             document.querySelector('#search-posts-view').style.display = "block";
             document.querySelector("#search-title").innerText = pageTitle;
@@ -76,24 +85,30 @@ function backButton(page, path, pageTitle="") {
     return button;
 }
 
-function completeCard(type, json) {
+function completeCard(type, json, postId=null) {
+
+    /** If the type is a comment, postId should be added to properly ping API. */
 
     //console.log(json);
 
-    const card = postElement(type, json.fields, json.pk);
-    const likeBtn = likeButton(type, json.fields, json.pk);
-    card.querySelector(`.${type}-btn-cont`).append(likeBtn);
-    if (type === "post") {
-        const commentBtn = seeCommentsButton(json.fields, json.pk);
-        card.querySelector(`.${type}-btn-cont`).append(commentBtn);
+    let loggedInUser = null;
+    const check = document.getElementById("user-menu");
+    if (check !== null) {
+        loggedInUser = parseInt(check.dataset.user);
+        //console.log(loggedInUser)
     };
+
+    const card = postElement(type, json);
+    const likeBtn = likeButton(type, json, postId);
+
+    card.querySelector(`.${type}-btn-cont`).append(likeBtn);
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
     });
 
-    if (loggedInUser === json.fields.creator) {
+    if (loggedInUser === json.creator) {
 
-        const editBtn = editButton(type, json.fields, json.pk);
+        const editBtn = editButton(type, json, postId);
         editBtn.addEventListener("click", () => {
             editAction(type, editBtn);
         })
@@ -101,37 +116,49 @@ function completeCard(type, json) {
 
         const cancelBtn = document.createElement("button");
         cancelBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        cancelBtn.setAttribute(`data-${type}`, json.pk);
+        cancelBtn.setAttribute(`data-${type}`, json.id);
         cancelBtn.innerText = "Cancel Edit";
         card.querySelector(`.${type}-btn-cont`).append(cancelBtn);
         cancelBtn.style.display = "none";
 
         const saveBtn = document.createElement("button");
         saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        saveBtn.setAttribute(`data-${type}`, json.pk);
+        saveBtn.setAttribute(`data-${type}`, json.id);
         saveBtn.innerText = "Save Edit";
         card.querySelector(`.${type}-btn-cont`).append(saveBtn);
         saveBtn.style.display = "none";
 
     };
 
+    if (type === "post") {
+        const commentBtn = seeCommentsButton(json);
+        card.querySelector(`.${type}-btn-cont`).append(commentBtn);
+    };
+
     return card;
 
 }
 
-function postElement(type, fields, id) {
-
-    //console.log(type, fields, id)
+function postElement(type, data, postId=null) {
 
     // Make parent
     const card = document.createElement("article");
     card.setAttribute("class", `${type}-card`);
 
+    let loggedInUser = null;
+    const check = document.getElementById("user-menu");
+    if (check !== null) {
+        loggedInUser = parseInt(check.dataset.user);
+        //console.log(loggedInUser)
+    };
 
     // Profile Picture
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", `round-pfp ${type}-pfp`);
     const pfpLink = document.createElement("a");
+    // Screen readers and keyboard navigators don't need redundant links
+    pfpLink.setAttribute("tabindex", -1);
+    pfpLink.setAttribute("aria-hidden", "true");
     const pfp = document.createElement("img");
     pfpLink.append(pfp);
     pfpDiv.append(pfpLink);
@@ -155,24 +182,26 @@ function postElement(type, fields, id) {
     top.append(topDeets)
 
     // Edit form
-    if (loggedInUser === fields.creator) {
+    if (loggedInUser === data.creator) {
 
-        const edittingForm = editForm(type, id);
+        const edittingForm = editForm(type, data.id);
         edittingForm.style.display = "none";
         top.append(edittingForm);
     };
 
     // Get user information
-    fetch(`/profiles/api/profile/${fields.creator}`)
+    fetch(`/profiles/api/profile/${data.creator}`)
     .then(response => response.json() )
     .then(user => {
 
-        pfp.alt = "";
+        //console.log(user)
+
+        pfp.alt = `${user.first_name}'s Profile Picture`;
         pfp.src = user.pfp_url;
         fullName.innerText = `${user.first_name}`
         fullName.setAttribute("href", `/profiles/${user.id}`);
         pfpLink.setAttribute("href", `/profiles/${user.id}`);
-        const dateObj = new Date(fields.creation_date);
+        const dateObj = new Date(data.creation_date);
         let dateConv = dateObj.toDateString();
         // Subtracing 4 to get the year and replace space with a comma
         const dateIndex = dateConv.length-5;
@@ -189,8 +218,11 @@ function postElement(type, fields, id) {
     postContentDiv.setAttribute("class", `${type}-content-cont`);
     const postContent = document.createElement("span");
     postContent.setAttribute("class", `${type}-content-text`);
-    postContent.setAttribute(`data-${type}`, id);
-    postContent.innerText = fields.content;
+    postContent.setAttribute(`data-${type}`, data.id);
+    if (type === "comment") {
+        postContent.setAttribute(`data-post`, postId);
+    }
+    postContent.innerText = data.content;
     postContentDiv.append(postContent);
 
     const postBtnContDiv = document.createElement("div");
@@ -206,7 +238,7 @@ function postElement(type, fields, id) {
 
         postContentDiv.addEventListener("click", () => {
 
-            const fullView = fullPostView(fields, id);
+            const fullView = fullPostView(data);
 
         });
 
@@ -216,25 +248,34 @@ function postElement(type, fields, id) {
 
 }
 
-function likeButton(type, fields, id) {
+function likeButton(type, data, postId=null) {
+
+    /** If the type is a comment, postId should be added to ping API. */
 
     const upperType = titleCase(type);
 
+    let loggedInUser = null;
+    const check = document.getElementById("user-menu");
+    if (check !== null) {
+        loggedInUser = parseInt(check.dataset.user);
+        //console.log(loggedInUser)
+    };
+
     const likeBtn = document.createElement("button");
     likeBtn.setAttribute("class", `round-btn ${type}-like-btn`);
-    likeBtn.setAttribute("data-id", id);
+    likeBtn.setAttribute("data-id", data.id);
     likeBtn.setAttribute("data-type", `${type}`);
     const likeIcon = document.createElement("i");
     likeIcon.setAttribute("class", "bx bxs-heart ${type}-like-heart");
-    likeIcon.setAttribute("data-id", id);
+    likeIcon.setAttribute("data-id", data.id);
     likeIcon.setAttribute("data-type", `${type}`);
     likeIcon.setAttribute("aria-hidden", "true");
     const likeCount = document.createElement("p");
     likeCount.setAttribute("class", "like-cnt");
-    likeCount.innerText = fields.likers["length"]
-    likeCount.setAttribute("data-id", id);
+    likeCount.innerText = data.likers.length;
+    likeCount.setAttribute("data-id", data.id);
     likeCount.setAttribute("data-type", `${type}`);
-    const liked = fields.likers.includes(loggedInUser);
+    const liked = data.likers.includes(loggedInUser);
 
     // Check if user has logged in
     if (loggedInUser === null) {
@@ -252,9 +293,12 @@ function likeButton(type, fields, id) {
     }
 
 
-    likeBtn.setAttribute("data-id", id);
-    likeBtn.setAttribute(`data-${type}`, id);
+    likeBtn.setAttribute("data-id", data.id);
+    likeBtn.setAttribute(`data-${type}`, data.id);
     likeBtn.setAttribute("data-type", `${type}`);
+    if (type === "comment") {
+        likeBtn.setAttribute("data-parent", postId);
+    }
     likeBtn.prepend(likeIcon, likeCount);
 
     return likeBtn;
@@ -263,13 +307,15 @@ function likeButton(type, fields, id) {
 
 function likeAction(button) {
 
-    const post_id = window.location.pathname.slice(12);
-
     const csrftoken = getCookie('csrftoken');
 
     // Get id and like type (post or comment) from dataset
-    const id = button.dataset.id;
     const type = button.dataset.type;
+    let postId = null;
+    if (type === "comment") {
+        postId = button.dataset.parent;
+    }
+    const id = button.dataset.id;
     const elements = document.querySelectorAll(`[data-id='${id}']`);
     const btnOne = elements.item(0);
     let btnTwo = null
@@ -283,61 +329,68 @@ function likeAction(button) {
         btnTwo = elements.item(3)
     }
 
-    fetch(`/posts/api/post/${post_id}`)
-    .then(response => {
-        if (!response.ok) return response.json().then(response => {throw new Error(response.error)})
+    let url = null;
+
+    if (type === "comment") {
+        url = `/posts/api/posts/${postId}/comments/${id}/like`
+    } else if (type === "post") {
+        url = `/posts/api/posts/${id}/like`
+    }
+
+    return fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        mode: 'same-origin',
+        body: JSON.stringify({
+            action: action
+        })
     })
-    .then(post => {
+    .then(() => {
 
-        var count = parseInt(elements.item(2).textContent)
+        var count = parseInt(elements.item(2).textContent);
 
-        return fetch(`/posts/api/post/${post_id}/action`, {
-            method: 'PUT',
-            headers: {'X-CSRFToken': csrftoken},
-            mode: 'same-origin',
-            body: JSON.stringify({
-                action: action,
-                type: type,
-                id: id
-            })
-        })
-        .then(() => {
-            if (btnOne.childNodes[2].nodeValue === `Like ${titleCase(type)}`) {
-                btnOne.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
-                elements.item(1).style.color = "red";
-                elements.item(2).textContent = count += 1;
-                if (btnTwo !== null) {
-                    btnTwo.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
-                    elements.item(4).style.color = "red";
-                    elements.item(5).textContent = count;
-                }
-            } else {
-                btnOne.childNodes[2].nodeValue = `Like ${titleCase(type)}`;
-                elements.item(1).style.color = "grey";
-                elements.item(2).textContent = count -= 1;
-                if (btnTwo !== null) {
-                    btnTwo.childNodes[2] = `Like ${titleCase(type)}`;
-                    elements.item(4).style.color = "grey";
-                    elements.item(5).textContent = count;
-                }
+        if (btnOne.childNodes[2].nodeValue === `Like ${titleCase(type)}`) {
+            btnOne.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
+            elements.item(1).style.color = "var(--primary-container)";
+            elements.item(2).textContent = count += 1;
+            if (btnTwo !== null) {
+                btnTwo.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
+                elements.item(4).style.color = "var(--primary-container)";
+                elements.item(5).textContent = count;
             }
-        })
-        .catch(error => {
-            console.log(error);
-        })
-
+        } else {
+            btnOne.childNodes[2].nodeValue = `Like ${titleCase(type)}`;
+            elements.item(1).style.color = "white";
+            elements.item(2).textContent = count -= 1;
+            if (btnTwo !== null) {
+                btnTwo.childNodes[2] = `Like ${titleCase(type)}`;
+                elements.item(4).style.color = "white";
+                elements.item(5).textContent = count;
+            }
+        }
     })
     .catch(error => {
-            console.log(error);
-    });
+        console.log(error);
+    })
 
 }
 
-function fullPostView(post, id, comments) {
+function fullPostView(post, comments) {
 
     const parent = document.querySelector('#post-view');
     const container = parent.parentElement;
     parent.innerText = "";
+
+    let loggedInUser = null;
+    const check = document.getElementById("user-menu");
+    if (check !== null) {
+        loggedInUser = parseInt(check.dataset.user);
+        //console.log(loggedInUser)
+    };
 
     // Check what page is displayed
     const titleCheck = document.querySelector("#posts-title");
@@ -354,7 +407,7 @@ function fullPostView(post, id, comments) {
     } else if (document.querySelector("#banner-row") !== null) {
         profilePostView();
         console.log(id)
-        if (!history.state || window.location.pathname !== `/profiles/post/${id}`) {
+        if (!history.state || window.location.pathname !== `/profiles/post/${post.id}`) {
             //window.history.pushState({post: id}, '', `/profiles/post/${id}`);
         }
     };
@@ -391,11 +444,11 @@ function fullPostView(post, id, comments) {
     .then(response => response.json() )
     .then(user => {
 
-       pfp.alt = "";
-       pfp.src = user.pfp_url;
-       fullName.innerText = `${user.first_name}`;
-       username.innerText = `@${user.username}`;
-       fullName.setAttribute("href", `/profiles/${user.id}`);
+        pfp.alt = "";
+        pfp.src = user.pfp_url;
+        fullName.innerText = `${user.first_name}`;
+        username.innerText = `@${user.username}`;
+        fullName.setAttribute("href", `/profiles/${user.id}`);
         pfpLink.setAttribute("href", `/profiles/${user.id}`);
 
     })
@@ -408,7 +461,7 @@ function fullPostView(post, id, comments) {
     postContentDiv.setAttribute("class", "post-view-content-cont");
     const postContent = document.createElement("p");
     postContent.setAttribute("class", "post-view-content-text");
-    postContent.setAttribute("data-post", id);
+    postContent.setAttribute("data-post", post.id);
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
 
@@ -428,34 +481,54 @@ function fullPostView(post, id, comments) {
     const buttonsDiv = document.createElement("div");
     buttonsDiv.setAttribute("class", "full-buttons-div");
     // Adding Like functionality
-    const likeBtn = likeButton("post", post, id)
+    const likeBtn = likeButton("post", post)
     buttonsDiv.append(likeBtn);
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
     })
 
-    if (loggedInUser === post.creator) {
+    /*if (loggedInUser === post.creator) {
 
         const saveBtn = document.createElement("button");
         saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        saveBtn.setAttribute("data-post", id);
+        saveBtn.setAttribute("data-post", post.id);
         saveBtn.innerText = "Save Edit";
         saveBtn.style.display = "None";
         buttonsDiv.append(saveBtn);
 
-    };
+        const cancelBtn = document.createElement("button");
+        cancelBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+        cancelBtn.setAttribute(`data-${type}`, post.id);
+        cancelBtn.innerText = "Cancel Edit";
+        cancelBtn.style.display = "none";
+
+    };*/
 
     // Edit button
     if (loggedInUser === post.creator) {
 
-        const editBtn = editButton("post", post, id);
+        const editBtn = editButton("post", post, post.id);
         editBtn.addEventListener("click", () => {
             editAction("post", editBtn, true);
         })
-        const edittingForm = editForm("post", id);
+        const edittingForm = editForm("post", post.id);
         edittingForm.style.display = "none";
         postUserDiv.append(edittingForm);
-        buttonsDiv.append(editBtn);
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+        cancelBtn.setAttribute(`data-post`, post.id);
+        cancelBtn.innerText = "Cancel Edit";
+        cancelBtn.style.display = "none";
+
+        const saveBtn = document.createElement("button");
+        saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
+        saveBtn.setAttribute("data-post", post.id);
+        saveBtn.innerText = "Save Edit";
+        saveBtn.style.display = "None";
+
+        buttonsDiv.append(editBtn, cancelBtn, saveBtn);
+
     };
 
     postParent.append(postUserDiv, postContentDiv, postTimestampDiv, buttonsDiv);
@@ -472,7 +545,7 @@ function fullPostView(post, id, comments) {
     commentsHeading.innerText = "Comments";
 
     if (loggedInUser !== null) {
-        const cmntCompose = compose("comment", id);
+        const cmntCompose = compose("comment", post.id);
         commentsSection.append(cmntCompose);
     }
     //const cmntJson = JSON.parse(comments);
@@ -488,7 +561,7 @@ function fullPostView(post, id, comments) {
     } else {
 
         comments.forEach(comment => {
-            const cmntCard = completeCard("comment", comment);
+            const cmntCard = completeCard("comment", comment, post.id);
             commentsSection.append(cmntCard);
         })
 
@@ -496,12 +569,12 @@ function fullPostView(post, id, comments) {
 
 }
 
-function seeCommentsButton(post, postId) {
+function seeCommentsButton(post) {
 
     const commentsBtn = document.createElement("button");
     commentsBtn.setAttribute("class", "round-btn post-like-btn");
     commentsBtn.setAttribute("data-type", "comment");
-    commentsBtn.setAttribute("data-post", postId);
+    commentsBtn.setAttribute("data-post", post.id);
     commentsBtn.innerText = "Comment(s)";
     const commentsIcon = document.createElement("i");
     commentsIcon.setAttribute("class", "bx bxs-comment post-like-heart");
@@ -514,18 +587,19 @@ function seeCommentsButton(post, postId) {
     commentsBtn.setAttribute("data-type", "comment");
     commentsBtn.prepend(commentsIcon, commentsCount);
 
-    fetch(`/posts/api/post/${postId}/comments`)
+    fetch(`/posts/api/posts/${post.id}/comments`)
     .then(response => response.json() )
     .then(comments => {
 
-        const json = JSON.parse(comments);
-        commentsCount.innerText = json["length"];
+        //console.log(comments)
+
+        commentsCount.innerText = comments.results.length;
 
         commentsBtn.addEventListener("click", () => {
 
-            const fullView = fullPostView(post, postId, json);
+            const fullView = fullPostView(post, comments.results);
             // Add the current state to the history
-            history.pushState({post: postId}, "", `${postId}`);
+            history.pushState({post: post.id}, "", `${post.id}`);
 
         });
 

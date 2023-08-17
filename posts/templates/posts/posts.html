@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-<h1 id="posts-title" class="container" data-page="{{ page }}"></h2>
+<h1 id="posts-title" class="container" data-page="{{ page }}" ></h2>
 
 <div class="container posts-container">
 
@@ -22,7 +22,7 @@
     <div id="posts-view">
     </div>
 
-    <div id="post-view">
+    <div id="post-view" data-post-req="{{ post }}">
         {% if user.is_authenticated %}
             <div id="comment-form">
             </div>

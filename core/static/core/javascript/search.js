@@ -59,6 +59,7 @@ function searchResults() {
     .then(json => {
 
         const data = JSON.parse(json)
+        console.log(data)
         if (data.length === 0) {
 
             const notifyNone = document.createElement("p");
@@ -70,7 +71,7 @@ function searchResults() {
 
             data.forEach(post => {
 
-                const postCard = completePostCard(post);
+                const postCard = completeCard("post", post.fields);
                 postCard.classList.remove("post-card");
                 postCard.classList.add("search-post-card");
                 postsDiv.append(postCard);
