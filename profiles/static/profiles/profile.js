@@ -97,7 +97,7 @@ function loadProfileInfo(profileId) {
 
 
     // Get user information
-    fetch(`/profiles/api/profile/${profileId}`)
+    fetch(`/auth/users/${profileId}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -144,7 +144,7 @@ function loadProfileInfo(profileId) {
         console.log(error);
     });
 
-    fetch(`/profiles/api/profile/${profileId}/posts`)
+    fetch(`/auth/users/profile/${profileId}/posts`)
     .then(response => response.json())
     .then(json => {
 
@@ -250,7 +250,7 @@ function loadActions(type, profileId) {
         actionsDiv.append(postForm);
     }
 
-    fetch(`/profiles/api/profile/${profileId}/${type}`)
+    /*fetch(`/auth/users/${profileId}/${type}`)
     .then(response => response.json())
     .then(json => {
 
@@ -273,7 +273,7 @@ function loadActions(type, profileId) {
 
         };
 
-    });
+    });*/
 
 }
 
@@ -282,7 +282,7 @@ function follow (button, id) {
     const csrftoken = getCookie('csrftoken');
     console.log(button.innerText)
 
-    fetch(`/profiles/api/follow`, {
+    /*fetch(`/auth/users/follow`, {
         method: 'PUT',
         headers: {'X-CSRFToken': csrftoken},
         body: JSON.stringify({
@@ -304,7 +304,7 @@ function follow (button, id) {
                 button.innerText = "Unfollow";
                 document.querySelector('#followers-cnt').innerText = (count_num+=1) + " " + count[1]
             };
-    });
+    });*/
 
 }
 

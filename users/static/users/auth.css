@@ -1,3 +1,7 @@
+#alert {
+    display: none;
+}
+
 .auth-rdrt-link {
     color: var(--accent-container-hover);
     font-weight: 600;
@@ -24,50 +28,33 @@
     color: white;
 }
 
-.auth-item {
-    padding: 1px;
+.auth-group {
+    margin-bottom: 30px;
 }
 
-.auth-item input{
-    background-color: rgba(255,255,255,0.4);
+.auth-group input::placeholder {
     color: white;
-}
+    opacity: 1; /* Firefox */
+  }
 
-.auth-item input:focus{
-    background-color: rgba(255,255,255,0.5);
-    color: white;
-    outline: var(--focus-outline) solid 3px;
-}
-
-/* ===== Register Page ===== */
-
-
-
-.reg-item {
-    margin: 10px;
-}
-
-.reg-item input {
-    width: 100%;
-    border-radius: 5px;
-    padding: 5px;
+.auth-group input {
+    background-color: transparent;
+    outline: none;
     border: none;
-    outline: var(--primary-container) solid 1px;
+    border-bottom: 1px solid white;
+    margin-bottom: 10px;
+    font-size: medium;
 }
 
-.reg-item select {
-    width: 100%;
-    padding: 5px;
+.auth-group span {
     background-color: rgba(255,255,255,0.3);
-    outline: rgba(255, 255,255, .5) solid 1px;
-    color: white;
-    border: none;
-    outline: var(--primary-container) solid 1px;
-    border-radius: 5px;
 }
 
-.reg-item select:focus {
-    background-color: var(--on-variant);
-    color: var(--variant);
-    outline: var(--focus-outline) solid 3px;
+.auth-rdrt a{
+    color: var(--main);
+    font-weight: 600;
+}
+
+.auth-btn {
+    float: right;
 }

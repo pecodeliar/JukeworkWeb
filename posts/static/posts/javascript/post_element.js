@@ -190,14 +190,14 @@ function postElement(type, data, postId=null) {
     };
 
     // Get user information
-    fetch(`/profiles/api/profile/${data.creator}`)
+    fetch(`/auth/users/${data.creator}`)
     .then(response => response.json() )
     .then(user => {
 
         //console.log(user)
 
         pfp.alt = `${user.first_name}'s Profile Picture`;
-        pfp.src = user.pfp_url;
+        pfp.src = user.profile_picture;
         fullName.innerText = `${user.first_name}`
         fullName.setAttribute("href", `/profiles/${user.id}`);
         pfpLink.setAttribute("href", `/profiles/${user.id}`);
@@ -440,7 +440,7 @@ function fullPostView(post, comments) {
     postUserDiv.append(pfpDiv, postUserInfo);
 
     // Get user information
-    fetch(`/profiles/api/profile/${post.creator}`)
+    fetch(`/auth/users/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 

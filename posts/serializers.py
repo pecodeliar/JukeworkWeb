@@ -1,11 +1,6 @@
 from rest_framework import serializers
 from .models import Post, Comment
-from users.models import User
-
-class UserPKField(serializers.PrimaryKeyRelatedField):
-    def get_queryset(self):
-        queryset = User.objects.all()
-        return queryset
+from users.serializers import UserPKField
 
 class PostPKField(serializers.PrimaryKeyRelatedField):
     def get_queryset(self):

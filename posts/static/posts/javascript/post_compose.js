@@ -28,12 +28,12 @@ function compose(type, postId=null) {
     formRow.append(pfpDiv)
 
     // Get user information for PFP
-    fetch(`/profiles/api/profile/${loggedInUser}`)
+    fetch(`/auth/users/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
         pfp.alt = user.username;
-        pfp.src = user.pfp_url;
+        pfp.src = user.profile_picture;
         fetchedUser = user;
 
     })
@@ -194,7 +194,7 @@ function editAction(type, button, full=false) {
     saveBtn = editables.item(6);
     saveBtn.style.display = "block";
 
-    
+
 
     cancelBtn.addEventListener("click", () => {
         // After changing content, hide the form field

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'core',
     'posts',
     'profiles',
+    'knox',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.admin',
@@ -137,6 +138,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 50,
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication'
     ),
@@ -150,7 +152,6 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-"""ALLOWED_HOSTS = local_settings.allowed_hosts
+ALLOWED_HOSTS = local_settings.allowed_hosts
 
 CSRF_TRUSTED_ORIGINS = local_settings.csrf_trusted_origins
-"""

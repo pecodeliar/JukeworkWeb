@@ -26,7 +26,7 @@ window.onpopstate = function(event) {
     } else if (event.state.post !== null) {
         loadPosts(event.state.post);
     }
-    
+
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -194,7 +194,7 @@ function profileDropdownMenu() {
     dropdownCnt.append(logoutLink);
 
     // Get user information
-    fetch(`/profiles/api/profile/${loggedInUser}`)
+    fetch(`/auth/users/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -206,7 +206,7 @@ function profileDropdownMenu() {
         const pfp = document.createElement("img");
         pfp.setAttribute("aria-hidden", "true");
         pfp.alt = "";
-        pfp.src = user.pfp_url;
+        pfp.src = user.profile_picture;
         pfpDiv.append(pfp);
         dropdownBtn.prepend(pfpDiv);
 

@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+     Jukework - {{ page }}
+{% endblock %}
+
+{% block styles %}
+    <!-- block.super will get the content of the block from the parent template -->
+    {{ block.super }}
+    <link href="{% static 'users/auth.css' %}?ver=1.2" rel="stylesheet">
+    {% endblock %}
+
+{% block body %}
+
+<div class="container auth-container" style="margin-top: 100px;">
+
+    <h2 class="auth-title">{{ page }}</h2>
+
+    <p class="alert alert-danger auth-alert" role="alert" id="alert"></p>
+
+    <div id="login-view">
+    </div>
+
+    <div id="register-view">
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+{% csrf_token %}
+{% block script %}
+    <script src="{% static 'users/auth.js' %}" ></script>
+{% endblock %}
