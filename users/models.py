@@ -24,16 +24,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
-"""def serialize(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "pfp_url":  self.profile_picture,
-            "following": [user.id for user in self.following.all()],
-            "followers": [user.id for user in self.followers.all()],
-            "banner_url":  self.banner,
-            "genre":  self.genre,
-        }"""

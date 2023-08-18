@@ -64,7 +64,7 @@ function backButton(page, path, pageTitle="") {
         if (page === "profile") {
             //window.history.pushState('', '', path);
             if (!history.state || window.location.pathname !== `/posts/${request}`) {
-                //window.history.pushState({profile: profile}, '', `/profiles/${request}`);
+                //window.history.pushState({profile: profile}, '', `/users/${request}`);
             }
 
 
@@ -190,7 +190,7 @@ function postElement(type, data, postId=null) {
     };
 
     // Get user information
-    fetch(`/auth/users/${data.creator}`)
+    fetch(`/users/api/users/${data.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -199,8 +199,8 @@ function postElement(type, data, postId=null) {
         pfp.alt = `${user.first_name}'s Profile Picture`;
         pfp.src = user.profile_picture;
         fullName.innerText = `${user.first_name}`
-        fullName.setAttribute("href", `/profiles/${user.id}`);
-        pfpLink.setAttribute("href", `/profiles/${user.id}`);
+        fullName.setAttribute("href", `/users/${user.id}`);
+        pfpLink.setAttribute("href", `/users/${user.id}`);
         const dateObj = new Date(data.creation_date);
         let dateConv = dateObj.toDateString();
         // Subtracing 4 to get the year and replace space with a comma
@@ -440,7 +440,7 @@ function fullPostView(post, comments) {
     postUserDiv.append(pfpDiv, postUserInfo);
 
     // Get user information
-    fetch(`/auth/users/${post.creator}`)
+    fetch(`/users/api/users/${post.creator}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -448,8 +448,8 @@ function fullPostView(post, comments) {
         pfp.src = user.pfp_url;
         fullName.innerText = `${user.first_name}`;
         username.innerText = `@${user.username}`;
-        fullName.setAttribute("href", `/profiles/${user.id}`);
-        pfpLink.setAttribute("href", `/profiles/${user.id}`);
+        fullName.setAttribute("href", `/users/${user.id}`);
+        pfpLink.setAttribute("href", `/users/${user.id}`);
 
     })
     .catch(error => {

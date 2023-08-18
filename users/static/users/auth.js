@@ -41,7 +41,7 @@ function loginForm() {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
-        fetch(`/auth/api/login`, {
+        fetch(`/users/api/auth/login`, {
             method: 'POST',
             //credentials: "same-origin",
             headers: {
@@ -158,7 +158,7 @@ function registerForm() {
         const password = document.getElementById("password");
         const confirmation = document.getElementById("confirmation");
 
-        fetch(`/auth/api/register`, {
+        fetch(`/users/api/auth/register`, {
             method: 'POST',
             //credentials: "same-origin",
             headers: {

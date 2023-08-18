@@ -110,7 +110,7 @@ function baseNavbar() {
 
         // Make a sign in button
         const signInLink = document.createElement("a");
-        signInLink.setAttribute("href", `/auth/login`);
+        signInLink.setAttribute("href", `/users/auth/login`);
         signInLink.setAttribute("class", "sign-in-link");
         signInLink.value = "Sign In";
         const signInIcon = document.createElement("i");
@@ -123,7 +123,7 @@ function baseNavbar() {
 
         // Make register button
         const registerLink = document.createElement("a");
-        registerLink.setAttribute("href", `/auth/register`);
+        registerLink.setAttribute("href", `/users/auth/register`);
         registerLink.setAttribute("class", "sign-in-link");
         registerLink.setAttribute("id", "reg-link");
         registerLink.value = "Sign In"
@@ -159,7 +159,7 @@ function profileDropdownMenu() {
 
     const profileLink = document.createElement("a");
     profileLink.setAttribute("class", "nav-dropdown-item");
-    profileLink.setAttribute("href", `/profiles/${loggedInUser}`);
+    profileLink.setAttribute("href", `/users/${loggedInUser}`);
     profileLink.innerText = "Profile";
     const profileLinkIcon = document.createElement("i");
     profileLinkIcon.setAttribute("class", "bx bxs-user");
@@ -186,7 +186,7 @@ function profileDropdownMenu() {
 
     const logoutLink = document.createElement("a");
     logoutLink.setAttribute("class", "nav-dropdown-item");
-    logoutLink.setAttribute("href", `/auth/logout`);
+    logoutLink.setAttribute("href", `/users/auth/logout`);
     logoutLink.innerText = "Logout";
     const logoutLinkIcon = document.createElement("i");
     logoutLinkIcon.setAttribute("class", "bx bxs-log-out");
@@ -194,7 +194,7 @@ function profileDropdownMenu() {
     dropdownCnt.append(logoutLink);
 
     // Get user information
-    fetch(`/auth/users/${loggedInUser}`)
+    fetch(`/users/api/users/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block styles %}
-<link href="{% static 'profiles/profile.css' %}?ver=1.2" rel="stylesheet">
+<link href="{% static 'users/profile.css' %}?ver=1.2" rel="stylesheet">
 <link href="{% static 'posts/css/post_element.css' %}?ver=1.2" rel="stylesheet">
 <link href="{% static 'posts/css/posts.css' %}?ver=1.2" rel="stylesheet">
 {% endblock %}
@@ -12,7 +12,7 @@
 <div id="banner-row">
 </div>
 
-<div class="container" id="profile-cont" data-profile="{{ profile.id }}">
+<div class="container" id="profile-cont" data-profile="{{ profile }}" data-page="{{ page }}">
 
     <div id="profile-view" {% if user.is_authenticated %}data-user="{{ user.id }}"{% endif %}>
     </div>
@@ -38,5 +38,5 @@
 {% block script %}
     <script src="{% static 'posts/javascript/post_element.js' %}"></script>
     <script src="{% static 'posts/javascript/post_compose.js' %}"></script>
-    <script src="{% static 'profiles/profile.js' %}"></script>
+    <script src="{% static 'users/profile.js' %}"></script>
 {% endblock %}

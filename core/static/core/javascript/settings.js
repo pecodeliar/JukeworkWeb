@@ -127,7 +127,7 @@ function editProfileForm() {
     thirdFormRow.append(deletePostsDiv, deleteAccountDiv);
 
     // Get user information for default data input
-    fetch(`/auth/users/${loggedInUser}`)
+    fetch(`/users/api/users/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 

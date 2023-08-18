@@ -18,17 +18,18 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = [
             "id",
-            "username","first_name",
+            "username",
+            "first_name",
             "profile_picture",
             "following",
             "followers",
             "genre"
         ]
 
-    extra_kwargs = {
-        'id': {'read_only': True},
-        'username': {'read_only': True}
-    }
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'username': {'read_only': True}
+        }
 
 
 class RegisterSerializer(serializers.ModelSerializer):

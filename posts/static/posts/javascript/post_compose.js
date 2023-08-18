@@ -28,7 +28,7 @@ function compose(type, postId=null) {
     formRow.append(pfpDiv)
 
     // Get user information for PFP
-    fetch(`/auth/users/${loggedInUser}`)
+    fetch(`/users/api/users/${loggedInUser}`)
     .then(response => response.json() )
     .then(user => {
 

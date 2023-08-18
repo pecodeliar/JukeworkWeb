@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.decorators import action
 from rest_framework import status, permissions, viewsets
-from rest_framework import generics
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -37,7 +36,7 @@ class PostOrCommentPermission(permissions.BasePermission):
 
 @api_view(['GET', 'PATCH'])
 def like_post(request, post_id):
-    """This function is for liking either a comment or post.
+    """This function is for liking a post.
     This is to avoid having to make a completely seperate model for likes."""
     data = request.data
     if request.method == 'PATCH':
@@ -63,6 +62,8 @@ def like_post(request, post_id):
 
 @api_view(['GET', 'PATCH'])
 def like_comment(request, post_id, comment_id):
+    """This function is for liking a comment.
+    This is to avoid having to make a completely seperate model for likes."""
     data = request.data
     if request.method == 'PATCH':
 
@@ -103,8 +104,18 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'], url_path='(?P<genre_code>[A-Z]{2})', permission_classes=[permissions.AllowAny])
     def genre(self, request, genre_code, *args, **kwargs):
 
+        genres = {
+            "JZ": 0,
+            "RB": 1,
+            "HH": 2,
+            "IN": 3,
+            "FK": 4,
+            "IE": 5,
+            "PP": 6
+        }
+
         posts = self.get_queryset()
-        users = User.objects.filter(genre=genre_code)
+        users = User.objects.filter(genre=genres[genre_code])
         genre_posts = posts.filter(creator__in=users).order_by("-creation_date").all()
         results = results = PostSerializer(genre_posts, many=True).data
         return Response(results)

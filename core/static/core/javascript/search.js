@@ -90,7 +90,7 @@ function userCard(user) {
 
     // Make parent
     const userLink = document.createElement("a");
-    userLink.setAttribute("href", `profiles/${user.id}`);
+    userLink.setAttribute("href", `/users/${user.id}`);
     userLink.setAttribute("class", "search-user-link");
     const card = document.createElement("div");
     card.setAttribute("class", "user-card");

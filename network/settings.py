@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'users',
     'core',
     'posts',
-    'profiles',
     'knox',
     'rest_framework',
     'rest_framework.authtoken',
@@ -152,6 +151,6 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = local_settings.allowed_hosts
+"""ALLOWED_HOSTS = local_settings.allowed_hosts
 
-CSRF_TRUSTED_ORIGINS = local_settings.csrf_trusted_origins
+CSRF_TRUSTED_ORIGINS = local_settings.csrf_trusted_origins"""

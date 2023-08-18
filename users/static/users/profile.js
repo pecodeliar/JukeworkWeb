@@ -5,11 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
         loggedInUser = parseInt(check.dataset.user);
     };
 
-    const profileId = parseInt(document.getElementById("profile-cont").dataset.profile);
+    const container = document.getElementById("profile-cont");
+    const profileId = parseInt(container.dataset.profile);
+    const page = container.dataset.page;
 
     loadProfileInfo(profileId);
     profileNavBar(profileId);
-    loadActions("posts", profileId);
+    loadActions(page, profileId);
 
 });
 
@@ -97,18 +99,28 @@ function loadProfileInfo(profileId) {
 
 
     // Get user information
-    fetch(`/auth/users/${profileId}`)
+    fetch(`/users/api/users/${profileId}`)
     .then(response => response.json() )
     .then(user => {
 
         fetchedUser = user;
-        bannerImg.src = user.banner_url;
-        pfp.src = user.pfp_url;
+        pfp.src = user.profile_picture;
         username.innerText = user.username;
         followerCount.innerText = `${user.followers.length} followers`;
         followingCount.innerText = `${user.following.length} following`;
         fullname.innerText = user.first_name;
-        genre.innerText = user.genre;
+
+        const genres = {
+            0: "Jazz",
+            1: "R&B / Soul",
+            2: "Hip-Hop",
+            3: "Classical",
+            4: "Folk / Acoustic",
+            5: "Indie / Alternative",
+            6: "Pop"
+        };
+
+        genre.innerText = genres[user.genre];
 
         // Check if logged in user is profile or follows and is followed by user
         if (loggedInUser === user.id) {
@@ -119,12 +131,12 @@ function loadProfileInfo(profileId) {
         } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
 
             followEditBtn.innerText = "Unfollow";
-            followEditBtn.addEventListener('click', () => follow(followEditBtn));
+            followEditBtn.addEventListener('click', () => follow(followEditBtn, user.id));
 
         } else {
 
             followEditBtn.innerText = "Follow";
-            followEditBtn.addEventListener('click', () => follow(followEditBtn));
+            followEditBtn.addEventListener('click', () => follow(followEditBtn, user.id));
 
         }
 
@@ -144,12 +156,11 @@ function loadProfileInfo(profileId) {
         console.log(error);
     });
 
-    fetch(`/auth/users/profile/${profileId}/posts`)
+    fetch(`/users/api/users/${profileId}/posts`)
     .then(response => response.json())
     .then(json => {
-
-        const data = JSON.parse(json)
-        postCount.innerText = `${data.length} posts`;
+        //console.log(json)
+        postCount.innerText = `${json.length} posts`;
 
     });
 
@@ -228,13 +239,12 @@ function profileNavBar(profileId) {
 }
 
 function loadActions(type, profileId) {
-    console.log(profileId)
 
     const actionsDiv = document.getElementById("profile-actions");
     actionsDiv.innerText = "";
 
-    if (!history.state || window.location.pathname !== `/profiles/${profileId}/${type}`) {
-        window.history.pushState({view: type, profile: profileId}, '', `/profiles/${profileId}/${type}`);
+    if (!history.state || window.location.pathname !== `/users/${profileId}/${type}`) {
+        window.history.pushState({view: type, profile: profileId}, '', `/users/${profileId}/${type}`);
     };
 
     const oldIndicator = document.querySelector('a[style*="border-bottom: 1px solid white;"]');
@@ -250,11 +260,10 @@ function loadActions(type, profileId) {
         actionsDiv.append(postForm);
     }
 
-    /*fetch(`/auth/users/${profileId}/${type}`)
+    fetch(`/users/api/users/${profileId}/${type}`)
     .then(response => response.json())
-    .then(json => {
+    .then(data => {
 
-        const data = JSON.parse(json)
         if (data.length === 0) {
 
             const notifyNone = document.createElement("p");
@@ -273,38 +282,40 @@ function loadActions(type, profileId) {
 
         };
 
-    });*/
+    });
 
 }
 
 function follow (button, id) {
 
+    /** The id parameter should be for the user that is currently being followed/unfollowed. */
+
     const csrftoken = getCookie('csrftoken');
     console.log(button.innerText)
 
-    /*fetch(`/auth/users/follow`, {
-        method: 'PUT',
-        headers: {'X-CSRFToken': csrftoken},
+    fetch(`/users/api/users/${id}/follow`, {
+        method: 'PATCH',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-            profile_id: profileId,
-            follower: loggedInUser,
             action: button.innerText
         })
     }).then(() => {
-            console.log("In then statement")
             const count = document.querySelector('#followers-cnt').innerText.split(" ");
             var count_num = parseInt(count[0]);
             console.log(count_num)
 
 
-            if (button.value == "Unfollow") {
+            if (button.innerText === "Unfollow") {
                 button.innerText = "Follow";
                 document.querySelector('#followers-cnt').innerText = (count_num-=1) + " " + count[1]
             } else {
                 button.innerText = "Unfollow";
                 document.querySelector('#followers-cnt').innerText = (count_num+=1) + " " + count[1]
             };
-    });*/
+    });
 
 }
 
