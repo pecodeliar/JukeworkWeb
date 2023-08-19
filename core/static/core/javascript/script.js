@@ -5,12 +5,27 @@ document.addEventListener('DOMContentLoaded', function() {
         loggedInUser = parseInt(check.dataset.user);
     };
 
-    const nav = document.querySelector('nav')
-    nav.append(baseNavbar())
+    if (sessionStorage.getItem("users") === null) {
+
+        const setUsers = async () => {
+            const users = await getUsers();
+            //sessionStorage.setItem("users", JSON.stringify(users));
+        }
+
+        const waitForUsers = async() => {
+            await setUsers();
+        }
+
+        waitForUsers();
+
+    }
+
+    const nav = document.querySelector('nav');
+    nav.append(baseNavbar());
 
     const searchCheck = document.getElementById("search-cont");
     if (searchCheck !== null) {
-        searchResults()
+        searchResults();
     };
 
 });
@@ -193,32 +208,24 @@ function profileDropdownMenu() {
     logoutLink.prepend(logoutLinkIcon);
     dropdownCnt.append(logoutLink);
 
-    // Get user information
-    fetch(`/users/api/users/${loggedInUser}`)
-    .then(response => response.json() )
-    .then(user => {
+    const user = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
 
-        dropdownBtn.innerText = user.username;
+    dropdownBtn.innerText = user.username;
 
-        // Profile Picture
-        const pfpDiv = document.createElement("div");
-        pfpDiv.setAttribute("class", "nav-bar-pfp round-pfp");
-        const pfp = document.createElement("img");
-        pfp.setAttribute("aria-hidden", "true");
-        pfp.alt = "";
-        pfp.src = user.profile_picture;
-        pfpDiv.append(pfp);
-        dropdownBtn.prepend(pfpDiv);
+    // Profile Picture
+    const pfpDiv = document.createElement("div");
+    pfpDiv.setAttribute("class", "nav-bar-pfp round-pfp");
+    const pfp = document.createElement("img");
+    pfp.setAttribute("aria-hidden", "true");
+    pfp.alt = "";
+    pfp.src = user.profile_picture;
+    pfpDiv.append(pfp);
+    dropdownBtn.prepend(pfpDiv);
 
-        const dropdownIcon = document.createElement("i");
-        dropdownIcon.setAttribute("class", "bx bx-chevron-down profile-arw");
-        dropdownIcon.setAttribute("aria-hidden", "true");
-        dropdownBtn.append(dropdownIcon);
-
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    const dropdownIcon = document.createElement("i");
+    dropdownIcon.setAttribute("class", "bx bx-chevron-down profile-arw");
+    dropdownIcon.setAttribute("aria-hidden", "true");
+    dropdownBtn.append(dropdownIcon);
 
     dropdownDiv.addEventListener("click", () => {
         dropdownCnt.style.display = "block";
@@ -301,3 +308,46 @@ function searchBar() {
     return searchLi;
 
 }
+
+async function getUsers() {
+
+    /* Since this is just a mock and there is a limited set of users in the DB,
+    this function is to just call them all at once, making their user id a key
+    so that it is easy to fetch for sessionStorage later.*/
+
+
+    if (sessionStorage.getItem("users") !== null) {
+        return;
+    }
+
+    var userDict = {};
+
+    fetch(`/users/api/users/`)
+    .then(response => {
+        if (response.ok) return response.json();
+        return response.json().then(response => {throw new Error(response.error)})
+    })
+    .then(users => {
+
+        //console.log(users.results)
+
+        users.results.forEach(row => {
+            //console.log(row.id)
+            userDict[row.id] = row;
+            // Since the id is already the key, it can be deleted from the obj
+            delete userDict[row.id]["id"];
+        })
+        sessionStorage.setItem("users", JSON.stringify(userDict));
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+    return;
+
+}
+
+getUsers().catch(error => {
+    console.log(error);
+});

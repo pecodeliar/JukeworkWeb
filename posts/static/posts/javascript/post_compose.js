@@ -27,19 +27,11 @@ function compose(type, postId=null) {
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
 
-    // Get user information for PFP
-    fetch(`/users/api/users/${loggedInUser}`)
-    .then(response => response.json() )
-    .then(user => {
+    const user = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
 
-        pfp.alt = user.username;
-        pfp.src = user.profile_picture;
-        fetchedUser = user;
-
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    pfp.alt = user.username;
+    pfp.src = user.profile_picture;
+    fetchedUser = user;
 
     const formTextDiv = document.createElement("div");
     formTextDiv.setAttribute("class", "form-text-div");

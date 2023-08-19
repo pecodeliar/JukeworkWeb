@@ -97,9 +97,58 @@ function loadProfileInfo(profileId) {
 
     thirdTextDiv.append(fullname, genre);
 
+    const user = JSON.parse(sessionStorage.getItem("users"))[profileId];
+
+    fetchedUser = user;
+        pfp.src = user.profile_picture;
+        username.innerText = user.username;
+        followerCount.innerText = `${user.followers.length} followers`;
+        followingCount.innerText = `${user.following.length} following`;
+        fullname.innerText = user.first_name;
+
+        const genres = {
+            0: "Jazz",
+            1: "R&B / Soul",
+            2: "Hip-Hop",
+            3: "Classical",
+            4: "Folk / Acoustic",
+            5: "Indie / Alternative",
+            6: "Pop"
+        };
+
+        genre.innerText = genres[user.genre];
+
+        // Check if logged in user is profile or follows and is followed by user
+        if (loggedInUser === user.id) {
+
+            followEditBtn.innerText = "Edit Profile";
+            followEditBtn.addEventListener('click', () => editProfile());
+
+        } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
+
+            followEditBtn.innerText = "Unfollow";
+            followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
+
+        } else {
+
+            followEditBtn.innerText = "Follow";
+            followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
+
+        }
+
+
+        // Check if profile user follows logged in user
+        if (user.following.includes(loggedInUser)) {
+            // Tag for if the profile visiting follows logged in user
+            const followsTag = document.createElement("p");
+            followsTag.setAttribute("id", "follows-tag");
+            followsTag.setAttribute("class", "tag");
+            followsTag.innerText = "Follows You";
+            firstTextDiv.append(followsTag);
+        }
 
     // Get user information
-    fetch(`/users/api/users/${profileId}`)
+    /*fetch(`/users/api/users/${profileId}`)
     .then(response => response.json() )
     .then(user => {
 
@@ -154,7 +203,7 @@ function loadProfileInfo(profileId) {
     })
     .catch(error => {
         console.log(error);
-    });
+    });*/
 
     fetch(`/users/api/users/${profileId}/posts`)
     .then(response => response.json())

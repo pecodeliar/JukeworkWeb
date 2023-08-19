@@ -189,29 +189,19 @@ function postElement(type, data, postId=null) {
         top.append(edittingForm);
     };
 
-    // Get user information
-    fetch(`/users/api/users/${data.creator}`)
-    .then(response => response.json() )
-    .then(user => {
+    const user = JSON.parse(sessionStorage.getItem("users"))[data.creator];
 
-        //console.log(user)
-
-        pfp.alt = `${user.first_name}'s Profile Picture`;
-        pfp.src = user.profile_picture;
-        fullName.innerText = `${user.first_name}`
-        fullName.setAttribute("href", `/users/${user.id}`);
-        pfpLink.setAttribute("href", `/users/${user.id}`);
-        const dateObj = new Date(data.creation_date);
-        let dateConv = dateObj.toDateString();
-        // Subtracing 4 to get the year and replace space with a comma
-        const dateIndex = dateConv.length-5;
-        dateConv = dateConv.slice(3, dateIndex) + "," + dateConv.slice(dateIndex);
-        userAndCreation.innerText = ` @${user.username} • ${dateConv}`;
-
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    pfp.alt = `${user.first_name}'s Profile Picture`;
+    pfp.src = user.profile_picture;
+    fullName.innerText = `${user.first_name}`
+    fullName.setAttribute("href", `/users/${data.creator}`);
+    pfpLink.setAttribute("href", `/users/${data.creator}`);
+    const dateObj = new Date(data.creation_date);
+    let dateConv = dateObj.toDateString();
+    // Subtracing 4 to get the year and replace space with a comma
+    const dateIndex = dateConv.length-5;
+    dateConv = dateConv.slice(3, dateIndex) + "," + dateConv.slice(dateIndex);
+    userAndCreation.innerText = ` @${user.username} • ${dateConv}`;
 
     // Post Content
     const postContentDiv = document.createElement("div");
@@ -439,22 +429,14 @@ function fullPostView(post, comments) {
 
     postUserDiv.append(pfpDiv, postUserInfo);
 
-    // Get user information
-    fetch(`/users/api/users/${post.creator}`)
-    .then(response => response.json() )
-    .then(user => {
+    const user = JSON.parse(sessionStorage.getItem("users"))[post.creator];
 
-        pfp.alt = "";
-        pfp.src = user.profile_picture;
-        fullName.innerText = `${user.first_name}`;
-        username.innerText = `@${user.username}`;
-        fullName.setAttribute("href", `/users/${user.id}`);
-        pfpLink.setAttribute("href", `/users/${user.id}`);
-
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    pfp.alt = "";
+    pfp.src = user.profile_picture;
+    fullName.innerText = `${user.first_name}`;
+    username.innerText = `@${user.username}`;
+    fullName.setAttribute("href", `/users/${post.creator}`);
+    pfpLink.setAttribute("href", `/users/${post.creator}`);
 
     // Post Content Div
     const postContentDiv = document.createElement("div");
