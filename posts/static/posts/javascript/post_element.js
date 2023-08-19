@@ -406,7 +406,7 @@ function fullPostView(post, comments) {
         //window.history.pushState('', '', '/');
     } else if (document.querySelector("#banner-row") !== null) {
         profilePostView();
-        console.log(id)
+        console.log(post.id)
         if (!history.state || window.location.pathname !== `/profiles/post/${post.id}`) {
             //window.history.pushState({post: id}, '', `/profiles/post/${id}`);
         }
@@ -445,7 +445,7 @@ function fullPostView(post, comments) {
     .then(user => {
 
         pfp.alt = "";
-        pfp.src = user.pfp_url;
+        pfp.src = user.profile_picture;
         fullName.innerText = `${user.first_name}`;
         username.innerText = `@${user.username}`;
         fullName.setAttribute("href", `/users/${user.id}`);
