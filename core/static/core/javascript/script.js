@@ -370,7 +370,7 @@ async function getPosts(request="") {
 
             let response = null;
 
-            if (request === "posts") {
+            if (request === "") {
                 // Only the all the posts request has a results attribute
                 response = [...previousResponse, ...newResponse.results];
             } else {
