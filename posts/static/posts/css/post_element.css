@@ -62,11 +62,12 @@
     display: inline-block;
     margin: 5px;
     margin-left: 5px;
+    margin-right: 8px;
 }
 
 .like-cnt {
     display: inline-block;
-    margin: 5px;
+    margin: 1px 5px;
 }
 
 .post-btn-cont {

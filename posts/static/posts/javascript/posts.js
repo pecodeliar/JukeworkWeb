@@ -117,99 +117,75 @@ async function loadPosts(request="") {
     const postIncrease = 15;
     let currentPage = 1;
 
-    if (request === "") {
+    if (sessionStorage.getItem(`posts${request}`) === null) {
 
-        const response = await fetch('/posts/api/posts')
-        .then(response => response.json() )
-        .then(posts => {
-            //console.log(posts)
-            if (posts.results.length > 0) {
-                allPosts = posts.results;
-            }
-            postLimit = allPosts.length;
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        const setPosts = async () => {
+            await getPosts(request);
+            setTimeout(getPosts, 5000);
+        }
 
-    } else if (request === "following") {
+        const waitForPosts = async() => {
+            await setPosts();
 
-        const response = await fetch(`/posts/api/posts/following`)
-        .then(response => response.json() )
-        .then(posts => {
-            if (posts.length > 0) {
-                allPosts = posts;
-            }
-            postLimit = posts.length
-        })
-        .catch(error => {
-            console.log(error);
-        });
-
-    } else {
-
-        /** For Genres */
-
-        const response = await fetch(`/posts/api/posts/${request}`)
-        .then(response => response.json() )
-        .then(posts => {
-            if (posts.length > 0) {
-                allPosts = posts;
-            }
-            postLimit = allPosts.length
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        }
+        waitForPosts();
 
     }
 
-    //console.log(allPosts)
+    const gettingPosts = async () => {
 
-    // Load More Button
-    const loadMoreDiv = document.createElement("div");
-    loadMoreDiv.setAttribute("id", "load-btn-div");
-    const loadMore = document.createElement("button");
-    loadMore.setAttribute("id", "load-btn");
-    loadMore.setAttribute("class", "")
-    loadMore.innerText = "Load More Posts";
+        const posts = JSON.parse(sessionStorage.getItem(`posts${request}`));
 
-    if (allPosts.length > 0) {
+        if (Object.keys(posts).length > 0) {
+            allPosts = posts;
+        }
+        postLimit = Object.keys(allPosts).length - 1;
 
-        const addPosts = (pageIndex) => {
+        // Load More Button
+        const loadMoreDiv = document.createElement("div");
+        loadMoreDiv.setAttribute("id", "load-btn-div");
+        const loadMore = document.createElement("button");
+        loadMore.setAttribute("id", "load-btn");
+        loadMore.setAttribute("class", "")
+        loadMore.innerText = "Load More Posts";
 
-            currentPage = pageIndex;
+        if (Object.keys(allPosts).length > 0) {
 
-            const startRange = (pageIndex - 1) * postIncrease;
-            let endRange = pageIndex * postIncrease;
+            const addPosts = (pageIndex) => {
 
-            if (allPosts.length - 1 < endRange) {
-                endRange = allPosts.length;
-                loadMore.classList.add("disabled");
-                loadMore.setAttribute("disabled", true);
-                loadMore.innerText = "No More Posts"
-            }
+                currentPage = pageIndex;
 
-            for (let i = startRange; i <= endRange - 1; i++) {
+                const startRange = (pageIndex - 1) * postIncrease;
+                let endRange = pageIndex * postIncrease;
 
-                //console.log(allPosts[i])
-                const postCard = completeCard("post", allPosts[i]);
-                innerParent.append(postCard);
+                if (Object.keys(allPosts).length - 1 < endRange) {
+                    endRange = Object.keys(allPosts).length;
+                    loadMore.classList.add("disabled");
+                    loadMore.setAttribute("disabled", true);
+                    loadMore.innerText = "No More Posts";
+                }
 
-            }
-        };
+                for (const key in allPosts) {
+                    const postCard = completeCard("post", allPosts[key]);
+                    innerParent.append(postCard);
+                }
+            };
 
-        addPosts(currentPage);
+            addPosts(currentPage);
 
-        loadMoreDiv.append(loadMore);
-        parent.append(loadMoreDiv);
-        loadMore.addEventListener("click", () => {
+            loadMoreDiv.append(loadMore);
+            parent.append(loadMoreDiv);
+            loadMore.addEventListener("click", () => {
 
-            addPosts(currentPage + 1);
+                addPosts(currentPage + 1);
 
-        });
+            });
+
+        }
 
     }
+
+    setTimeout(gettingPosts, 2000);
 
 }
 

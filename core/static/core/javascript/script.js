@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const setUsers = async () => {
             const users = await getUsers();
-            //sessionStorage.setItem("users", JSON.stringify(users));
         }
 
         const waitForUsers = async() => {
@@ -351,3 +350,63 @@ async function getUsers() {
 getUsers().catch(error => {
     console.log(error);
 });
+
+async function getPosts(request="") {
+
+    if (sessionStorage.getItem(`posts${request}`) !== null) {
+        return;
+    }
+
+    // https://observablehq.com/@xari/paginated_fetch
+    function paginated_fetch(
+        url,
+        page = 1,
+        previousResponse = []
+    ) {
+        //console.log("in here")
+        return fetch(`${url}?page=${page}`) // Append the page number to the base URL
+        .then(response => response.json())
+        .then(newResponse => {
+
+            let response = null;
+
+            if (request === "posts") {
+                // Only the all the posts request has a results attribute
+                response = [...previousResponse, ...newResponse.results];
+            } else {
+                response = [...previousResponse, ...newResponse];
+            }
+
+            if (newResponse.hasOwnProperty("next") && newResponse.next !== null) {
+                page++;
+                return paginated_fetch(url, page, response);
+            }
+
+            return response;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+
+    paginated_fetch(`/posts/api/posts/${request}`).then(function(results) {
+
+        var postDict = {};
+
+        results.forEach((row, index) => {
+            if (request === "posts") {
+                postDict[row.id] = row;
+                // Since the id is already the key, it can be deleted from the obj
+                delete postDict[row.id]["id"];
+            } else {
+                postDict[index] = row;
+            }
+        });
+
+        sessionStorage.setItem(`posts${request}`, JSON.stringify(postDict));
+
+    });
+
+    return;
+
+}

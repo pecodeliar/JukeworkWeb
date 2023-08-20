@@ -256,11 +256,11 @@ function likeButton(type, data, postId=null) {
     likeBtn.setAttribute("data-id", data.id);
     likeBtn.setAttribute("data-type", `${type}`);
     const likeIcon = document.createElement("i");
-    likeIcon.setAttribute("class", "bx bxs-heart ${type}-like-heart");
+    likeIcon.setAttribute("class", `bx bxs-heart`);
     likeIcon.setAttribute("data-id", data.id);
     likeIcon.setAttribute("data-type", `${type}`);
     likeIcon.setAttribute("aria-hidden", "true");
-    const likeCount = document.createElement("p");
+    const likeCount = document.createElement("span");
     likeCount.setAttribute("class", "like-cnt");
     likeCount.innerText = data.likers.length;
     likeCount.setAttribute("data-id", data.id);
@@ -274,10 +274,10 @@ function likeButton(type, data, postId=null) {
         likeBtn.innerText = `Like(s)`;
     } else {
         if (liked === false) {
-            likeBtn.innerText = `Like ${upperType}`;
+            likeBtn.innerText = `Like ${titleCase(type)}`;
             likeIcon.style.color = "white";
         } else {
-            likeBtn.innerText = `Unlike ${upperType}`;
+            likeBtn.innerText = `Unlike ${titleCase(type)}`;
             likeIcon.style.color = "var(--primary-container)";
         }
     }
@@ -463,7 +463,7 @@ function fullPostView(post, comments) {
     const buttonsDiv = document.createElement("div");
     buttonsDiv.setAttribute("class", "full-buttons-div");
     // Adding Like functionality
-    const likeBtn = likeButton("post", post)
+    const likeBtn = likeButton("post", post);
     buttonsDiv.append(likeBtn);
     likeBtn.addEventListener("click", () => {
         likeAction(likeBtn);
@@ -557,38 +557,34 @@ function seeCommentsButton(post) {
     commentsBtn.setAttribute("class", "round-btn post-like-btn");
     commentsBtn.setAttribute("data-type", "comment");
     commentsBtn.setAttribute("data-post", post.id);
-    commentsBtn.innerText = "Comment(s)";
+    commentsBtn.innerText = "Comments";
     const commentsIcon = document.createElement("i");
     commentsIcon.setAttribute("class", "bx bxs-comment post-like-heart");
     commentsIcon.setAttribute("aria-hidden", "true");
     commentsIcon.style.color = "white";
-    const commentsCount = document.createElement("p");
-    commentsCount.setAttribute("class", "like-cnt");
 
     // Check if user has logged in
     commentsBtn.setAttribute("data-type", "comment");
-    commentsBtn.prepend(commentsIcon, commentsCount);
+    commentsBtn.prepend(commentsIcon);
 
-    fetch(`/posts/api/posts/${post.id}/comments`)
-    .then(response => response.json() )
-    .then(comments => {
+    commentsBtn.addEventListener("click", () => {
 
-        //console.log(comments)
-
-        commentsCount.innerText = comments.results.length;
-
-        commentsBtn.addEventListener("click", () => {
+        fetch(`/posts/api/posts/${post.id}/comments`)
+        .then(response => response.json() )
+        .then(comments => {
 
             const fullView = fullPostView(post, comments.results);
             // Add the current state to the history
             history.pushState({post: post.id}, "", `${post.id}`);
 
+        })
+        .catch(error => {
+            console.log(error);
         });
 
-    })
-    .catch(error => {
-        console.log(error);
     });
+
+
 
     return commentsBtn;
 
