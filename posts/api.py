@@ -49,11 +49,13 @@ def like_post(request, post_id):
         if data.get("action") == "Like":
             post.likers.add(request.user.id)
             post.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            likers = list(post.likers.all().values_list('pk', flat=True))
+            return Response(likers)
         elif data.get("action") == "Unlike":
             post.likers.remove(request.user.id)
             post.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            likers = list(post.likers.all().values_list('pk', flat=True))
+            return Response(likers)
         else:
             content = {"error": "Must to be a post."}
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -73,13 +75,15 @@ def like_comment(request, post_id, comment_id):
 
         comment = Comment.objects.get(pk=comment_id)
         if data.get("action") == "Like":
-                comment.likers.add(request.user.id)
-                comment.save()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+            comment.likers.add(request.user.id)
+            comment.save()
+            likers = list(comment.likers.all().values_list('pk', flat=True))
+            return Response(likers)
         elif data.get("action") == "Unlike":
             comment.likers.remove(request.user.id)
             comment.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            likers = list(comment.likers.all().values_list('pk', flat=True))
+            return Response(likers)
         else:
             content = {"error": "Must to be a comment."}
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

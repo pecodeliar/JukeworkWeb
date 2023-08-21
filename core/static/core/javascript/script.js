@@ -160,10 +160,48 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
             if (loggedInUser["posts"] !== undefined) {
                 loggedInUser["posts"].push(value);
             }
-        } else if (type === "like") {
-            // TODO
+        }
+    } else if (action.includes("Comment")) {
+
+        // If a comment, the type parameter will be the post's id
+
+        for (const key in prevData) {
+            // Finding post
+            if (prevData[key].id === parseInt(type)) {
+                // Finding comment
+                for (element in prevData[key]["comments"]) {
+                    if (prevData[key]["comments"][element].id === parseInt(index)) {
+                        prevData[key]["comments"][element]["likers"] = value;
+                        break;
+                    }
+                }
+                break;
+            }
         }
 
+    } else if (action.includes("Post")) {
+
+        for (const key in prevData) {
+            // Finding post
+            if (prevData[key].id === parseInt(index)) {
+                prevData[key]["likers"] = value;
+                // Finding it in user's data
+                if (loggedInUser["likes"] !== undefined) {
+                    if (action.includes("Like")) {
+                        loggedInUser["likes"].push(prevData[key]);
+                    } else {
+                        // Unliking so removing from data
+                        for (const [position, element] of loggedInUser["likes"].entries()) {
+                            if (element.id === parseInt(index)) {
+                                loggedInUser["likes"].splice(position, 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
     }
     sessionStorage.setItem(sessionKey, JSON.stringify(prevData));
     sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));

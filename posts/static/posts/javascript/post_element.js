@@ -346,14 +346,20 @@ function likeAction(button) {
             action: action
         })
     })
-    .then(() => {
+    .then(response => response.json())
+    .then(likers_list => {
 
-        var count = parseInt(elements.item(2).textContent);
+        //console.log(btnOne.innerText, likers_list, id, postId)
+
+        // The API should send back a followers list so that the frontend does not have to do so much calculation
+        updateSessionData(btnOne.innerText, "posts", likers_list, id, postId);
+
+        var count = likers_list.length;
 
         if (btnOne.childNodes[2].nodeValue === `Like ${titleCase(type)}`) {
             btnOne.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
             elements.item(1).style.color = "var(--primary-container)";
-            elements.item(2).textContent = count += 1;
+            elements.item(2).textContent = count;
             if (btnTwo !== null) {
                 btnTwo.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
                 elements.item(4).style.color = "var(--primary-container)";
@@ -362,7 +368,7 @@ function likeAction(button) {
         } else {
             btnOne.childNodes[2].nodeValue = `Like ${titleCase(type)}`;
             elements.item(1).style.color = "white";
-            elements.item(2).textContent = count -= 1;
+            elements.item(2).textContent = count;
             if (btnTwo !== null) {
                 btnTwo.childNodes[2] = `Like ${titleCase(type)}`;
                 elements.item(4).style.color = "white";
@@ -386,7 +392,7 @@ function fullPostView(post, comments) {
     const check = document.getElementById("user-menu");
     if (check !== null) {
         loggedInUser = parseInt(check.dataset.user);
-        //console.log(loggedInUser)
+
     };
 
     // Check what page is displayed
@@ -476,23 +482,6 @@ function fullPostView(post, comments) {
         likeAction(likeBtn);
     })
 
-    /*if (loggedInUser === post.creator) {
-
-        const saveBtn = document.createElement("button");
-        saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        saveBtn.setAttribute("data-post", post.id);
-        saveBtn.innerText = "Save Edit";
-        saveBtn.style.display = "None";
-        buttonsDiv.append(saveBtn);
-
-        const cancelBtn = document.createElement("button");
-        cancelBtn.setAttribute("class", "float-right round-btn post-crt-btn");
-        cancelBtn.setAttribute(`data-${type}`, post.id);
-        cancelBtn.innerText = "Cancel Edit";
-        cancelBtn.style.display = "none";
-
-    };*/
-
     // Edit button
     if (loggedInUser === post.creator) {
 
@@ -534,12 +523,21 @@ function fullPostView(post, comments) {
     commentsHeading.innerText = "Comments";
 
     if (loggedInUser !== null) {
-        const cmntCompose = compose("comment", post.id);
-        commentsSection.append(cmntCompose);
-    }
-    //const cmntJson = JSON.parse(comments);
 
-    //console.log(comments)
+        const makingCommentForm = async () => {
+
+            const cmntCompose = compose("comment", post.id);
+            commentsHeading.after(cmntCompose);
+
+        }
+
+        if (sessionStorage.getItem("loggedInUser") !== null) {
+            makingCommentForm();
+        } else {
+            setTimeout(makingCommentForm, 2000);
+        };
+
+    }
 
     if (comments["length"] === 0) {
 

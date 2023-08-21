@@ -93,17 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Post does not exist.")
             }
 
-            /*fetch(`/posts/api/posts/${postId}/comments`)
-            .then(response => response.json() )
-            .then(comments => {
-
-                fullPostView(post, comments.results);
-
-            })
-            .catch(error => {
-                console.log(error);
-            });*/
-
         }
 
         if (sessionStorage.getItem("posts") !== null) {
