@@ -72,7 +72,6 @@ function compose(type, postId=null) {
           .then(response => response.json())
           .then(result => {
                 // Print result
-                console.log(result);
                 formText.value = "";
 
                 const postCard = completeCard(type, result);
@@ -94,6 +93,9 @@ function compose(type, postId=null) {
 
                 }
 
+                const dataLength = Object.keys(JSON.parse(sessionStorage.getItem("posts"))).length;
+                updateSessionData("compose", "posts", result, dataLength, type);
+
           })
           .catch(error => {
             console.log(error);
@@ -109,7 +111,7 @@ function compose(type, postId=null) {
 
 function editButton(type, data, postId) {
 
-    console.log(data.id)
+    //console.log(data.id)
 
     const upperType = titleCase(type);
 

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const userInfo = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
                 sessionStorage.setItem("loggedInUser", JSON.stringify(userInfo));
                 // Adding since for users lists, ids are the keys
-                updateSessionData("add", "loggedInUser", loggedInUser, "id");
+                updateSessionData("load", "loggedInUser", loggedInUser, "id");
             }
         };
 
@@ -37,7 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     };
 
-    setTimeout(setup, 2000);
+    if (sessionStorage.getItem("users") !== null) {
+        setup()
+    } else {
+        setTimeout(setup, 2000);
+    };
 
 });
 
@@ -88,13 +92,14 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function updateSessionData(action, sessionKey, value, index) {
+function updateSessionData(action, sessionKey, value, index, type=null) {
 
     let prevData = JSON.parse(sessionStorage.getItem(sessionKey));
     let loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
 
     //console.log(action)
     if (action === "delete") {
+        // TODO
     } else if (action === "Follow") {
         // Edit the following list of the user the logged-in user followed
         // and add user to logged-in users following list
@@ -109,8 +114,36 @@ function updateSessionData(action, sessionKey, value, index) {
         const placeTwo = loggedInUser["following"].indexOf(index);
         loggedInUser["following"].splice(placeTwo, 1);
 
-    } else if (action === "add") {
-        prevData[index] = value;
+    } else if (action === "load") {
+        if (type !== null) {
+            if (loggedInUser.id === index && loggedInUser[type] !== undefined) {
+                // The users created a post, comment or liked a post and data already exists.
+                loggedInUser[type].push(value);
+            } else if (loggedInUser.id === index && loggedInUser[type] === undefined) {
+                // The users created a post, comment or liked a post.
+                loggedInUser[type] = value;
+            } else {
+                // Accessing a profile's page for posts, comments or likes
+                prevData[index][type] = value;
+            }
+        } else {
+            // Adding the user's own profile info
+            loggedInUser[index] = value;
+        }
+    } else if (action === "compose") {
+        // The users created a post, comment or liked a post.
+        if (type === "comment") {
+            // TODO
+        } else if (type === "post") {
+            prevData[index] = value;
+            // All posts have ids as keys, not as a seperate attribute
+            if (loggedInUser["posts"] !== undefined) {
+                loggedInUser["posts"].push(value);
+            }
+        } else if (type === "like") {
+            // TODO
+        }
+
     }
     sessionStorage.setItem(sessionKey, JSON.stringify(prevData));
     sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));

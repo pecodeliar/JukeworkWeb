@@ -41,19 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Slicing 'posts/post/' which is 12 characters out of pathname and converting to int
         const postId = document.getElementById("post-view").dataset.postReq;
 
-        if (sessionData.getItem("posts") === null) {
+        const setPosts = async () => {
+            await getPosts(request);
+        }
 
-            const setPosts = async () => {
-                await getPosts(request);
-            }
-
-            const waitForPosts = async() => {
-                await setPosts();
-
-            }
-            waitForPosts();
+        const waitForPosts = async() => {
+            await setPosts();
 
         }
+
+        waitForPosts();
+
 
         const gettingPosts = async () => {
 
@@ -70,7 +68,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }
 
-        setTimeout(gettingPosts, 2000);
+        if (sessionStorage.getItem("posts") !== null) {
+            gettingPosts()
+        } else {
+            setTimeout(gettingPosts, 2000);
+        };
 
     };
 
@@ -82,9 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('#post-form').append(form);
         };
 
-    }
+    };
 
-    setTimeout(makePostForm, 3000);
+    if (sessionStorage.getItem("loggedInUser") !== null) {
+        makePostForm();
+    } else if (document.getElementById("user-menu") !== null) {
+        setTimeout(makePostForm, 3000);
+    }
 
 });
 
@@ -131,20 +137,17 @@ async function loadPosts(request="") {
     const postIncrease = 15;
     let currentPage = 1;
 
-    if (sessionStorage.getItem(`posts${request}`) === null) {
+    const setPosts = async () => {
+        await getPosts(request);
+        setTimeout(getPosts, 5000);
+    }
 
-        const setPosts = async () => {
-            await getPosts(request);
-            setTimeout(getPosts, 5000);
-        }
-
-        const waitForPosts = async() => {
-            await setPosts();
-
-        }
-        waitForPosts();
+    const waitForPosts = async() => {
+        await setPosts();
 
     }
+
+    waitForPosts();
 
     const gettingPosts = async () => {
 
@@ -153,7 +156,6 @@ async function loadPosts(request="") {
         if (Object.keys(posts).length > 0) {
             allPosts = posts;
         }
-        postLimit = Object.keys(allPosts).length - 1;
 
         // Load More Button
         const loadMoreDiv = document.createElement("div");
@@ -179,8 +181,8 @@ async function loadPosts(request="") {
                     loadMore.innerText = "No More Posts";
                 }
 
-                for (const key in allPosts) {
-                    const postCard = completeCard("post", allPosts[key]);
+                for (let i = startRange; i <= endRange - 1; i++) {
+                    const postCard = completeCard("post", allPosts[i]);
                     innerParent.append(postCard);
                 }
             };
@@ -197,9 +199,13 @@ async function loadPosts(request="") {
 
         }
 
-    }
+    };
 
-    setTimeout(gettingPosts, 2000);
+    if (sessionStorage.getItem(`posts${request}`) !== null) {
+        gettingPosts();
+    } else {
+        setTimeout(gettingPosts, 2000);
+    };
 
 }
 

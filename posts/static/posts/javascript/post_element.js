@@ -141,6 +141,8 @@ function completeCard(type, json, postId=null) {
 
 function postElement(type, data, postId=null) {
 
+    //console.log(postId, data.likers)
+
     // Make parent
     const card = document.createElement("article");
     card.setAttribute("class", `${type}-card`);
@@ -148,8 +150,7 @@ function postElement(type, data, postId=null) {
     let loggedInUser = null;
     const check = document.getElementById("user-menu");
     if (check !== null) {
-        loggedInUser = parseInt(check.dataset.user);
-        //console.log(loggedInUser)
+        loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
     };
 
     // Profile Picture
@@ -178,24 +179,28 @@ function postElement(type, data, postId=null) {
     fullName.setAttribute("class", `${type}-full-name`);
     const userAndCreation = document.createElement("span");
     userAndCreation.setAttribute("class", `${type}-user-create`);
-    topDeets.append(fullName, userAndCreation)
-    top.append(topDeets)
+    topDeets.append(fullName, userAndCreation);
+    top.append(topDeets);
+
+    let user = null;
 
     // Edit form
-    if (loggedInUser === data.creator) {
-
+    if (loggedInUser === data.creator || data.creator === undefined) {
+        user = loggedInUser;
         const edittingForm = editForm(type, data.id);
         edittingForm.style.display = "none";
         top.append(edittingForm);
-    };
-
-    const user = JSON.parse(sessionStorage.getItem("users"))[data.creator];
+        fullName.setAttribute("href", `/users/${loggedInUser.id}`);
+        pfpLink.setAttribute("href", `/users/${loggedInUser.id}`);
+    } else {
+        user = JSON.parse(sessionStorage.getItem("users"))[data.creator];
+        fullName.setAttribute("href", `/users/${data.creator}`);
+        pfpLink.setAttribute("href", `/users/${data.creator}`);
+    }
 
     pfp.alt = `${user.first_name}'s Profile Picture`;
     pfp.src = user.profile_picture;
-    fullName.innerText = `${user.first_name}`
-    fullName.setAttribute("href", `/users/${data.creator}`);
-    pfpLink.setAttribute("href", `/users/${data.creator}`);
+    fullName.innerText = `${user.first_name}`;
     const dateObj = new Date(data.creation_date);
     let dateConv = dateObj.toDateString();
     // Subtracing 4 to get the year and replace space with a comma

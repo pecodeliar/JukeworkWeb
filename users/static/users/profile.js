@@ -1,23 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    const check = document.getElementById("user-menu");
-    if (check !== null) {
-        loggedInUser = parseInt(check.dataset.user);
-    };
-
     const container = document.getElementById("profile-cont");
     const profileId = parseInt(container.dataset.profile);
     const page = container.dataset.page;
 
-    loadProfileInfo(profileId);
-    profileNavBar(profileId);
-    loadActions(page, profileId);
+    const setUp = async () => {
+
+        loadProfileInfo(profileId);
+        profileNavBar(profileId);
+        loadActions(page, profileId);
+
+    };
+
+    if (sessionStorage.getItem("users") !== null) {
+        setUp()
+    } else {
+        setTimeout(setUp, 3000);
+    };
 
 });
 
 function loadProfileInfo(profileId) {
-
-    let fetchedUser = null;
 
     // Banner Display
     const bannerDiv = document.querySelector("#banner-row");
@@ -70,9 +73,6 @@ function loadProfileInfo(profileId) {
     secTextDiv.setAttribute("id", "sec-info");
     textInfo.append(secTextDiv);
 
-    const postCount = document.createElement("p");
-    postCount.setAttribute("class", "profile-count");
-
     const followerCount = document.createElement("p");
     followerCount.setAttribute("class", "profile-count");
     followerCount.setAttribute("id", "followers-cnt");
@@ -80,7 +80,7 @@ function loadProfileInfo(profileId) {
     const followingCount = document.createElement("p");
     followingCount.setAttribute("class", "profile-count");
 
-    secTextDiv.append(postCount, followerCount, followingCount);
+    secTextDiv.append(followerCount, followingCount);
 
     // 2nd text div that should have full name and genre
 
@@ -99,7 +99,6 @@ function loadProfileInfo(profileId) {
 
     const user = JSON.parse(sessionStorage.getItem("users"))[profileId];
 
-    fetchedUser = user;
     pfp.src = user.profile_picture;
     username.innerText = user.username;
     followerCount.innerText = `${user.followers.length} followers`;
@@ -118,7 +117,8 @@ function loadProfileInfo(profileId) {
 
     genre.innerText = genres[user.genre];
 
-        // Check if logged in user is profile or follows and is followed by user
+    // Check if logged in user is profile or follows and is followed by user
+    const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
     if (loggedInUser === user.id) {
 
         followEditBtn.innerText = "Edit Profile";
@@ -146,14 +146,6 @@ function loadProfileInfo(profileId) {
         followsTag.innerText = "Follows You";
         firstTextDiv.append(followsTag);
     }
-
-    fetch(`/users/api/users/${profileId}/posts`)
-    .then(response => response.json())
-    .then(json => {
-        //console.log(json)
-        postCount.innerText = `${json.length} posts`;
-
-    });
 
 }
 
@@ -245,15 +237,33 @@ function loadActions(type, profileId) {
     const newIndicator = document.getElementById(`profile-nav-${type}-btn`);
     newIndicator.style.borderBottom = "solid white 1px";
 
-    if (loggedInUser === profileId && type === "posts") {
+    const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    if (loggedInUser.id === profileId && type === "posts") {
         const postForm = compose("post");
         postForm.classList.add("profile-post-form");
         actionsDiv.append(postForm);
     }
 
-    fetch(`/users/api/users/${profileId}/${type}`)
-    .then(response => response.json())
-    .then(data => {
+    let data = null;
+    if (loggedInUser.id === profileId) {
+        data = loggedInUser[type];
+    } else {
+        data = JSON.parse(sessionStorage.getItem("users"))[profileId][type];
+    }
+
+    if (data === undefined || data === null) {
+        console.log("in here")
+        fetch(`/users/api/users/${profileId}/${type}`)
+        .then(response => response.json())
+        .then(results => {
+
+            updateSessionData("load", "users", results, profileId, type);
+            data = results;
+
+        });
+    }
+
+    const profileData = async () => {
 
         if (data.length === 0) {
 
@@ -273,7 +283,15 @@ function loadActions(type, profileId) {
 
         };
 
-    });
+    }
+
+    if (data !== undefined) {
+        profileData();
+    } else {
+        setTimeout(profileData, 2000);
+    };
+
+
 
 }
 
