@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const postId = document.getElementById("post-view").dataset.postReq;
 
         const setPosts = async () => {
-            await getPosts(request);
+            await getPosts();
         }
 
         const waitForPosts = async() => {
@@ -53,9 +53,47 @@ document.addEventListener('DOMContentLoaded', function() {
         waitForPosts();
 
 
-        const gettingPosts = async () => {
+        const gettingPost = async () => {
 
-            fetch(`/posts/api/posts/${postId}/comments`)
+            // Make sure post exists
+            const posts = JSON.parse(sessionStorage.getItem("posts"));
+            let post = null;
+            for (const key in posts) {
+                if (posts[key].id === parseInt(postId)) {
+                    post = posts[key];
+                    break;
+                }
+            }
+
+            if (post !== null) {
+
+                // Checking to see if comments have already been fetched
+                const comments = post["comments"];
+
+                if (comments !== undefined) {
+
+                    fullPostView(post, comments);
+
+                } else {
+
+                    fetch(`/posts/api/posts/${postId}/comments`)
+                    .then(response => response.json() )
+                    .then(comments => {
+
+                        updateSessionData("load", "posts", comments.results, postId, "comments")
+                        fullPostView(post, comments.results);
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                }
+
+            } else {
+                console.log("Post does not exist.")
+            }
+
+            /*fetch(`/posts/api/posts/${postId}/comments`)
             .then(response => response.json() )
             .then(comments => {
 
@@ -64,14 +102,14 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.log(error);
-            });
+            });*/
 
         }
 
         if (sessionStorage.getItem("posts") !== null) {
-            gettingPosts()
+            gettingPost();
         } else {
-            setTimeout(gettingPosts, 2000);
+            setTimeout(gettingPost, 2000);
         };
 
     };

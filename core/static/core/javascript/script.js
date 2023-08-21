@@ -48,11 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // When back arrow is clicked, show previous section
 window.onpopstate = function(event) {
 
-    if (event.state.profile !== undefined) {
-        console.log(event.state.profile)
+    if (event.state.profile !== undefined && event.state.page !== "render") {
         loadActions(event.state.view, event.state.profile);
-    } else if (event.state.page !== null) {
-        loadPosts(event.state.page);
+    } else if (event.state.page !== null && event.state.page === "render") {
+        loadPosts("");
+    } else if (event.state.post !== null) {
+        loadPosts(event.state.post);
     } else if (event.state.post !== null) {
         loadPosts(event.state.post);
     }
@@ -124,7 +125,17 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
                 loggedInUser[type] = value;
             } else {
                 // Accessing a profile's page for posts, comments or likes
-                prevData[index][type] = value;
+                if (sessionKey === "users") {
+                    prevData[index][type] = value;
+                } else if (sessionKey === "posts") {
+                    // Storing comments for a specific post
+                    for (const key in prevData) {
+                        if (prevData[key].id === index) {
+                            prevData[key]["comments"] = value;
+                            break;
+                        }
+                    }
+                }
             }
         } else {
             // Adding the user's own profile info
@@ -134,6 +145,15 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
         // The users created a post, comment or liked a post.
         if (type === "comment") {
             // TODO
+            for (const key in prevData) {
+                if (prevData[key].id === index) {
+                    prevData[key]["comments"].push(value);
+                    break;
+                }
+            }
+            if (loggedInUser["comments"] !== undefined) {
+                loggedInUser["comments"].push(value);
+            }
         } else if (type === "post") {
             prevData[index] = value;
             // All posts have ids as keys, not as a seperate attribute

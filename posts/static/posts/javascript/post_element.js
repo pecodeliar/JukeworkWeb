@@ -24,7 +24,7 @@ function backButton(page, path, pageTitle="") {
 
         // For All Posts Page
         if (page === "all" || page === "render" || page === "following") {
-            if (!history.state || window.location.pathname !== path) {
+            if ((!history.state || window.location.pathname !== path) && page !== "render") {
                 window.history.pushState({page: page}, '', path);
             }
 
@@ -62,9 +62,11 @@ function backButton(page, path, pageTitle="") {
         // For Profile Page
 
         if (page === "profile") {
-            //window.history.pushState('', '', path);
-            if (!history.state || window.location.pathname !== `/posts/${request}`) {
-                //window.history.pushState({profile: profile}, '', `/users/${request}`);
+            if (!history.state || window.location.pathname !== path) {
+                // To get the idea, remove "/users/" from beginning and "/posts" or "/likes" from end
+                const profile = parseInt(path.slice(7, -6));
+                const type = path.slice(`/users/${profile}/`.length);
+                window.history.pushState({view: type, profile: profile}, '', path);
             }
 
 
@@ -401,7 +403,7 @@ function fullPostView(post, comments) {
         //window.history.pushState('', '', '/');
     } else if (document.querySelector("#banner-row") !== null) {
         profilePostView();
-        console.log(post.id)
+        //console.log(post.id)
         if (!history.state || window.location.pathname !== `/profiles/post/${post.id}`) {
             //window.history.pushState({post: id}, '', `/profiles/post/${id}`);
         }
@@ -572,20 +574,43 @@ function seeCommentsButton(post) {
     commentsBtn.setAttribute("data-type", "comment");
     commentsBtn.prepend(commentsIcon);
 
+
+
     commentsBtn.addEventListener("click", () => {
 
-        fetch(`/posts/api/posts/${post.id}/comments`)
-        .then(response => response.json() )
-        .then(comments => {
+        const posts = JSON.parse(sessionStorage.getItem("posts"));
+        let gotPost = null;
+        for (const key in posts) {
+            if (posts[key].id === post.id) {
+                gotPost = posts[key];
+                break;
+            };
+        };
 
-            const fullView = fullPostView(post, comments.results);
+        const comments = gotPost["comments"];
+
+        if (comments !== undefined) {
+            const fullView = fullPostView(gotPost, comments);
             // Add the current state to the history
-            history.pushState({post: post.id}, "", `${post.id}`);
+            if (!history.state || window.location.pathname !== `/posts/${post.id}`) {
+                window.history.pushState({post: post.id}, '', `/posts/${post.id}`);
+            }
+        } else {
+            fetch(`/posts/api/posts/${post.id}/comments/`)
+            .then(response => response.json() )
+            .then(comments => {
 
-        })
-        .catch(error => {
-            console.log(error);
-        });
+                updateSessionData("load", "posts", comments.results, post.id, "comments");
+                const fullView = fullPostView(post, comments.results);
+                // Add the current state to the history
+                history.pushState({post: post.id}, "", `${post.id}`);
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        };
 
     });
 

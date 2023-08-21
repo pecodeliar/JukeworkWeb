@@ -223,6 +223,15 @@ function profileNavBar(profileId) {
 
 function loadActions(type, profileId) {
 
+    // If back button was pressed for full post view
+    const postView = document.getElementById("post-view");
+    if (postView.style.display === "block") {
+        postView.style.display = "none";
+        document.getElementById("profile-view").style.display = "";
+        document.getElementById("profile-nav").style.display = "";
+        document.getElementById("profile-actions").style.display = "";
+    }
+
     const actionsDiv = document.getElementById("profile-actions");
     actionsDiv.innerText = "";
 
@@ -252,8 +261,7 @@ function loadActions(type, profileId) {
     }
 
     if (data === undefined || data === null) {
-        console.log("in here")
-        fetch(`/users/api/users/${profileId}/${type}`)
+        fetch(`/users/api/users/${profileId}/${type}/`)
         .then(response => response.json())
         .then(results => {
 

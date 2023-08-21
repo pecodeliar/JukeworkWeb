@@ -85,16 +85,16 @@ function compose(type, postId=null) {
                     } else if (profileCont !== null) {
                         profileCont.after(postCard);
                     }
+                    const dataLength = Object.keys(JSON.parse(sessionStorage.getItem("posts"))).length;
+                    updateSessionData("compose", "posts", result, dataLength, type);
 
                 } else if (type === "comment") {
 
                     const allCont = document.querySelector('.comment-form-div');
                     allCont.after(postCard);
+                    updateSessionData("compose", "posts", result, postId, type);
 
                 }
-
-                const dataLength = Object.keys(JSON.parse(sessionStorage.getItem("posts"))).length;
-                updateSessionData("compose", "posts", result, dataLength, type);
 
           })
           .catch(error => {
