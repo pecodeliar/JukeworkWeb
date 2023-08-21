@@ -2,13 +2,6 @@ function compose(type, postId=null) {
 
     const upperType = titleCase(type);
 
-    let loggedInUser = null;
-    const check = document.getElementById("user-menu");
-    if (check !== null) {
-        loggedInUser = parseInt(check.dataset.user);
-        //console.log(loggedInUser)
-    };
-
     // Make div
     const formDiv = document.createElement("div");
     formDiv.setAttribute("class", `${type}-form-div`);
@@ -27,7 +20,7 @@ function compose(type, postId=null) {
     pfpDiv.append(pfp)
     formRow.append(pfpDiv)
 
-    const user = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
 
     pfp.alt = user.username;
     pfp.src = user.profile_picture;

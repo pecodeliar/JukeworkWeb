@@ -43,13 +43,15 @@ def follow(request, user_id):
             user_followed.followers.add(signed_in_user)
             signed_in_user.save()
             user_followed.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            user_followers_list = list(user_followed.followers.all().values_list('pk', flat=True))
+            return Response(user_followers_list)
         elif data.get("action") == "Unfollow":
             signed_in_user.following.remove(user_followed)
             user_followed.followers.remove(signed_in_user)
             signed_in_user.save()
             user_followed.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            user_followers_list = list(user_followed.followers.all().values_list('pk', flat=True))
+            return Response(user_followers_list)
 
     return Response({"error": "GET or PATCH request required."}, status=status.HTTP_400_BAD_REQUEST)
 

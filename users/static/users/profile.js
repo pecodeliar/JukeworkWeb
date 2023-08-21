@@ -100,110 +100,52 @@ function loadProfileInfo(profileId) {
     const user = JSON.parse(sessionStorage.getItem("users"))[profileId];
 
     fetchedUser = user;
-        pfp.src = user.profile_picture;
-        username.innerText = user.username;
-        followerCount.innerText = `${user.followers.length} followers`;
-        followingCount.innerText = `${user.following.length} following`;
-        fullname.innerText = user.first_name;
+    pfp.src = user.profile_picture;
+    username.innerText = user.username;
+    followerCount.innerText = `${user.followers.length} followers`;
+    followingCount.innerText = `${user.following.length} following`;
+    fullname.innerText = user.first_name;
 
-        const genres = {
-            0: "Jazz",
-            1: "R&B / Soul",
-            2: "Hip-Hop",
-            3: "Classical",
-            4: "Folk / Acoustic",
-            5: "Indie / Alternative",
-            6: "Pop"
-        };
+    const genres = {
+        0: "Jazz",
+        1: "R&B / Soul",
+        2: "Hip-Hop",
+        3: "Classical",
+        4: "Folk / Acoustic",
+        5: "Indie / Alternative",
+        6: "Pop"
+    };
 
-        genre.innerText = genres[user.genre];
-
-        // Check if logged in user is profile or follows and is followed by user
-        if (loggedInUser === user.id) {
-
-            followEditBtn.innerText = "Edit Profile";
-            followEditBtn.addEventListener('click', () => editProfile());
-
-        } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
-
-            followEditBtn.innerText = "Unfollow";
-            followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
-
-        } else {
-
-            followEditBtn.innerText = "Follow";
-            followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
-
-        }
-
-
-        // Check if profile user follows logged in user
-        if (user.following.includes(loggedInUser)) {
-            // Tag for if the profile visiting follows logged in user
-            const followsTag = document.createElement("p");
-            followsTag.setAttribute("id", "follows-tag");
-            followsTag.setAttribute("class", "tag");
-            followsTag.innerText = "Follows You";
-            firstTextDiv.append(followsTag);
-        }
-
-    // Get user information
-    /*fetch(`/users/api/users/${profileId}`)
-    .then(response => response.json() )
-    .then(user => {
-
-        fetchedUser = user;
-        pfp.src = user.profile_picture;
-        username.innerText = user.username;
-        followerCount.innerText = `${user.followers.length} followers`;
-        followingCount.innerText = `${user.following.length} following`;
-        fullname.innerText = user.first_name;
-
-        const genres = {
-            0: "Jazz",
-            1: "R&B / Soul",
-            2: "Hip-Hop",
-            3: "Classical",
-            4: "Folk / Acoustic",
-            5: "Indie / Alternative",
-            6: "Pop"
-        };
-
-        genre.innerText = genres[user.genre];
+    genre.innerText = genres[user.genre];
 
         // Check if logged in user is profile or follows and is followed by user
-        if (loggedInUser === user.id) {
+    if (loggedInUser === user.id) {
 
-            followEditBtn.innerText = "Edit Profile";
-            followEditBtn.addEventListener('click', () => editProfile());
+        followEditBtn.innerText = "Edit Profile";
+        followEditBtn.addEventListener('click', () => editProfile());
 
-        } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
+    } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
 
-            followEditBtn.innerText = "Unfollow";
-            followEditBtn.addEventListener('click', () => follow(followEditBtn, user.id));
+        followEditBtn.innerText = "Unfollow";
+        followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
 
-        } else {
+    } else {
 
-            followEditBtn.innerText = "Follow";
-            followEditBtn.addEventListener('click', () => follow(followEditBtn, user.id));
+        followEditBtn.innerText = "Follow";
+        followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
 
-        }
+    }
 
 
-        // Check if profile user follows logged in user
-        if (user.following.includes(loggedInUser)) {
-            // Tag for if the profile visiting follows logged in user
-            const followsTag = document.createElement("p");
-            followsTag.setAttribute("id", "follows-tag");
-            followsTag.setAttribute("class", "tag");
-            followsTag.innerText = "Follows You";
-            firstTextDiv.append(followsTag);
-        }
-
-    })
-    .catch(error => {
-        console.log(error);
-    });*/
+    // Check if profile user follows logged in user
+    if (user.following.includes(loggedInUser)) {
+        // Tag for if the profile visiting follows logged in user
+        const followsTag = document.createElement("p");
+        followsTag.setAttribute("id", "follows-tag");
+        followsTag.setAttribute("class", "tag");
+        followsTag.innerText = "Follows You";
+        firstTextDiv.append(followsTag);
+    }
 
     fetch(`/users/api/users/${profileId}/posts`)
     .then(response => response.json())
@@ -351,19 +293,13 @@ function follow (button, id) {
         body: JSON.stringify({
             action: button.innerText
         })
-    }).then(() => {
-            const count = document.querySelector('#followers-cnt').innerText.split(" ");
-            var count_num = parseInt(count[0]);
-            console.log(count_num)
-
-
-            if (button.innerText === "Unfollow") {
-                button.innerText = "Follow";
-                document.querySelector('#followers-cnt').innerText = (count_num-=1) + " " + count[1]
-            } else {
-                button.innerText = "Unfollow";
-                document.querySelector('#followers-cnt').innerText = (count_num+=1) + " " + count[1]
-            };
+    })
+    .then(response => response.json())
+    .then(following_list => {
+        // The API should send back a followers list so that the frontend does not have to do so much calculation
+        updateSessionData(button.innerText, "users", following_list, id);
+        button.innerText === "Unfollow" ? button.innerText = "Follow" : button.innerText = "Unfollow";
+        document.querySelector('#followers-cnt').innerText = `${following_list.length} followers`;
     });
 
 }

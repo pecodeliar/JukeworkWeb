@@ -1,12 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    const postForm = document.querySelector('#post-form')
-    if (postForm !== null) {
-        loggedInUser = parseInt(postForm.dataset.user);
-        const form = compose("post");
-        document.querySelector('#post-form').append(form);
-    };
-
     const title = document.querySelector("#posts-title");
 
     if (title !== null && title.dataset.page === "all") {
@@ -48,11 +41,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Slicing 'posts/post/' which is 12 characters out of pathname and converting to int
         const postId = document.getElementById("post-view").dataset.postReq;
 
-        fetch(`/posts/api/posts/${postId}`)
-        .then(response => response.json() )
-        .then(post => {
+        if (sessionData.getItem("posts") === null) {
 
-            fetch(`/posts/api/posts/${post.id}/comments`)
+            const setPosts = async () => {
+                await getPosts(request);
+            }
+
+            const waitForPosts = async() => {
+                await setPosts();
+
+            }
+            waitForPosts();
+
+        }
+
+        const gettingPosts = async () => {
+
+            fetch(`/posts/api/posts/${postId}/comments`)
             .then(response => response.json() )
             .then(comments => {
 
@@ -63,14 +68,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(error);
             });
 
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        }
 
-        //fullPostView(post, id, comments);
+        setTimeout(gettingPosts, 2000);
 
     };
+
+    const makePostForm = async () => {
+
+        const postForm = document.querySelector('#post-form')
+        if (postForm !== null) {
+            const form = compose("post");
+            document.querySelector('#post-form').append(form);
+        };
+
+    }
+
+    setTimeout(makePostForm, 3000);
 
 });
 

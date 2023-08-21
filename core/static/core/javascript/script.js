@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    const check = document.getElementById("user-menu");
-    if (check !== null) {
-        loggedInUser = parseInt(check.dataset.user);
-    };
-
     if (sessionStorage.getItem("users") === null) {
 
         const setUsers = async () => {
@@ -19,13 +14,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
-    const nav = document.querySelector('nav');
-    nav.append(baseNavbar());
+    const setup = async () => {
+        // Adding logged in user as their own item in session storage
+        const check = document.getElementById("user-menu");
+        if (check !== null) {
+            const loggedInUser = parseInt(check.dataset.user);
+            if (sessionStorage.getItem("loggedInUser") === null) {
+                const userInfo = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
+                sessionStorage.setItem("loggedInUser", JSON.stringify(userInfo));
+                // Adding since for users lists, ids are the keys
+                updateSessionData("add", "loggedInUser", loggedInUser, "id");
+            }
+        };
 
-    const searchCheck = document.getElementById("search-cont");
-    if (searchCheck !== null) {
-        searchResults();
+        const nav = document.querySelector('nav');
+        nav.append(baseNavbar());
+
+        const searchCheck = document.getElementById("search-cont");
+        if (searchCheck !== null) {
+            searchResults();
+        };
+
     };
+
+    setTimeout(setup, 2000);
 
 });
 
@@ -74,6 +86,36 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function updateSessionData(action, sessionKey, value, index) {
+
+    let prevData = JSON.parse(sessionStorage.getItem(sessionKey));
+    let loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+
+    //console.log(action)
+    if (action === "delete") {
+    } else if (action === "Follow") {
+        // Edit the following list of the user the logged-in user followed
+        // and add user to logged-in users following list
+        prevData[index]["followers"].push(loggedInUser.id);
+        loggedInUser["following"].push(index);
+
+    } else if (action === "Unfollow") {
+        // Edit the following list of the user the logged-in user unfollowed
+        // and remove user to logged-in users following list
+        const placeOne = prevData[index]["followers"].indexOf(loggedInUser.id);
+        prevData[index]["followers"].splice(placeOne, 1);
+        const placeTwo = loggedInUser["following"].indexOf(index);
+        loggedInUser["following"].splice(placeTwo, 1);
+
+    } else if (action === "add") {
+        prevData[index] = value;
+    }
+    sessionStorage.setItem(sessionKey, JSON.stringify(prevData));
+    sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+    const newData = JSON.parse(sessionStorage.getItem(sessionKey));
+    //console.log(newData);
 }
 
 function baseNavbar() {
@@ -158,6 +200,8 @@ function baseNavbar() {
 
 function profileDropdownMenu() {
 
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+
     const dropdownDiv = document.getElementById("user-menu");
     dropdownDiv.setAttribute("class", "pro-dropdown");
     dropdownDiv.setAttribute("aria-expanded", "false");
@@ -173,7 +217,7 @@ function profileDropdownMenu() {
 
     const profileLink = document.createElement("a");
     profileLink.setAttribute("class", "nav-dropdown-item");
-    profileLink.setAttribute("href", `/users/${loggedInUser}`);
+    profileLink.setAttribute("href", `/users/${user.id}`);
     profileLink.innerText = "Profile";
     const profileLinkIcon = document.createElement("i");
     profileLinkIcon.setAttribute("class", "bx bxs-user");
@@ -206,8 +250,6 @@ function profileDropdownMenu() {
     logoutLinkIcon.setAttribute("class", "bx bxs-log-out");
     logoutLink.prepend(logoutLinkIcon);
     dropdownCnt.append(logoutLink);
-
-    const user = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
 
     dropdownBtn.innerText = user.username;
 
