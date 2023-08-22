@@ -132,6 +132,8 @@ function completeCard(type, json, postId=null) {
 
     };
 
+    console.log(type)
+
     if (type === "post") {
         const commentBtn = seeCommentsButton(json);
         card.querySelector(`.${type}-btn-cont`).append(commentBtn);
@@ -223,7 +225,7 @@ function postElement(type, data, postId=null) {
     postContentDiv.append(postContent);
 
     // Post Image
-    if (data.post_image !== null) {
+    if (type !== "comment" && data.post_image !== undefined && data.post_image !== null) {
 
         const imgCont = document.createElement("div");
         postContentDiv.append(imgCont);
@@ -473,6 +475,20 @@ function fullPostView(post, comments) {
     postContent.setAttribute("data-post", post.id);
     postContent.innerText = post.content;
     postContentDiv.append(postContent);
+
+    // Post Image
+    if (post.post_image !== null) {
+
+        const imgCont = document.createElement("div");
+        postContentDiv.append(imgCont);
+        imgCont.setAttribute("class", "post-img-cont");
+
+        const img = document.createElement("img");
+        imgCont.append(img);
+        img.src = post.post_image;
+        img.alt= "";
+
+    }
 
     // Post Timestamp
     const postTimestampDiv = document.createElement("div");

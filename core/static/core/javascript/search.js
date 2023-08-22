@@ -2,12 +2,12 @@ function searchResults() {
 
     const search = document.querySelector("#search-cont").dataset.query;
 
-    const searchBody = document.querySelector("body");
+    const navBar = document.querySelector("header");
     const searchTitle = document.createElement("h1");
     searchTitle.setAttribute("class", "container");
     searchTitle.setAttribute("id", "search-title");
     searchTitle.innerText = `Search results for "${search}"...`;
-    searchBody.prepend(searchTitle);
+    navBar.after(searchTitle);
 
     const usersDiv = document.querySelector("#profiles-view");
     usersDiv.innerHTML = "";
@@ -23,10 +23,68 @@ function searchResults() {
     postsTitle.setAttribute("id", "search-posts-title");
     postsTitle.setAttribute("class", "search-htwo-title");
     postsTitle.innerText = "Posts";
-    postsDiv.append(postsTitle)
+    postsDiv.append(postsTitle);
+
+    const csrftoken = getCookie('csrftoken');
+
+    // Getting search results
+    fetch(`api/search/${search}`)
+    .then(response => response.json())
+    .then(json => {
+
+        console.log(json)
+
+        if (json.users.length === 0) {
+
+            const notifyNone = document.createElement("p");
+            notifyNone.setAttribute("id", "profile-creations-none");
+            notifyNone.innerText = `No users match this search.`;
+            usersDiv.append(notifyNone);
+
+        } else {
+
+            json.users.forEach(user => {
+
+                const card = userCard(user);
+                usersDiv.append(card);
+
+            })
+        }
+
+        if (json.posts.length === 0) {
+
+            const notifyNone = document.createElement("p");
+            notifyNone.setAttribute("id", "profile-creations-none");
+            notifyNone.innerText = `No posts match this search.`;
+            postsDiv.append(notifyNone);
+
+        } else {
+
+            json.posts.forEach(postId => {
+
+                const posts = JSON.parse(sessionStorage.getItem("posts"));
+                let postData = null;
+                for (const key in posts) {
+                    if (posts[key].id === postId) {
+                        postData = posts[key];
+                        console.log(postData)
+                        break;
+                    }
+                }
+
+                const postCard = completeCard("post", postData);
+                postsDiv.append(postCard);
+
+            })
+        }
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
 
     // Get user results
-    fetch(`api/search/users/${search}`)
+    /*fetch(`api/search/users/${search}`)
     .then(response => response.json() )
     .then(json => {
 
@@ -82,15 +140,17 @@ function searchResults() {
     })
     .catch(error => {
         console.log(error);
-    });
+    });*/
 
 }
 
-function userCard(user) {
+function userCard(userId) {
+
+    const user = JSON.parse(sessionStorage.getItem("users"))[userId];
 
     // Make parent
     const userLink = document.createElement("a");
-    userLink.setAttribute("href", `/users/${user.id}`);
+    userLink.setAttribute("href", `/users/${userId}`);
     userLink.setAttribute("class", "search-user-link");
     const card = document.createElement("div");
     card.setAttribute("class", "user-card");
@@ -101,7 +161,7 @@ function userCard(user) {
     const pfpDiv = document.createElement("div");
     pfpDiv.setAttribute("class", "round-pfp search-user-pfp");
     const pfp = document.createElement("img");
-    pfp.src = user.pfp_url;
+    pfp.src = user.profile_picture;
     pfp.alt = "";
     pfpDiv.append(pfp);
 

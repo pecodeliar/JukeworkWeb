@@ -38,31 +38,6 @@ def settings(request):
 
 # API route
 
-def users(request, input):
-    users = User.objects.filter( Q(first_name__contains=input) | Q(username__contains=input))
-    print(users)
-
-    if request.method == "GET":
-        return JsonResponse([user.serialize() for user in users], safe=False)
-    else:
-        return JsonResponse({
-            "error": "GET required for user search."
-        }, status=400)
-
-
-def posts(request, input):
-
-    posts = Post.objects.filter(content__contains=input).order_by("-creation_date").all()
-
-    if request.method == "GET":
-        post_data = serializers.serialize('json', posts)
-        return JsonResponse(post_data, safe=False)
-    else:
-        return JsonResponse({
-            "error": "GET required for post search."
-        }, status=400)
-
-
 @login_required
 def edit_settings(request):
     user = User.objects.get(pk=request.user.pk)

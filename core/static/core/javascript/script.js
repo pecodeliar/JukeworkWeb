@@ -337,6 +337,9 @@ function profileDropdownMenu() {
     logoutLink.setAttribute("class", "nav-dropdown-item");
     logoutLink.setAttribute("href", `/users/auth/logout`);
     logoutLink.innerText = "Logout";
+    logoutLink.addEventListener("click", () => {
+        sessionStorage.removeItem("loggedInUser");
+    })
     const logoutLinkIcon = document.createElement("i");
     logoutLinkIcon.setAttribute("class", "bx bxs-log-out");
     logoutLink.prepend(logoutLinkIcon);

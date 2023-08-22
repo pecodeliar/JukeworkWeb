@@ -121,7 +121,7 @@ class PostViewSet(viewsets.ModelViewSet):
         posts = self.get_queryset()
         users = User.objects.filter(genre=genres[genre_code])
         genre_posts = posts.filter(creator__in=users).order_by("-creation_date").all()
-        results = results = PostSerializer(genre_posts, many=True).data
+        results = PostSerializer(genre_posts, many=True).data
         return Response(results)
 
     @action(detail=False, methods=['GET'], url_path='following', permission_classes=[permissions.IsAuthenticated])

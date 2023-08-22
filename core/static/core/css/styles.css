@@ -335,6 +335,7 @@ a.skip-main:focus, a.skip-main:active {
 
 #search-title {
     color: white;
+    padding-left: 24px;
 }
 
 #search-cont {

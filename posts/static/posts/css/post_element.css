@@ -236,6 +236,19 @@ a:hover {
     padding: 0;
 }
 
+.post-view-content-cont .post-img-cont img {
+    margin-left: -10px;
+}
+
+.post-view-content-cont .post-img-cont {
+    margin: 0;
+    margin-bottom: 16px;
+}
+
+#comment-cont p {
+    padding: 8px 32px;
+}
+
 .post-view-time {
     margin-left: -20px;
 }

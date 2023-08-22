@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import api
 
 
 app_name="core"
@@ -12,8 +13,7 @@ urlpatterns = [
    path("settings", views.settings, name="settings"),
 
    # API Routes
-   path("api/search/posts/<str:input>", views.posts, name="posts"),
-   path("api/search/users/<str:input>", views.users, name="users"),
+   path("api/search/<str:query>", api.search, name="search_api"),
    path("api/settings/edit", views.edit_settings, name="edit"),
 
 ]
