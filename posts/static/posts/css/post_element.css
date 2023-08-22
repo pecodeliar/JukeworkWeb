@@ -33,6 +33,7 @@
 
 .post-misc-div {
     margin: 8px 24px;
+    width: 100%;
 }
 
 .post-misc-div div {
@@ -56,6 +57,25 @@
 
 .post-content-cont {
     padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.post-img-cont {
+    display: inline-block;
+    width: 100%;
+    margin: 10px;
+    text-align: center;
+}
+
+.post-img-cont img {
+    margin-top: 16px;
+    margin-left: -80px;
+    width: 350px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .post-like-heart {
@@ -74,6 +94,8 @@
     display: flex;
     align-items: center;
     padding-top: 8px;
+    justify-content: center;
+    padding-right: 80px;
 }
 
 .post-like-btn,

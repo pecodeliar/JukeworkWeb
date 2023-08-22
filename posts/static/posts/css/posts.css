@@ -32,6 +32,16 @@
     border-radius: 10px;
 }
 
+.input-divs {
+    width: 100%;
+    margin: 16px 0;
+    margin-right: 16px;
+}
+
+.input-divs .form-text-div {
+    margin-bottom: 8px;
+}
+
 .comment-form-div {
     margin-top: 20px;
 }
@@ -67,6 +77,16 @@
     padding-right: 32px;
 }
 
+#post-url-text {
+    background-color: rgba(255,255,255,0.5);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-01);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+}
+
 .create-post-pfp {
     width: 84px;
 }
@@ -93,6 +113,10 @@
 
 .form-text-div label{
     color: white;
+}
+
+#post-form-text label {
+    margin-top: 8px;
 }
 
 #post-form-text {

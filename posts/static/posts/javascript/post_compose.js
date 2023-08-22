@@ -10,7 +10,7 @@ function compose(type, postId=null) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
 
-    var formRow = document.createElement("div");
+    const formRow = document.createElement("div");
     formRow.setAttribute("class", `${type}-form-row`);
 
     // Profile Picture
@@ -26,6 +26,10 @@ function compose(type, postId=null) {
     pfp.src = user.profile_picture;
     fetchedUser = user;
 
+    const inputDivs = document.createElement("div");
+    formRow.append(inputDivs);
+    inputDivs.setAttribute("class", "input-divs");
+
     const formTextDiv = document.createElement("div");
     formTextDiv.setAttribute("class", "form-text-div");
     let formText = null;
@@ -39,8 +43,26 @@ function compose(type, postId=null) {
     const formTextLabel = document.createElement("label");
     formTextLabel.setAttribute("for", `${type}-form-text`);
     formTextLabel.innerText = `Enter text for a new ${type}:`;
-    formTextDiv.append(formTextLabel, formText)
-    formRow.append(formTextDiv);
+    formTextDiv.append(formTextLabel, formText);
+
+    if (type === "post") {
+
+        inputDivs.append(formTextDiv);
+
+        const picURLDiv = document.createElement("div");
+        picURLDiv.setAttribute("class", "form-text-div");
+        const formPicURL = document.createElement("input");
+        formPicURL.setAttribute("id", `post-url-text`);
+        formPicURL.placeholder = `Enter url for picture...`;
+        const formPicURLLabel = document.createElement("label");
+        formPicURLLabel.setAttribute("for", `post-url-text`);
+        formPicURLLabel.innerText = `Enter URL for image:`;
+        picURLDiv.append(formPicURLLabel, formPicURL);
+        inputDivs.append(picURLDiv);
+
+    } else {
+        formRow.append(formTextDiv);
+    }
 
     const csrftoken = getCookie('csrftoken');
 
@@ -48,14 +70,30 @@ function compose(type, postId=null) {
     postButton.setAttribute("class", "float-right round-btn post-crt-btn");
     postButton.innerText = `Create ${type}`;
 
-    let url = null;
-    if (type === "post") {
-        url = '/posts/api/posts/';
-    } else {
-        url = `/posts/api/posts/${postId}/comments/`;
-    }
-
     postButton.addEventListener("click", () => {
+
+        let url = null;
+        let bodyDict = null;
+
+        if (type === "post") {
+
+            url = '/posts/api/posts/';
+            const postImage = document.getElementById("post-url-text").value;
+            bodyDict = {
+                post: postId,
+                content: formText.value,
+                post_image: postImage.length > 0 ? postImage : null
+            };
+
+        } else {
+
+            url = `/posts/api/posts/${postId}/comments/`;
+            bodyDict = {
+                post: postId,
+                content: formText.value
+            };
+
+        }
 
         fetch(url, {
             method: 'POST',
@@ -64,10 +102,7 @@ function compose(type, postId=null) {
                 "Content-Type": "application/json",
             },
             mode: 'same-origin',
-            body: JSON.stringify({
-                post: postId,
-                content: formText.value
-            })
+            body: JSON.stringify(bodyDict)
           })
           .then(response => response.json())
           .then(result => {
@@ -78,6 +113,7 @@ function compose(type, postId=null) {
 
                 if (type === "post") {
 
+                    document.getElementById("post-url-text").value = "";
                     const allCont = document.querySelector('#posts-cont');
                     const profileCont = document.querySelector('.profile-post-form');
                     if (allCont !== null) {
@@ -254,6 +290,7 @@ function editAction(type, button, full=false) {
         .catch(error => {
             console.log(error);
         });
+
     })
 
 }

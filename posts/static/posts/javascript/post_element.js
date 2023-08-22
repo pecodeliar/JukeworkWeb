@@ -222,6 +222,20 @@ function postElement(type, data, postId=null) {
     postContent.innerText = data.content;
     postContentDiv.append(postContent);
 
+    // Post Image
+    if (data.post_image !== null) {
+
+        const imgCont = document.createElement("div");
+        postContentDiv.append(imgCont);
+        imgCont.setAttribute("class", "post-img-cont");
+
+        const img = document.createElement("img");
+        imgCont.append(img);
+        img.src = data.post_image;
+        img.alt= "";
+
+    }
+
     const postBtnContDiv = document.createElement("div");
     postBtnContDiv.setAttribute("class", `${type}-btn-cont`);
 
