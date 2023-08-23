@@ -31,7 +31,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 #SECRET_KEY = local_settings.secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DJANGO_DEBUG']
+DEBUG = False
 
 # Application definition
 
