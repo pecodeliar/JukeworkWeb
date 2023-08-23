@@ -18,13 +18,14 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from posts.urls import router as post_router
 from users.urls import router as user_router
+import os
 
 router = DefaultRouter()
 router.registry.extend(post_router.registry)
 router.registry.extend(user_router.registry)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(f'${os.environ["ADMIN_ROUTE"]}/', admin.site.urls),
     path("", include("core.urls", namespace="core")),
     path("api-auth/", include("rest_framework.urls")),
     path("users/", include("users.urls")),

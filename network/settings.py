@@ -11,25 +11,27 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from network import local_settings
+import os
+import dj_database_url
+#import local_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-PROJECT_ROOT = local_settings.project_root
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
+
+ALLOWED_HOSTS = ['127.0.0.1', 'jukework.up.railway.app']
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = local_settings.secret_key
+SECRET_KEY = os.environ["SECRET_KEY"]
+#SECRET_KEY = local_settings.secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = os.environ['DJANGO_DEBUG']
 
 # Application definition
 
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,9 +132,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-STATIC_ROOT = local_settings.static_root
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = STATICFILES_DIRS = (os.path.join(BASE_DIR, '/static'), )
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -151,6 +156,15 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-"""ALLOWED_HOSTS = local_settings.allowed_hosts
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
-CSRF_TRUSTED_ORIGINS = local_settings.csrf_trusted_origins"""
+SECURE_SSL_REDIRECT = False
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = ['127.0.0.1', 'jukework.up.railway.app']

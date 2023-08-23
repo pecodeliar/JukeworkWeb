@@ -3,7 +3,7 @@ from .models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-import network.local_settings
+import os
 
 class UserPKField(serializers.PrimaryKeyRelatedField):
     def get_queryset(self):
@@ -53,7 +53,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = self.validated_data["password1"]
         confirmation = self.validated_data["password2"]
 
-        if email != network.local_settings.email:
+        if email != os.environ["EMAIL_PERM"]:
             raise serializers.ValidationError({"error": "You are not allowed to use this app."})
 
         # Ensure password matches confirmation
