@@ -247,20 +247,20 @@ function loadActions(type, profileId) {
     newIndicator.style.borderBottom = "solid white 1px";
 
     const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
-    if (loggedInUser.id === profileId && type === "posts") {
+    if (loggedInUser !== null && loggedInUser.id === profileId && type === "posts") {
         const postForm = compose("post");
         postForm.classList.add("profile-post-form");
         actionsDiv.append(postForm);
     }
 
-    let data = null;
-    if (loggedInUser.id === profileId) {
+    let data = undefined;
+    if (loggedInUser !== null && loggedInUser.id === profileId) {
         data = loggedInUser[type];
     } else {
         data = JSON.parse(sessionStorage.getItem("users"))[profileId][type];
     }
 
-    if (data === undefined || data === null) {
+    if (data === undefined) {
         fetch(`/users/api/users/${profileId}/${type}/`)
         .then(response => response.json())
         .then(results => {

@@ -83,65 +83,6 @@ function searchResults() {
         console.log(error);
     });
 
-    // Get user results
-    /*fetch(`api/search/users/${search}`)
-    .then(response => response.json() )
-    .then(json => {
-
-        if (json.length === 0) {
-
-            const notifyNone = document.createElement("p");
-            notifyNone.setAttribute("id", "profile-creations-none");
-            notifyNone.innerText = `No users match this search.`;
-            usersDiv.append(notifyNone);
-
-        } else {
-
-            json.forEach(user => {
-
-                const card = userCard(user);
-                usersDiv.append(card);
-
-            })
-        }
-
-    })
-    .catch(error => {
-        console.log(error);
-    });
-
-
-    // Get post results
-    fetch(`api/search/posts/${search}`)
-    .then(response => response.json() )
-    .then(json => {
-
-        const data = JSON.parse(json)
-        console.log(data)
-        if (data.length === 0) {
-
-            const notifyNone = document.createElement("p");
-            notifyNone.setAttribute("id", "profile-creations-none");
-            notifyNone.innerText = `No posts match this search.`;
-            postsDiv.append(notifyNone);
-
-        } else {
-
-            data.forEach(post => {
-
-                const postCard = completeCard("post", post.fields);
-                postCard.classList.remove("post-card");
-                postCard.classList.add("search-post-card");
-                postsDiv.append(postCard);
-
-            })
-        }
-
-    })
-    .catch(error => {
-        console.log(error);
-    });*/
-
 }
 
 function userCard(userId) {

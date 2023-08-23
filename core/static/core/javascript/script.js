@@ -117,12 +117,16 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
 
     } else if (action === "load") {
         if (type !== null) {
-            if (loggedInUser.id === index && loggedInUser[type] !== undefined) {
-                // The users created a post, comment or liked a post and data already exists.
-                loggedInUser[type].push(value);
-            } else if (loggedInUser.id === index && loggedInUser[type] === undefined) {
-                // The users created a post, comment or liked a post.
-                loggedInUser[type] = value;
+            if (loggedInUser !== null) {
+
+                if (loggedInUser.id === index && loggedInUser[type] !== undefined) {
+                    // The users created a post, comment or liked a post and data already exists.
+                    loggedInUser[type].push(value);
+                } else if (loggedInUser.id === index && loggedInUser[type] === undefined) {
+                    // The users created a post, comment or liked a post.
+                    loggedInUser[type] = value;
+                }
+
             } else {
                 // Accessing a profile's page for posts, comments or likes
                 if (sessionKey === "users") {
