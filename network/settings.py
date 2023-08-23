@@ -167,4 +167,4 @@ CSRF_COOKIE_SECURE = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CSRF_TRUSTED_ORIGINS = ['127.0.0.1', 'jukework.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://jukework.up.railway.app']
