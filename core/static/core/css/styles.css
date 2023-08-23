@@ -38,16 +38,17 @@
 /* https://stackoverflow.com/questions/2869212/css3-gradient-background-set-on-body-doesnt-stretch-but-instead-repeats */
 
 html {
-    height: 100%;
+    min-height: 100%;
 }
 
 body {
     background-image: linear-gradient(to bottom right, var(--primary), var(--secondary));
-    height: 100%;
+    min-height: 100%;;
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: "Raleway", sans-serif;
+    background-size: cover;
 }
 
 .round-btn {
@@ -350,11 +351,8 @@ a.skip-main:focus, a.skip-main:active {
 
 #profiles-view {
     margin: 10px;
-    flex: 1;
-    width: 50%;
     height: 100%;
     vertical-align: middle;
-    border-bottom: 0.2px solid white;
 }
 
 .search-htwo-title {
@@ -363,8 +361,6 @@ a.skip-main:focus, a.skip-main:active {
 
 #search-posts-view {
     margin: 10px;
-    flex: 1;
-    width: 50%;
     height: 100%;
     vertical-align: middle;
 }
@@ -378,7 +374,9 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 .user-card:hover {
-    background-color: var(--main)
+    background-color: rgba(255,255,255,0.3);
+    outline: rgba(255, 255,255, .5) solid 1px;
+    box-shadow: var(--shad-02);
 }
 
 .search-user-link:focus{
@@ -386,14 +384,14 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 .user-card {
-    border-top: 0.2px solid white;
     padding: 20px;
     color: white;
     display: flex;
+    border-radius: 16px;
 }
 
 .search-user-pfp {
-    margin-left: 20px;
+    margin-left: 8px;
     margin-right: 0;
     vertical-align: top;
     height: 100%;

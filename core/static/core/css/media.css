@@ -1,4 +1,4 @@
-@media screen and (min-width: 921px) {
+@media screen and (min-width: 1000px) {
 
   #search-full-label {
     display: inline-block;;
@@ -19,10 +19,13 @@
 
 }
 
+@media screen and (max-width: 990px) {
+
+
+}
+
 @media screen and (max-width: 920px) {
-  body {
-    background-color: purple;
-  }
+
 
   #search-full-label {
     display: none;
@@ -49,12 +52,15 @@
   #search-btn i {
     display: block;
   }
+
+  #search-posts-view .post-card .post-misc-div .post-img-cont img {
+    width: 150px;
+    height: 150px;
+  }
 }
 
 @media screen and (max-width: 768px) {
-  body {
-    background-color: pink;
-  }
+
 
   #search-form{
     position: relative;
@@ -88,18 +94,108 @@
     margin-top: 13px;
   }
 
+  #search-cont {
+    flex-direction: column;
+  }
+
+  #profiles-view {
+    height: auto;
+  }
+
+  #users-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .search-user-pfp {
+    margin-left: 0;
+  }
+
+  #search-posts-view {
+    margin: 0;
+  }
+
+  #search-posts-view .post-card .post-misc-div .post-img-cont img {
+    width: 250px;
+    height: 250px;
+  }
+
+
+  .search-user-link {
+    height: 115px;
+  }
+
+  .user-card {
+    display: block;
+    text-align: center;
+    padding: 8px;
+  }
+
+  .post-full-name {
+    overflow: hidden;
+    width: 140px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-user-info {
+    margin-left: 0;
+  }
+
 }
 
 @media screen and (max-width: 600px) {
+
+
   #search-inp {
     padding: 5px 10px;
     width: 100px;
   }
+
+  #users-inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .search-user-link {
+    margin-bottom: 32px;
+  }
+
+  .user-card {
+    display: block;
+    text-align: center;
+    padding: 8px;
+  }
+
+  .post-full-name {
+    width: 100%;
+    text-align: center;
+  }
+
 }
 
 @media screen and (max-width: 480px) {
-  body {
-    background-color: lightgreen;
+
+  #main-nav {
+    display: none;
+  }
+
+  .user-card {
+    padding: 0;
+  }
+
+  .search-htwo-title {
+    margin-bottom: 32px;
+  }
+
+  .user-card:hover {
+    background-color: none;
+    outline: none;
+    box-shadow: none;
+  }
+
+  .search-user-info {
+    margin: 0 3px;
   }
 
 }

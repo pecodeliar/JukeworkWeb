@@ -15,7 +15,9 @@ function searchResults() {
     usersTitle.setAttribute("id", "search-users-title");
     usersTitle.setAttribute("class", "search-htwo-title");
     usersTitle.innerText = "Users";
-    usersDiv.append(usersTitle)
+    const usersInnerCont = document.createElement("div");
+    usersInnerCont.setAttribute("id", "users-inner")
+    usersDiv.append(usersTitle, usersInnerCont);
 
     const postsDiv = document.querySelector("#search-posts-view");
     postsDiv.innerHTML = "";
@@ -46,7 +48,7 @@ function searchResults() {
             json.users.forEach(user => {
 
                 const card = userCard(user);
-                usersDiv.append(card);
+                usersInnerCont.append(card);
 
             })
         }
@@ -67,13 +69,16 @@ function searchResults() {
                 for (const key in posts) {
                     if (posts[key].id === postId) {
                         postData = posts[key];
-                        console.log(postData)
+                        //console.log(postData)
                         break;
                     }
                 }
 
                 const postCard = completeCard("post", postData);
+                const buttonCont = postCard.querySelector(".post-btn-cont");
+                buttonCont.removeChild(buttonCont.children[0]);
                 postsDiv.append(postCard);
+
 
             })
         }
