@@ -145,7 +145,9 @@ function completeCard(type, json, postId=null) {
 
 function postElement(type, data, postId=null) {
 
-    //console.log(postId, data.likers)
+    /** Because a lot of information overlaps, this is funciton is used for both comments and posts
+     * Depending on the type parameter, it will have different styling that is controlled in the CSS files
+     */
 
     // Make parent
     const card = document.createElement("article");
@@ -212,6 +214,22 @@ function postElement(type, data, postId=null) {
     dateConv = dateConv.slice(3, dateIndex) + "," + dateConv.slice(dateIndex);
     userAndCreation.innerText = ` @${user.username} • ${dateConv}`;
 
+    // For mobile only, should stay hidden otherwise
+    if (type === "post") {
+        const pfpDivMobile = document.createElement("div");
+        pfpDivMobile.setAttribute("class", `round-pfp mobile-${type}-pfp`);
+        const pfpLinkMobile = document.createElement("a");
+        // Screen readers and keyboard navigators don't need redundant links
+        pfpLinkMobile.setAttribute("tabindex", -1);
+        pfpLinkMobile.setAttribute("aria-hidden", "true");
+        const pfpMobile = document.createElement("img");
+        pfpLinkMobile.append(pfpMobile);
+        pfpDivMobile.append(pfpLinkMobile);
+        top.prepend(pfpDivMobile);
+        pfpMobile.alt = `${user.first_name}'s Profile Picture`;
+        pfpMobile.src = user.profile_picture;
+    }
+
     // Post Content
     const postContentDiv = document.createElement("div");
     postContentDiv.setAttribute("class", `${type}-content-cont`);
@@ -245,6 +263,8 @@ function postElement(type, data, postId=null) {
 
     // Appendings
     card.append(pfpDiv, miscDiv);
+    // For mobile
+
 
     // Card Click Even to Show Full Post View
     if (type === "Post") {
