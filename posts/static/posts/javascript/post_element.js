@@ -132,7 +132,7 @@ function completeCard(type, json, postId=null) {
 
     };
 
-    console.log(type)
+    //console.log(type)
 
     if (type === "post") {
         const commentBtn = seeCommentsButton(json);

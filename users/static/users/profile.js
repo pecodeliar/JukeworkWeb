@@ -284,8 +284,13 @@ function loadActions(type, profileId) {
 
             data.forEach(item => {
 
-                const postCard = completeCard("post", item);
-                actionsDiv.append(postCard);
+                if (type === "comments") {
+                    const postCard = completeCard("comment", item);
+                    actionsDiv.append(postCard);
+                } else {
+                    const postCard = completeCard("post", item);
+                    actionsDiv.append(postCard);
+                }
 
             });
 
