@@ -18,8 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adding logged in user as their own item in session storage
         const check = document.getElementById("user-menu");
         if (check !== null) {
+            console.log()
             const loggedInUser = parseInt(check.dataset.user);
-            if (sessionStorage.getItem("loggedInUser") === null) {
+            if (sessionStorage.getItem("loggedInUser") === null || (sessionStorage.getItem("loggedInUser") !== null && sessionStorage.getItem("loggedInUser") === "null")) {
+                console.log("in here")
                 const userInfo = JSON.parse(sessionStorage.getItem("users"))[loggedInUser];
                 sessionStorage.setItem("loggedInUser", JSON.stringify(userInfo));
                 // Adding since for users lists, ids are the keys
@@ -310,6 +312,9 @@ function profileDropdownMenu() {
     dropdownCnt.setAttribute("id", "pro-dropdown-cnt");
     dropdownDiv.append(dropdownCnt);
 
+    const dropdownUsername = document.createElement("span");
+    dropdownBtn.append(dropdownUsername);
+
     const profileLink = document.createElement("a");
     profileLink.setAttribute("class", "nav-dropdown-item");
     profileLink.setAttribute("href", `/users/${user.id}`);
@@ -349,7 +354,7 @@ function profileDropdownMenu() {
     logoutLink.prepend(logoutLinkIcon);
     dropdownCnt.append(logoutLink);
 
-    dropdownBtn.innerText = user.username;
+    dropdownUsername.innerText = user.username;
 
     // Profile Picture
     const pfpDiv = document.createElement("div");

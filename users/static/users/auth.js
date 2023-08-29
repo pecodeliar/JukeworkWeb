@@ -78,7 +78,7 @@ function loginForm() {
     redirect.setAttribute("class", "auth-rdrt");
     const redirectLink = document.createElement("a");
     redirect.append(redirectLink);
-    redirectLink.setAttribute("href", "/auth/register");
+    redirectLink.setAttribute("href", "/users/auth/register");
     redirectLink.innerText = "Register here.";
 
 }
@@ -214,7 +214,7 @@ function registerForm() {
     redirect.setAttribute("class", "auth-rdrt");
     const redirectLink = document.createElement("a");
     redirect.append(redirectLink);
-    redirectLink.setAttribute("href", "/auth/login");
+    redirectLink.setAttribute("href", "/users/auth/login");
     redirectLink.innerText = "Log in here.";
 
 }

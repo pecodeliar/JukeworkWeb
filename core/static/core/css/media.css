@@ -1,7 +1,7 @@
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1061px) {
 
   #search-full-label {
-    display: inline-block;;
+    display: inline-block;
   }
 
   #search-short-label {
@@ -19,23 +19,15 @@
 
 }
 
-@media screen and (max-width: 990px) {
+@media screen and (max-width: 1060px) {
 
   /*body {
-    background: grey;
+    background: black;
   }*/
 
   .profile-nav-btn {
     padding: 0 50px;
   }
-
-}
-
-@media screen and (max-width: 920px) {
-
-  /*body {
-    background: purple;
-  }*/
 
   #search-full-label {
     display: none;
@@ -61,6 +53,50 @@
 
   #search-btn i {
     display: block;
+  }
+
+}
+
+@media screen and (max-width: 990px) {
+
+  /*body {
+    background: grey;
+  }*/
+}
+
+@media screen and (max-width: 920px) {
+
+  /*body {
+    background: purple;
+  }*/
+
+  #main-nav {
+    padding: 0 16px;
+  }
+
+  #search-form{
+    position: relative;
+  }
+
+  #search-short-label {
+    position: absolute;
+    top: -0.4ex;
+    z-index: 1;
+    left: 2em;
+    background-color: rgba(255,255,255,0.025);
+    backdrop-filter: blur(20px);
+    padding: 0 5px;
+  }
+
+  #search-inp {
+    border: 1px solid gray;
+    position: relative;
+    margin: 10px;
+    width: 150px;
+  }
+
+  #search-btn {
+    margin: 0;
   }
 
   .posts-container {
@@ -90,6 +126,7 @@
     width: 150px;
     height: 150px;
   }
+
 }
 
 @media screen and (max-width: 768px) {
@@ -98,36 +135,25 @@
     background: pink;
   }*/
 
-  #search-form{
-    position: relative;
+  #main-nav {
+    padding: 1px 8px;
   }
 
-  #search-short-label{
-    position: absolute;
-    top: -0.4ex;
-    z-index: 1;
-    left: 2em;
-    background-color: var(--main);
-    padding: 0 5px;
+  #nav-right #reg-link {
+    display: none;
   }
 
   #search-inp {
-    border: 1px solid gray;
-    position: relative;
-    margin: 10px;
-    width: 150px;
+    padding: 5px 10px;
+    width: 100px;
   }
 
-  #search-btn {
-    margin: 0;
+  .nav-bar-pfp {
+    margin-right: 0;
   }
 
-  #nav-right {
-    margin-top: 10px;
-  }
-
-  .nb-brand {
-    margin-top: 13px;
+  .drpdwn-btn span {
+    display: none;
   }
 
   #genre-sidebar fieldset {
@@ -195,6 +221,23 @@
     background: blue;
   }*/
 
+  #main-nav {
+    margin: 8px;
+  }
+
+  .drpdwn-btn i {
+    margin-left: 0;
+  }
+
+  #pro-dropdown-cnt {
+    right: 8px;
+    margin-top: 32px;
+  }
+
+  .auth-container {
+    max-width: 400px;
+  }
+
   #search-inp {
     padding: 5px 10px;
     width: 100px;
@@ -224,16 +267,56 @@
     padding: 0 20px;
   }
 
+  #profile-info-pfp {
+    margin-right: 24px;
+  }
+
+  #profile-info-pfp img {
+    height: 150px;
+    width: 150px;
+  }
+
+  #info-username {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+    margin-right: 4px;
+  }
+
 }
 
 @media screen and (max-width: 480px) {
 
-  /*body {
-    background: green;
-  }*/
+  body {
+    /*background: green;*/
+    margin-top: 72px;
+  }
 
   #main-nav {
+    position: fixed;
+    top: 0;
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+    backdrop-filter: blur(10px);
+  }
+
+  .brand-logo {
+    font-size: 2rem;
+  }
+
+  .nb-brand p {
     display: none;
+  }
+
+  #pro-dropdown-cnt {
+    right: 8px;
+    margin-top: 24px;
+  }
+
+  .auth-container {
+    max-width: 300px;
   }
 
   #genre-sidebar {
@@ -284,7 +367,6 @@
 }
 
   .post-btn-cont {
-
     padding-right: 0;
   }
 
@@ -323,10 +405,6 @@
 
   #profile-info-cont {
     width: 100%;
-  }
-
-  #profile-info-pfp {
-    margin-right: 24px;
   }
 
   #profile-info-pfp img {
