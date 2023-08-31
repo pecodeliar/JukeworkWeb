@@ -23,7 +23,7 @@ function backButton(page, path, pageTitle="") {
         container.classList.add("posts-container");
 
         // For All Posts Page
-        if (page === "all" || page === "render" || page === "following") {
+        if (page === "all" || page === "render" || page === "following" || ["JZ", "RB", "HH", "IN", "FK", "IE", "PP"].includes(page)) {
             if ((!history.state || window.location.pathname !== path) && page !== "render") {
                 window.history.pushState({page: page}, '', path);
             }
@@ -622,8 +622,6 @@ function seeCommentsButton(post) {
     commentsBtn.setAttribute("data-type", "comment");
     commentsBtn.prepend(commentsIcon);
 
-
-
     commentsBtn.addEventListener("click", () => {
 
         const posts = JSON.parse(sessionStorage.getItem("posts"));
@@ -661,8 +659,6 @@ function seeCommentsButton(post) {
         };
 
     });
-
-
 
     return commentsBtn;
 

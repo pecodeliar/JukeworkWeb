@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         title.innerHTML = genres[title.dataset.page];
         loadPosts(title.dataset.page);
-        genreSideBarSelect();
+        genreSideBarSelect(title.dataset.page);
 
     } else if (title !== null && title.dataset.page === "following") {
 
@@ -236,7 +236,7 @@ async function loadPosts(request="") {
 
 }
 
-function genreSideBarSelect() {
+function genreSideBarSelect(page=null) {
 
     const genres = {
         "Jazz": "JZ",
@@ -265,7 +265,9 @@ function genreSideBarSelect() {
     allPostsDiv.setAttribute("class", "sb-genre-cont");
     const allPostsInput = document.createElement("input");
     allPostsInput.setAttribute("class", "sb-genre-item");
-    allPostsInput.setAttribute("checked" ,"");
+    if (page === null) {
+        allPostsInput.setAttribute("checked" ,"");
+    }
     allPostsInput.setAttribute("type", "radio");
     allPostsInput.setAttribute("name", "genre");
     allPostsInput.setAttribute("id", "all");
@@ -293,6 +295,9 @@ function genreSideBarSelect() {
         genreInput.setAttribute("name", "genre");
         genreInput.setAttribute("id", `${genre[1]}`);
         genreInput.setAttribute("value", `${genre[1]}`);
+        if (page !== null && page === genre[1]) {
+            genreInput.setAttribute("checked" ,"");
+        }
         const genreInputLabel = document.createElement("label");
         genreInputLabel.setAttribute("for", `${genre[1]}`);
         genreInputLabel.innerText = `${genre[0]}`;

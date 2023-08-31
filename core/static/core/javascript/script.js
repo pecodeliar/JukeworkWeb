@@ -54,8 +54,8 @@ window.onpopstate = function(event) {
         loadActions(event.state.view, event.state.profile);
     } else if (event.state.page !== null && event.state.page === "render") {
         loadPosts("");
-    } else if (event.state.post !== null) {
-        loadPosts(event.state.post);
+    } else if (event.state.page !== null) {
+        loadPosts(event.state.page);
     } else if (event.state.post !== null) {
         loadPosts(event.state.post);
     }
