@@ -309,6 +309,7 @@ function likeButton(type, data, postId=null) {
     likeCount.setAttribute("data-id", data.id);
     likeCount.setAttribute("data-type", `${type}`);
     const liked = data.likers.includes(loggedInUser);
+    //console.log(data.id, data.likers)
 
     // Check if user has logged in
     if (loggedInUser === null) {
@@ -385,7 +386,12 @@ function likeAction(button) {
     .then(response => response.json())
     .then(likers_list => {
 
-        //console.log(btnOne.innerText, likers_list, id, postId)
+        console.log(btnOne.innerText, likers_list, id, postId);
+        const check = document.getElementById("genre-sidebar");
+        if (check !== null) {
+            const code = document.getElementById("posts-title").dataset.page;
+            updateSessionData(btnOne.innerText, `posts${code}`, likers_list, id, postId);
+        }
 
         // The API should send back a followers list so that the frontend does not have to do so much calculation
         updateSessionData(btnOne.innerText, "posts", likers_list, id, postId);

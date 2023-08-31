@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adding logged in user as their own item in session storage
         const check = document.getElementById("user-menu");
         if (check !== null) {
-            console.log()
             const loggedInUser = parseInt(check.dataset.user);
             if (sessionStorage.getItem("loggedInUser") === null || (sessionStorage.getItem("loggedInUser") !== null && sessionStorage.getItem("loggedInUser") === "null")) {
                 console.log("in here")
@@ -186,7 +185,6 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
         }
 
     } else if (action.includes("Post")) {
-
         for (const key in prevData) {
             // Finding post
             if (prevData[key].id === parseInt(index)) {
