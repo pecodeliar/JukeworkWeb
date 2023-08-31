@@ -80,7 +80,7 @@
 
   #search-short-label {
     position: absolute;
-    top: -0.4ex;
+    top: -0.1ex;
     z-index: 1;
     left: 2em;
     background-color: rgba(255,255,255,0.025);
@@ -131,9 +131,9 @@
 
 @media screen and (max-width: 768px) {
 
-  /*body {
+  body {
     background: pink;
-  }*/
+  }
 
   #main-nav {
     padding: 1px 8px;
@@ -217,9 +217,9 @@
 
 @media screen and (max-width: 600px) {
 
-  /*body {
+  body {
     background: blue;
-  }*/
+  }
 
   #main-nav {
     margin: 8px;
@@ -282,12 +282,21 @@
     margin-right: 4px;
   }
 
+  #settings-form {
+    flex-direction: column;
+  }
+
+  .settings-pics-div,
+  #form-column {
+    width: 100%;
+  }
+
 }
 
 @media screen and (max-width: 480px) {
 
   body {
-    /*background: green;*/
+    background: green;
     margin-top: 72px;
   }
 

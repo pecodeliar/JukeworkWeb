@@ -16,6 +16,7 @@ function editProfileForm() {
 
     const form = document.createElement("form");
     form.setAttribute("method", "post");
+    form.setAttribute("id", "form-column");
     formDiv.append(form);
 
     // Showing the users pfp and banner images
@@ -33,25 +34,15 @@ function editProfileForm() {
     pfp.alt = "";
     pfpDiv.append(pfpLabel, pfp);
 
-    const bannerDiv = document.createElement("div");
-    bannerDiv.setAttribute("id", "settings-banner");
-    const bannerLabel = document.createElement("label");
-    bannerLabel.setAttribute("for", "settings-banner");
-    bannerLabel.innerText = "Banner:";
-    const banner = document.createElement("img");
-    banner.alt = "";
-    bannerDiv.append(bannerLabel, banner);
-
-    picsDiv.append(pfpDiv, bannerDiv);
+    picsDiv.append(pfpDiv);
 
 
     // Row for changing Profile Picture and/or Banner
     const firstFormRow = document.createElement("div");
-    firstFormRow.setAttribute("class", "form-row");
     form.append(firstFormRow);
 
     const pfpURLDiv = document.createElement("div");
-    pfpURLDiv.setAttribute("class", "col auth-item reg-item");
+    pfpURLDiv.setAttribute("class", "col auth-group");
     const pfpURLLabel = document.createElement("label");
     pfpURLLabel.setAttribute("for", "pfp-url");
     pfpURLLabel.innerText = "URL for Profile Picture:";
@@ -59,24 +50,15 @@ function editProfileForm() {
     pfpURLInput.setAttribute("id", "pfp-url");
     pfpURLDiv.append(pfpURLLabel, pfpURLInput);
 
-    const bannerURLDiv = document.createElement("div");
-    bannerURLDiv.setAttribute("class", "col auth-item reg-item");
-    const bannerURLLabel = document.createElement("label");
-    bannerURLLabel.setAttribute("for", "banner-url");
-    bannerURLLabel.innerText = "URL for Banner:";
-    const bannerURLInput = document.createElement("input");
-    bannerURLInput.setAttribute("id", "banner-url");
-    bannerURLDiv.append(bannerURLLabel, bannerURLInput);
-
-    firstFormRow.append(pfpURLDiv, bannerURLDiv);
+    firstFormRow.append(pfpURLDiv);
 
     // Row for changing first name and/or genre
-    const secondFormRow = document.createElement("div");
+    /*const secondFormRow = document.createElement("div");
     secondFormRow.setAttribute("class", "form-row");
-    form.append(secondFormRow);
+    form.append(secondFormRow);*/
 
     const nameDiv = document.createElement("div");
-    nameDiv.setAttribute("class", "col auth-item reg-item");
+    nameDiv.setAttribute("class", "col auth-group");
     const nameLabel = document.createElement("label");
     nameLabel.setAttribute("for", "full-name");
     nameLabel.innerText = "Displayed Name:";
@@ -85,13 +67,13 @@ function editProfileForm() {
     nameDiv.append(nameLabel, nameInput);
 
     const genreDiv = document.createElement("div");
-    genreDiv.setAttribute("class", "col auth-item reg-item");
+    genreDiv.setAttribute("class", "col auth-group");
     const genreLabel = document.createElement("label");
     genreLabel.setAttribute("for", "genre");
     genreLabel.innerText = "User Genre:";
     genreDiv.append(genreLabel);
 
-    secondFormRow.append(nameDiv, genreDiv);
+    firstFormRow.append(nameDiv, genreDiv);
 
     // Save Changes Button
     const saveBtn = document.createElement("button");
@@ -102,12 +84,14 @@ function editProfileForm() {
 
 
     // Row for deleting all posts and/or deleting profile
+    const pageCont = document.getElementById("settings-outer");
+
     const thirdFormRow = document.createElement("div");
     thirdFormRow.setAttribute("class", "form-row btn-row");
-    form.append(thirdFormRow);
+    pageCont.append(thirdFormRow);
 
     const deletePostsDiv = document.createElement("div");
-    deletePostsDiv.setAttribute("class", "col auth-item reg-item set-btn-col");
+    deletePostsDiv.setAttribute("class", "col auth-group set-btn-col");
     const deletePostsBtn = document.createElement("button");
     deletePostsBtn.setAttribute("class", "set-btn");
     deletePostsBtn.setAttribute("id", "dlt-posts-btn");
@@ -116,7 +100,7 @@ function editProfileForm() {
     deletePostsDiv.append(deletePostsBtn);
 
     const deleteAccountDiv = document.createElement("div");
-    deleteAccountDiv.setAttribute("class", "col auth-item reg-item set-btn-col");
+    deleteAccountDiv.setAttribute("class", "col auth-group set-btn-col");
     const deleteAccountBtn = document.createElement("button");
     deleteAccountBtn.setAttribute("class", "set-btn");
     deleteAccountBtn.setAttribute("id", "dlt-accnt-btn");
@@ -126,24 +110,15 @@ function editProfileForm() {
 
     thirdFormRow.append(deletePostsDiv, deleteAccountDiv);
 
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+
     // Get user information for default data input
-    fetch(`/users/api/users/${loggedInUser}`)
-    .then(response => response.json() )
-    .then(user => {
+    pfp.src = user.profile_picture;
+    pfpURLInput.value = user.profile_picture;
+    nameInput.value = user.first_name;
 
-        pfp.src = user.pfp_url;
-        pfpURLInput.value = user.pfp_url;
-        banner.src = user.banner_url;
-        bannerURLInput.value = user.banner_url;
-        nameInput.value = user.first_name;
-
-        const selectMenu = genreSelect(user.genre);
-        genreDiv.append(selectMenu);
-
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    const selectMenu = genreSelect(user.genre);
+    genreDiv.append(selectMenu);
 
 }
 
@@ -152,13 +127,13 @@ function genreSelect(userGenre) {
     //https://stackoverflow.com/questions/17001961/how-to-add-drop-down-list-select-programmatically
 
     const genres = {
-        "Jazz": "JZ",
-        "R&B / Soul": "RB",
-        "Hip-Hop": "HH",
-        "Classical": "IN",
-        "Folk / Acoustic": "FK",
-        "Indie / Alternative": "IE",
-        "Pop": "PP"
+        0: ["Jazz", "JZ"],
+        1: ["R&B / Soul", "RB"],
+        2: ["Hip-Hop", "HH"],
+        3: ["Classical", "IN"],
+        4: ["Folk / Acoustic", "FK"],
+        5: ["Indie / Alternative", "IE"],
+        6: ["Pop", "PP"]
     };
 
     //Create and append select list
@@ -169,12 +144,12 @@ function genreSelect(userGenre) {
     for (let key in genres) {
 
         var option = document.createElement("option");
-        option.value = genres[key];
-        option.text = key;
+        option.value = genres[key][1];
+        option.text = genres[key][0];
         selectList.appendChild(option);
 
         // Selecting default
-        if (userGenre === genres[key]) {
+        if (userGenre === parseInt(key)) {
             option.setAttribute("selected", "");
         };
 
@@ -188,31 +163,45 @@ function saveEdit() {
 
     // Getting input values
     const pfpURL = document.getElementById("pfp-url").value;
-    const bannerURL = document.getElementById("banner-url").value;
     const name = document.getElementById("full-name").value;
+
+    const genres = {
+        "JZ": 0,
+        "RB": 1,
+        "HH": 2,
+        "IN": 3,
+        "FK": 4,
+        "IE": 5,
+        "PP": 6
+    };
     const genre = document.getElementById("genre").value;
+
+    // Getting User ID
+    const userId = JSON.parse(sessionStorage.getItem("loggedInUser")).id;
 
     const csrftoken = getCookie('csrftoken');
 
-    fetch(`/api/settings/edit`, {
-        method: 'PUT',
-        headers: {'X-CSRFToken': csrftoken},
+    fetch(`/users/api/users/${userId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
         body: JSON.stringify({
             pfp_url: pfpURL,
-            banner_url: bannerURL,
             first_name: name,
-            genre: genre,
-            action: "edit"
+            genre: genres[genre]
         })
     })
-    .then(() => {
+    .then(response => response.json())
+    .then(result => {
 
         //Changing the pfp and/or banner to reflect any changes that may have been made
         document.querySelectorAll("img")[0].src = pfpURL;
         document.querySelectorAll("img")[1].src = pfpURL;
-        document.querySelectorAll("img")[2].src = bannerURL;
-
-        console.log("Things saved successfully");
+        sessionStorage.setItem("loggedInUser", JSON.stringify(result));
+        console.log("Changes saved successfully");
 
     })
     .catch(error => {

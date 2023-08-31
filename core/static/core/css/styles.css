@@ -432,13 +432,18 @@ a.skip-main:focus, a.skip-main:active {
 
 /* ===== Settings Page ===== */
 
+#settings-form {
+    display: flex;
+}
+
 /*https://stackoverflow.com/questions/22196587/how-to-vertically-center-a-container-in-bootstrap*/
 
 .settings-pics-div {
-    display: inline-block;
+    display: flex;
     margin-bottom: 40px;
-    width: 100%;
-    text-align: center;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
 }
 
 #settings-pfp {
@@ -452,8 +457,8 @@ a.skip-main:focus, a.skip-main:active {
 }
 
 #settings-pfp img {
-    height: 150px;
-    width: 150px;
+    height: 175px;
+    width: 175px;
 }
 
 #settings-banner {
@@ -472,6 +477,18 @@ a.skip-main:focus, a.skip-main:active {
     width: 500px;
     border-radius: 10px;
     object-fit: cover;
+}
+
+#form-column {
+    width: 50%;
+}
+
+#form-column .auth-group input {
+    width: 100%;
+}
+
+#genre {
+    width: 100%;
 }
 
 .btn-row {
