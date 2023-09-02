@@ -153,10 +153,12 @@ function postElement(type, data, postId=null) {
     const card = document.createElement("article");
     card.setAttribute("class", `${type}-card`);
 
-    let loggedInUser = null;
+    let loggedInUserId = null;
+    let loggedInUserInfo = null;
     const check = document.getElementById("user-menu");
     if (check !== null) {
-        loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+        loggedInUserId = parseInt(check.dataset.user);
+        loggedInUserInfo = JSON.parse(sessionStorage.getItem("users"))[loggedInUserId];
     };
 
     // Profile Picture
@@ -190,14 +192,17 @@ function postElement(type, data, postId=null) {
 
     let user = null;
 
+    //console.log(loggedInUser === data.creator, data.creator === undefined)
+    //console.log(loggedInUser.id, data.creator)
+
     // Edit form
-    if (loggedInUser === data.creator || data.creator === undefined) {
-        user = loggedInUser;
+    if (loggedInUserId === data.creator || data.creator === undefined) {
+        user = loggedInUserInfo;
         const edittingForm = editForm(type, data.id);
         edittingForm.style.display = "none";
         top.append(edittingForm);
-        fullName.setAttribute("href", `/users/${loggedInUser.id}`);
-        pfpLink.setAttribute("href", `/users/${loggedInUser.id}`);
+        fullName.setAttribute("href", `/users/${loggedInUserId}`);
+        pfpLink.setAttribute("href", `/users/${loggedInUserId}`);
     } else {
         user = JSON.parse(sessionStorage.getItem("users"))[data.creator];
         fullName.setAttribute("href", `/users/${data.creator}`);
@@ -386,7 +391,7 @@ function likeAction(button) {
     .then(response => response.json())
     .then(likers_list => {
 
-        console.log(btnOne.innerText, likers_list, id, postId);
+        //console.log(btnOne.innerText, likers_list, id, postId);
         const check = document.getElementById("genre-sidebar");
         if (check !== null) {
             const code = document.getElementById("posts-title").dataset.page;

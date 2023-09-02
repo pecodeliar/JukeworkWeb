@@ -166,7 +166,7 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
                 loggedInUser["posts"].push(value);
             }
         }
-    } else if (action.includes("Comment")) {
+    } else if (action.includes("Comment") || (action === "edit" && type !== null)) {
 
         // If a comment, the type parameter will be the post's id
 
@@ -176,7 +176,12 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
                 // Finding comment
                 for (element in prevData[key]["comments"]) {
                     if (prevData[key]["comments"][element].id === parseInt(index)) {
-                        prevData[key]["comments"][element]["likers"] = value;
+                        if (action !== "edit") {
+                            prevData[key]["comments"][element]["likers"] = value;
+                        } else {
+                            prevData[key]["comments"][element].content = value;
+                            //if
+                        }
                         break;
                     }
                 }
@@ -184,20 +189,35 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
             }
         }
 
-    } else if (action.includes("Post")) {
+    } else if (action.includes("Post") || (action === "edit" && type === null)) {
         for (const key in prevData) {
             // Finding post
             if (prevData[key].id === parseInt(index)) {
-                prevData[key]["likers"] = value;
-                // Finding it in user's data
-                if (loggedInUser["likes"] !== undefined) {
-                    if (action.includes("Like")) {
-                        loggedInUser["likes"].push(prevData[key]);
-                    } else {
-                        // Unliking so removing from data
-                        for (const [position, element] of loggedInUser["likes"].entries()) {
+                if (action !== "edit") {
+                    prevData[key]["likers"] = value;
+                    // Finding it in user's data
+                    if (loggedInUser["likes"] !== undefined) {
+                        if (action.includes("Like")) {
+                            loggedInUser["likes"].push(prevData[key]);
+                        } else {
+                            // Unliking so removing from data
+                            for (const [position, element] of loggedInUser["likes"].entries()) {
+                                if (element.id === parseInt(index)) {
+                                    loggedInUser["likes"].splice(position, 1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // Editing a post
+                    prevData[key].content = value;
+                    console.log("test here")
+                    // Finding it in user's data
+                    if (loggedInUser["posts"] !== undefined) {
+                        for (const [position, element] of loggedInUser["posts"].entries()) {
                             if (element.id === parseInt(index)) {
-                                loggedInUser["likes"].splice(position, 1);
+                                loggedInUser["posts"][position].content = value;
                                 break;
                             }
                         }

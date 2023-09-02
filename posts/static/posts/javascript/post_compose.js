@@ -61,7 +61,7 @@ function compose(type, postId=null) {
         inputDivs.append(picURLDiv);
 
     } else {
-        formRow.append(formTextDiv);
+        inputDivs.append(formTextDiv);
     }
 
     const csrftoken = getCookie('csrftoken');
@@ -69,6 +69,7 @@ function compose(type, postId=null) {
     const postButton = document.createElement("button");
     postButton.setAttribute("class", "float-right round-btn post-crt-btn");
     postButton.innerText = `Create ${type}`;
+    inputDivs.append(postButton);
 
     postButton.addEventListener("click", () => {
 
@@ -139,7 +140,7 @@ function compose(type, postId=null) {
 
     });
 
-    form.append(formRow, postButton);
+    form.append(formRow);
     formDiv.append(form);
     return formDiv;
 
@@ -152,7 +153,8 @@ function editButton(type, data, postId) {
     const upperType = titleCase(type);
 
     const editBtn = document.createElement("button");
-    editBtn.setAttribute("class", `round-btn ${type}-like-btn ${type}-edit-btn`);
+    //editBtn.setAttribute("class", `round-btn ${type}-like-btn ${type}-edit-btn`);
+    editBtn.setAttribute("class", `round-btn ${type}-like-btn`);
     editBtn.innerText = `Edit ${upperType}`;
 
     const editIcon = document.createElement("i");
@@ -285,6 +287,12 @@ function editAction(type, button, full=false) {
             postText.style.display = "block";
             // Show like button
             likeBtn.removeAttribute("style");
+
+            if (type === "post") {
+                updateSessionData("edit", "posts", newContent, id);
+            } else if (type === "comment") {
+                //updateSessionData("edit", "posts", newContent, id, editBtn.dataset.parent);
+            }
 
         })
         .catch(error => {
