@@ -102,6 +102,10 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
     //console.log(action)
     if (action === "delete") {
         // TODO
+    } else if (action === "add" || action === "edit") {
+        // (Add) New User is created or (Edit) User changed their settings 
+        prevData[index] = value;
+        delete prevData[index]["id"]; // The key of the dict is already the user id
     } else if (action === "Follow") {
         // Edit the following list of the user the logged-in user followed
         // and add user to logged-in users following list

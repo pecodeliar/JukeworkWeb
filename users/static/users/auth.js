@@ -195,8 +195,9 @@ function registerForm() {
             })
         })
         .then(data => {
-                console.log("Made it", data)
-
+                //console.log("Made it", data.user)
+                sessionStorage.setItem("loggedInUser", JSON.stringify(data.user));
+                updateSessionData("add", "users", data.user, data.user.id);
                 // https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
                 sessionStorage.setItem("token", data.token);
                 window.location.href = "/";

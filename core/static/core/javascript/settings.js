@@ -189,7 +189,7 @@ function saveEdit() {
             'X-CSRFToken': csrftoken
         },
         body: JSON.stringify({
-            pfp_url: pfpURL,
+            profile_picture: pfpURL,
             first_name: name,
             genre: genres[genre]
         })
@@ -201,8 +201,8 @@ function saveEdit() {
         document.querySelectorAll("img")[0].src = pfpURL;
         document.querySelectorAll("img")[1].src = pfpURL;
         sessionStorage.setItem("loggedInUser", JSON.stringify(result));
+        updateSessionData("edit","users", result, result.id);
         console.log("Changes saved successfully");
-
     })
     .catch(error => {
         console.log(error);

@@ -131,9 +131,9 @@
 
 @media screen and (max-width: 768px) {
 
-  body {
+  /*body {
     background: pink;
-  }
+  }*/
 
   #main-nav {
     padding: 1px 8px;
@@ -217,9 +217,9 @@
 
 @media screen and (max-width: 600px) {
 
-  body {
+  /*body {
     background: blue;
-  }
+  }*/
 
   #main-nav {
     margin: 8px;
@@ -296,7 +296,7 @@
 @media screen and (max-width: 480px) {
 
   body {
-    background: green;
+    /*background: green;*/
     margin-top: 72px;
   }
 

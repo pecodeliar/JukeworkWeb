@@ -128,7 +128,7 @@ class RegisterView(generics.CreateAPIView):
         token = AuthToken.objects.create(user)
         login(request, user)
         return Response({
-            "users": UserSerializer(user, context=self.get_serializer_context()).data,
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": token[1]
         })
 
