@@ -201,7 +201,7 @@ function saveEdit() {
         document.querySelectorAll("img")[0].src = pfpURL;
         document.querySelectorAll("img")[1].src = pfpURL;
         sessionStorage.setItem("loggedInUser", JSON.stringify(result));
-        updateSessionData("edit","users", result, result.id);
+        updateSessionData("settings","users", result, result.id);
         console.log("Changes saved successfully");
     })
     .catch(error => {

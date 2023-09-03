@@ -102,8 +102,8 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
     //console.log(action)
     if (action === "delete") {
         // TODO
-    } else if (action === "add" || action === "edit") {
-        // (Add) New User is created or (Edit) User changed their settings 
+    } else if (action === "add" || action === "settings") {
+        // (Add) New User is created or (Settings) User changed their settings 
         prevData[index] = value;
         delete prevData[index]["id"]; // The key of the dict is already the user id
     } else if (action === "Follow") {
@@ -111,7 +111,6 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
         // and add user to logged-in users following list
         prevData[index]["followers"].push(loggedInUser.id);
         loggedInUser["following"].push(index);
-
     } else if (action === "Unfollow") {
         // Edit the following list of the user the logged-in user unfollowed
         // and remove user to logged-in users following list
@@ -119,7 +118,6 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
         prevData[index]["followers"].splice(placeOne, 1);
         const placeTwo = loggedInUser["following"].indexOf(index);
         loggedInUser["following"].splice(placeTwo, 1);
-
     } else if (action === "load") {
         if (type !== null) {
             if (loggedInUser !== null) {
@@ -173,7 +171,7 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
     } else if (action.includes("Comment") || (action === "edit" && type !== null)) {
 
         // If a comment, the type parameter will be the post's id
-
+        //console.log("in comment")
         for (const key in prevData) {
             // Finding post
             if (prevData[key].id === parseInt(type)) {
@@ -194,6 +192,7 @@ function updateSessionData(action, sessionKey, value, index, type=null) {
         }
 
     } else if (action.includes("Post") || (action === "edit" && type === null)) {
+        //console.log("in post")
         for (const key in prevData) {
             // Finding post
             if (prevData[key].id === parseInt(index)) {

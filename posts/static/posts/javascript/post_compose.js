@@ -185,7 +185,7 @@ function editAction(type, button, full=false) {
     }
 
     const editables = document.querySelectorAll(`[data-${type}='${id}']`)
-    console.log(editables)
+    //console.log(editables)
 
     // Defining now so that depending on on full's boolean, variables to do not have be redeinfed
     let editBtn = null;
@@ -291,7 +291,7 @@ function editAction(type, button, full=false) {
             if (type === "post") {
                 updateSessionData("edit", "posts", newContent, id);
             } else if (type === "comment") {
-                //updateSessionData("edit", "posts", newContent, id, editBtn.dataset.parent);
+                updateSessionData("edit", "posts", newContent, id, editBtn.dataset.parent);
             }
 
         })

@@ -124,7 +124,7 @@ function loadProfileInfo(profileId) {
         followEditBtn.innerText = "Edit Profile";
         followEditBtn.addEventListener('click', () => editProfile());
 
-    } else if (loggedInUser !== null && user.followers.includes(loggedInUser)) {
+    } else if (loggedInUser !== null && user.followers.includes(loggedInUser.id)) {
 
         followEditBtn.innerText = "Unfollow";
         followEditBtn.addEventListener('click', () => follow(followEditBtn, profileId));
@@ -329,6 +329,10 @@ function follow (button, id) {
     .then(following_list => {
         // The API should send back a followers list so that the frontend does not have to do so much calculation
         updateSessionData(button.innerText, "users", following_list, id);
+        const followingPosts = sessionStorage.getItem("postsfollowing");
+        if (followingPosts !== null) {
+            sessionStorage.removeItem("postsfollowing");
+        }
         button.innerText === "Unfollow" ? button.innerText = "Follow" : button.innerText = "Unfollow";
         document.querySelector('#followers-cnt').innerText = `${following_list.length} followers`;
     });

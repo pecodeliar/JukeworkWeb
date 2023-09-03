@@ -59,7 +59,7 @@ function loginForm() {
             return response.json().then(response => {throw new Error(response.error)})
         })
         .then(data => {
-
+                sessionStorage.setItem("loggedInUser", JSON.stringify(data.user));
                 // https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
                 sessionStorage.setItem("token", data.token);
                 window.location.href = "/";
