@@ -119,14 +119,14 @@ function completeCard(type, json, postId=null) {
         const cancelBtn = document.createElement("button");
         cancelBtn.setAttribute("class", "float-right round-btn post-crt-btn");
         cancelBtn.setAttribute(`data-${type}`, json.id);
-        cancelBtn.innerText = "Cancel Edit";
+        cancelBtn.innerText = "Cancel";
         card.querySelector(`.${type}-btn-cont`).append(cancelBtn);
         cancelBtn.style.display = "none";
 
         const saveBtn = document.createElement("button");
         saveBtn.setAttribute("class", "float-right round-btn post-crt-btn");
         saveBtn.setAttribute(`data-${type}`, json.id);
-        saveBtn.innerText = "Save Edit";
+        saveBtn.innerText = "Save";
         card.querySelector(`.${type}-btn-cont`).append(saveBtn);
         saveBtn.style.display = "none";
 
@@ -323,10 +323,14 @@ function likeButton(type, data, postId=null) {
         likeBtn.innerText = `Like(s)`;
     } else {
         if (liked === false) {
-            likeBtn.innerText = `Like ${titleCase(type)}`;
+            likeBtn.setAttribute("data-action", `Like ${titleCase(type)}`);
+            //likeBtn.innerText = `Like ${titleCase(type)}`;
+            likeBtn.innerText = `Like`;
             likeIcon.style.color = "white";
         } else {
-            likeBtn.innerText = `Unlike ${titleCase(type)}`;
+            likeBtn.setAttribute("data-action", `Unlike ${titleCase(type)}`);
+            //likeBtn.innerText = `Unlike ${titleCase(type)}`;
+            likeBtn.innerText = `Unlike`;
             likeIcon.style.color = "var(--primary-container)";
         }
     }
@@ -359,7 +363,7 @@ function likeAction(button) {
     const btnOne = elements.item(0);
     let btnTwo = null
     let action = "";
-    if (btnOne.innerText.includes("Unlike")) {
+    if (btnOne.dataset.action.includes("Unlike")) {
         action = "Unlike";
     } else {
         action = "Like";
@@ -395,29 +399,35 @@ function likeAction(button) {
         const check = document.getElementById("genre-sidebar");
         if (check !== null) {
             const code = document.getElementById("posts-title").dataset.page;
-            updateSessionData(btnOne.innerText, `posts${code}`, likers_list, id, postId);
+            updateSessionData(btnOne.dataset.action, `posts${code}`, likers_list, id, postId);
         }
 
         // The API should send back a followers list so that the frontend does not have to do so much calculation
-        updateSessionData(btnOne.innerText, "posts", likers_list, id, postId);
+        updateSessionData(btnOne.dataset.action, "posts", likers_list, id, postId);
 
         var count = likers_list.length;
 
-        if (btnOne.childNodes[2].nodeValue === `Like ${titleCase(type)}`) {
-            btnOne.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
+        //console.log(btnOne.childNodes[2])
+
+        if (btnOne.childNodes[2].nodeValue === `Like`) {
+            btnOne.childNodes[2].nodeValue = `Unlike`;
+            btnOne.dataset.action = `Unlike ${titleCase(type)}`;
             elements.item(1).style.color = "var(--primary-container)";
             elements.item(2).textContent = count;
             if (btnTwo !== null) {
-                btnTwo.childNodes[2].nodeValue = `Unlike ${titleCase(type)}`;
+                btnTwo.childNodes[2].nodeValue = `Unlike`;
+                btnTwo.dataset.action = `Unlike ${titleCase(type)}`;
                 elements.item(4).style.color = "var(--primary-container)";
                 elements.item(5).textContent = count;
             }
         } else {
-            btnOne.childNodes[2].nodeValue = `Like ${titleCase(type)}`;
+            btnOne.childNodes[2].nodeValue = `Like`;
+            btnOne.dataset.action = `Like ${titleCase(type)}`;
             elements.item(1).style.color = "white";
             elements.item(2).textContent = count;
             if (btnTwo !== null) {
-                btnTwo.childNodes[2] = `Like ${titleCase(type)}`;
+                btnTwo.childNodes[2] = `Like`;
+                btnTwo.dataset.action = `Like ${titleCase(type)}`;
                 elements.item(4).style.color = "white";
                 elements.item(5).textContent = count;
             }

@@ -196,8 +196,8 @@ a:hover {
 
 .post-view-user-cont {
     display: inline-block;
-    margin-left: 16px;
-    padding: 16px;
+    padding: 32px;
+    width: 100%;
 }
 
 .post-view-pfp {

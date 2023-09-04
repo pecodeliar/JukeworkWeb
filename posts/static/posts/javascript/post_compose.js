@@ -155,7 +155,8 @@ function editButton(type, data, postId) {
     const editBtn = document.createElement("button");
     //editBtn.setAttribute("class", `round-btn ${type}-like-btn ${type}-edit-btn`);
     editBtn.setAttribute("class", `round-btn ${type}-like-btn`);
-    editBtn.innerText = `Edit ${upperType}`;
+    editBtn.setAttribute("data-action", `Edit ${upperType}`);
+    editBtn.innerText = `Edit`;
 
     const editIcon = document.createElement("i");
     editIcon.setAttribute("class", "bx bxs-edit-alt");
@@ -185,7 +186,7 @@ function editAction(type, button, full=false) {
     }
 
     const editables = document.querySelectorAll(`[data-${type}='${id}']`)
-    //console.log(editables)
+    console.log(editables)
 
     // Defining now so that depending on on full's boolean, variables to do not have be redeinfed
     let editBtn = null;
@@ -241,7 +242,7 @@ function editAction(type, button, full=false) {
         if (full === false) {
             newContent = editForm.value;
         } else {
-            newContent = editables.item(8).value;
+            newContent = editables.item(1).value;
         }
 
         const csrftoken = getCookie('csrftoken');
@@ -281,7 +282,7 @@ function editAction(type, button, full=false) {
             // Replace unedditable content with new value for both post elements and full view
             postText.innerText = newContent;
             if (full === true) {
-                editables.item(9).innerText = newContent;
+                editables.item(3).innerText = newContent;
             }
             // Reshow unedditable content
             postText.style.display = "block";

@@ -373,10 +373,25 @@
     height: 250px;
     object-fit: cover;
     border-radius: 10px;
-}
+  }
 
   .post-btn-cont {
     padding-right: 0;
+    width: 100%;
+    flex-wrap: wrap;
+    padding-top: 0;
+  }
+  
+  .post-btn-cont button {
+    margin-top: 8px;
+  }
+
+  .posts-container .create-post-pfp {
+    display: none;
+  }
+
+  .post-form-div {
+    padding-left: 24px;
   }
 
   .user-card {
